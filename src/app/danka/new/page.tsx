@@ -1,0 +1,336 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+interface MemberForm {
+  name: string;
+  nameKana: string;
+  relation: string;
+  birthDate: string;
+  dharmaName: string;
+  note: string;
+}
+
+export default function NewDankaPage() {
+  const router = useRouter();
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  const [form, setForm] = useState({
+    dankaCode: "",
+    familyName: "",
+    givenName: "",
+    familyNameKana: "",
+    givenNameKana: "",
+    postalCode: "",
+    address: "",
+    phone: "",
+    email: "",
+    note: "",
+    joinedAt: "",
+  });
+
+  const [members, setMembers] = useState<MemberForm[]>([]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const addMember = () => {
+    setMembers([...members, { name: "", nameKana: "", relation: "", birthDate: "", dharmaName: "", note: "" }]);
+  };
+
+  const updateMember = (index: number, field: keyof MemberForm, value: string) => {
+    const updated = [...members];
+    updated[index] = { ...updated[index], [field]: value };
+    setMembers(updated);
+  };
+
+  const removeMember = (index: number) => {
+    setMembers(members.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/danka", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, members: members.filter((m) => m.name) }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error || "登録に失敗しました");
+        return;
+      }
+
+      const danka = await res.json();
+      router.push(`/danka/${danka.id}`);
+    } catch (err) {
+      console.error(err);
+      setError("ネットワークエラーが発生しました");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="max-w-2xl space-y-6">
+      <div className="flex items-center gap-4">
+        <Link href="/danka" className="text-stone-400 hover:text-stone-600 text-sm">
+          ← 一覧へ
+        </Link>
+        <h1 className="text-2xl font-bold text-stone-800">檀家新規登録</h1>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6 space-y-4">
+          <h2 className="font-semibold text-stone-700">基本情報</h2>
+
+          <div>
+            <label className="block text-sm font-medium text-stone-600 mb-1">
+              檀家番号 <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="dankaCode"
+              value={form.dankaCode}
+              onChange={handleChange}
+              required
+              placeholder="例: D001"
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">
+                姓 <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="familyName"
+                value={form.familyName}
+                onChange={handleChange}
+                required
+                placeholder="山田"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">
+                名 <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="givenName"
+                value={form.givenName}
+                onChange={handleChange}
+                required
+                placeholder="太郎"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">姓（カナ）</label>
+              <input
+                type="text"
+                name="familyNameKana"
+                value={form.familyNameKana}
+                onChange={handleChange}
+                placeholder="ヤマダ"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">名（カナ）</label>
+              <input
+                type="text"
+                name="givenNameKana"
+                value={form.givenNameKana}
+                onChange={handleChange}
+                placeholder="タロウ"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">郵便番号</label>
+              <input
+                type="text"
+                name="postalCode"
+                value={form.postalCode}
+                onChange={handleChange}
+                placeholder="123-4567"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-stone-600 mb-1">住所</label>
+              <input
+                type="text"
+                name="address"
+                value={form.address}
+                onChange={handleChange}
+                placeholder="東京都..."
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">電話番号</label>
+              <input
+                type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="03-1234-5678"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">メールアドレス</label>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="example@example.com"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-stone-600 mb-1">入檀日</label>
+            <input
+              type="date"
+              name="joinedAt"
+              value={form.joinedAt}
+              onChange={handleChange}
+              className="border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-stone-600 mb-1">備考</label>
+            <textarea
+              name="note"
+              value={form.note}
+              onChange={handleChange}
+              rows={3}
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+            />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-stone-700">世帯員</h2>
+            <button
+              type="button"
+              onClick={addMember}
+              className="text-sm text-stone-600 hover:text-stone-800 border border-stone-300 px-3 py-1 rounded-lg"
+            >
+              + 追加
+            </button>
+          </div>
+
+          {members.length === 0 && (
+            <p className="text-stone-400 text-sm">世帯員を追加できます</p>
+          )}
+
+          {members.map((member, index) => (
+            <div key={index} className="border border-stone-200 rounded-lg p-4 space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-stone-600">世帯員 {index + 1}</span>
+                <button
+                  type="button"
+                  onClick={() => removeMember(index)}
+                  className="text-red-400 hover:text-red-600 text-sm"
+                >
+                  削除
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">氏名 *</label>
+                  <input
+                    type="text"
+                    value={member.name}
+                    onChange={(e) => updateMember(index, "name", e.target.value)}
+                    placeholder="山田 花子"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">続柄</label>
+                  <input
+                    type="text"
+                    value={member.relation}
+                    onChange={(e) => updateMember(index, "relation", e.target.value)}
+                    placeholder="妻・子など"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">生年月日</label>
+                  <input
+                    type="date"
+                    value={member.birthDate}
+                    onChange={(e) => updateMember(index, "birthDate", e.target.value)}
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">戒名（法名）</label>
+                  <input
+                    type="text"
+                    value={member.dharmaName}
+                    onChange={(e) => updateMember(index, "dharmaName", e.target.value)}
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex gap-3">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="bg-stone-700 text-white px-6 py-2 rounded-lg hover:bg-stone-800 transition-colors text-sm font-medium disabled:opacity-50"
+          >
+            {submitting ? "登録中..." : "登録する"}
+          </button>
+          <Link
+            href="/danka"
+            className="border border-stone-300 text-stone-600 px-6 py-2 rounded-lg hover:bg-stone-50 transition-colors text-sm font-medium"
+          >
+            キャンセル
+          </Link>
+        </div>
+      </form>
+    </div>
+  );
+}

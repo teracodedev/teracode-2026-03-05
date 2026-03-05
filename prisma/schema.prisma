@@ -1,0 +1,101 @@
+// テラコード - 寺院管理システム
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// 檀家（法人・個人）
+model Danka {
+  id            Int       @id @default(autoincrement())
+  dankaCode     String    @unique // 檀家番号
+  familyName    String    // 姓
+  givenName     String    // 名
+  familyNameKana String?  // 姓（カナ）
+  givenNameKana  String?  // 名（カナ）
+  postalCode    String?   // 郵便番号
+  address       String?   // 住所
+  phone         String?   // 電話番号
+  email         String?   // メールアドレス
+  note          String?   // 備考
+  joinedAt      DateTime? // 入檀日
+  leftAt        DateTime? // 離檀日
+  isActive      Boolean   @default(true) // 在籍フラグ
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  members       DankaMember[] // 世帯員
+  ceremonies    CeremonyParticipant[] // 法要参加
+}
+
+// 世帯員（檀家家族）
+model DankaMember {
+  id            Int       @id @default(autoincrement())
+  dankaId       Int
+  danka         Danka     @relation(fields: [dankaId], references: [id], onDelete: Cascade)
+  name          String    // 氏名
+  nameKana      String?   // 氏名（カナ）
+  relation      String?   // 続柄（世帯主、妻、子など）
+  birthDate     DateTime? // 生年月日
+  deathDate     DateTime? // 没年月日
+  dharmaName    String?   // 戒名（法名）
+  note          String?   // 備考
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// 法要・行事
+model Ceremony {
+  id            Int       @id @default(autoincrement())
+  title         String    // 法要・行事名
+  ceremonyType  CeremonyType // 種別
+  scheduledAt   DateTime  // 開催日時
+  endAt         DateTime? // 終了日時
+  location      String?   // 場所
+  description   String?   // 説明
+  maxAttendees  Int?      // 定員
+  fee           Int?      // 費用（円）
+  status        CeremonyStatus @default(SCHEDULED) // ステータス
+  note          String?   // 備考
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  participants  CeremonyParticipant[] // 参加者
+}
+
+// 法要種別
+enum CeremonyType {
+  MEMORIAL       // 法要（年忌法要など）
+  REGULAR        // 定例行事（彼岸、盂蘭盆など）
+  FUNERAL        // 葬儀・告別式
+  SPECIAL        // 特別行事
+  OTHER          // その他
+}
+
+// 法要ステータス
+enum CeremonyStatus {
+  SCHEDULED      // 予定
+  COMPLETED      // 完了
+  CANCELLED      // 中止
+}
+
+// 法要参加者
+model CeremonyParticipant {
+  id            Int       @id @default(autoincrement())
+  ceremonyId    Int
+  ceremony      Ceremony  @relation(fields: [ceremonyId], references: [id], onDelete: Cascade)
+  dankaId       Int
+  danka         Danka     @relation(fields: [dankaId], references: [id], onDelete: Cascade)
+  attendees     Int       @default(1) // 参加人数
+  offering      Int?      // 御布施（円）
+  note          String?   // 備考
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([ceremonyId, dankaId])
+}
