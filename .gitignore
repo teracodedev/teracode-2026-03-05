@@ -33,6 +33,13 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# docker compose (local/dev)
+docker-compose.yml
+
+# nginx certs (do not commit private keys/certs)
+nginx/certs/server.key
+nginx/certs/server.crt
+
 # vercel
 .vercel
 

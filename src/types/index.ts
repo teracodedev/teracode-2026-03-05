@@ -1,6 +1,3 @@
-export type { Danka, DankaMember, Ceremony, CeremonyParticipant } from "@/generated/prisma";
-export { CeremonyType, CeremonyStatus } from "@/generated/prisma";
-
 export interface DankaWithMembers {
   id: number;
   dankaCode: string;

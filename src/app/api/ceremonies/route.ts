@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { CeremonyType, CeremonyStatus } from "@/generated/prisma";
+import { CeremonyType, CeremonyStatus } from "@/generated/prisma/enums";
 
 // 法要・行事一覧取得
 export async function GET(request: NextRequest) {
