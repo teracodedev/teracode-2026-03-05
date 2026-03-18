@@ -21,18 +21,29 @@ export default function DankaPage() {
   const [query, setQuery] = useState("");
   const [showInactive, setShowInactive] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const fetchDanka = useCallback(async () => {
     setLoading(true);
+    setError("");
     try {
       const params = new URLSearchParams();
       if (query) params.set("q", query);
       if (showInactive) params.set("active", "false");
       const res = await fetch(`/api/danka?${params}`);
       const data = await res.json();
-      setDankaList(data);
+
+      if (!res.ok) {
+        setDankaList([]);
+        setError(data?.error || "データの取得に失敗しました");
+        return;
+      }
+
+      setDankaList(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
+      setDankaList([]);
+      setError("エラーが発生しました");
     } finally {
       setLoading(false);
     }
@@ -76,6 +87,8 @@ export default function DankaPage() {
 
       {loading ? (
         <div className="text-center py-12 text-stone-400">読み込み中...</div>
+      ) : error ? (
+        <div className="text-center py-12 text-stone-400">{error}</div>
       ) : dankaList.length === 0 ? (
         <div className="text-center py-12 text-stone-400">
           <p>檀家が登録されていません</p>

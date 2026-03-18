@@ -87,7 +87,10 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
   useEffect(() => {
     Promise.all([
       fetch(`/api/ceremonies/${id}`).then((r) => r.json()),
-      fetch("/api/danka?active=true").then((r) => r.json()),
+      fetch("/api/danka?active=true").then(async (r) => {
+        const data = await r.json();
+        return r.ok && Array.isArray(data) ? data : [];
+      }),
     ]).then(([ceremonyData, dankaData]) => {
       setCeremony(ceremonyData);
       setDankaList(dankaData);
