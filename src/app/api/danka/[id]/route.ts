@@ -6,10 +6,7 @@ type Params = { params: Promise<{ id: string }> };
 // 檀家詳細取得
 export async function GET(_request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const dankaId = parseInt(id);
-  if (isNaN(dankaId)) {
-    return NextResponse.json({ error: "不正なID" }, { status: 400 });
-  }
+  const dankaId = id;
 
   try {
     const danka = await prisma.danka.findUnique({
@@ -37,10 +34,7 @@ export async function GET(_request: NextRequest, { params }: Params) {
 // 檀家情報更新
 export async function PUT(request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const dankaId = parseInt(id);
-  if (isNaN(dankaId)) {
-    return NextResponse.json({ error: "不正なID" }, { status: 400 });
-  }
+  const dankaId = id;
 
   try {
     const body = await request.json();
@@ -88,10 +82,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 // 檀家削除
 export async function DELETE(_request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const dankaId = parseInt(id);
-  if (isNaN(dankaId)) {
-    return NextResponse.json({ error: "不正なID" }, { status: 400 });
-  }
+  const dankaId = id;
 
   try {
     await prisma.danka.delete({ where: { id: dankaId } });

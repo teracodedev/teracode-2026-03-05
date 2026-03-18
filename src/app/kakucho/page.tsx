@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 
 interface KakuchoRecord {
-  id: number;
-  dankaId: number;
+  id: string;
+  dankaId: string;
   name: string;
   nameKana: string | null;
   relation: string | null;
@@ -14,7 +14,7 @@ interface KakuchoRecord {
   dharmaName: string | null;
   note: string | null;
   danka: {
-    id: number;
+    id: string;
     dankaCode: string;
     familyName: string;
     givenName: string;

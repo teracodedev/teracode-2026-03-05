@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 interface Member {
-  id: number;
+  id: string;
   name: string;
   nameKana: string | null;
   relation: string | null;
@@ -16,14 +16,14 @@ interface Member {
 }
 
 interface Ceremony {
-  id: number;
+  id: string;
   title: string;
   scheduledAt: string;
   ceremonyType: string;
 }
 
 interface DankaDetail {
-  id: number;
+  id: string;
   dankaCode: string;
   familyName: string;
   givenName: string;

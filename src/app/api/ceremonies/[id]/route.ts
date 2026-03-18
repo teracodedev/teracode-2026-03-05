@@ -6,10 +6,7 @@ type Params = { params: Promise<{ id: string }> };
 // 法要詳細取得
 export async function GET(_request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const ceremonyId = parseInt(id);
-  if (isNaN(ceremonyId)) {
-    return NextResponse.json({ error: "不正なID" }, { status: 400 });
-  }
+  const ceremonyId = id;
 
   try {
     const ceremony = await prisma.ceremony.findUnique({
@@ -35,10 +32,7 @@ export async function GET(_request: NextRequest, { params }: Params) {
 // 法要情報更新
 export async function PUT(request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const ceremonyId = parseInt(id);
-  if (isNaN(ceremonyId)) {
-    return NextResponse.json({ error: "不正なID" }, { status: 400 });
-  }
+  const ceremonyId = id;
 
   try {
     const body = await request.json();
@@ -84,10 +78,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 // 法要削除
 export async function DELETE(_request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const ceremonyId = parseInt(id);
-  if (isNaN(ceremonyId)) {
-    return NextResponse.json({ error: "不正なID" }, { status: 400 });
-  }
+  const ceremonyId = id;
 
   try {
     await prisma.ceremony.delete({ where: { id: ceremonyId } });

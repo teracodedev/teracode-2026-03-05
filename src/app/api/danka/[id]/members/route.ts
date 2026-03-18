@@ -6,10 +6,7 @@ type Params = { params: Promise<{ id: string }> };
 // 世帯員追加
 export async function POST(request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const dankaId = parseInt(id);
-  if (isNaN(dankaId)) {
-    return NextResponse.json({ error: "不正なID" }, { status: 400 });
-  }
+  const dankaId = id;
 
   try {
     const body = await request.json();

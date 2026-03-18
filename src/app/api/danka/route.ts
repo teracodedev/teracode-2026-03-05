@@ -40,7 +40,6 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const {
-      dankaCode,
       familyName,
       givenName,
       familyNameKana,
@@ -54,24 +53,15 @@ export async function POST(request: NextRequest) {
       members,
     } = body;
 
-    if (!dankaCode || !familyName || !givenName) {
+    if (!familyName || !givenName) {
       return NextResponse.json(
-        { error: "檀家番号・姓・名は必須です" },
+        { error: "姓・名は必須です" },
         { status: 400 }
-      );
-    }
-
-    const existing = await prisma.danka.findUnique({ where: { dankaCode } });
-    if (existing) {
-      return NextResponse.json(
-        { error: "この檀家番号は既に使用されています" },
-        { status: 409 }
       );
     }
 
     const danka = await prisma.danka.create({
       data: {
-        dankaCode,
         familyName,
         givenName,
         familyNameKana: familyNameKana || null,

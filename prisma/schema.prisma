@@ -13,8 +13,8 @@ datasource db {
 
 // 檀家（法人・個人）
 model Danka {
-  id            Int       @id @default(autoincrement())
-  dankaCode     String    @unique // 檀家番号
+  id            String    @id @default(uuid())
+  dankaCode     String    @unique @default(uuid()) // 檀家番号（UUID）
   familyName    String    // 姓
   givenName     String    // 名
   familyNameKana String?  // 姓（カナ）
@@ -36,8 +36,8 @@ model Danka {
 
 // 世帯員（檀家家族）
 model DankaMember {
-  id            Int       @id @default(autoincrement())
-  dankaId       Int
+  id            String    @id @default(uuid())
+  dankaId       String
   danka         Danka     @relation(fields: [dankaId], references: [id], onDelete: Cascade)
   name          String    // 氏名
   nameKana      String?   // 氏名（カナ）
@@ -52,7 +52,7 @@ model DankaMember {
 
 // 法要・行事
 model Ceremony {
-  id            Int       @id @default(autoincrement())
+  id            String    @id @default(uuid())
   title         String    // 法要・行事名
   ceremonyType  CeremonyType // 種別
   scheduledAt   DateTime  // 開催日時
@@ -87,10 +87,10 @@ enum CeremonyStatus {
 
 // 法要参加者
 model CeremonyParticipant {
-  id            Int       @id @default(autoincrement())
-  ceremonyId    Int
+  id            String    @id @default(uuid())
+  ceremonyId    String
   ceremony      Ceremony  @relation(fields: [ceremonyId], references: [id], onDelete: Cascade)
-  dankaId       Int
+  dankaId       String
   danka         Danka     @relation(fields: [dankaId], references: [id], onDelete: Cascade)
   attendees     Int       @default(1) // 参加人数
   offering      Int?      // 御布施（円）

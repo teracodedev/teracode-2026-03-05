@@ -58,7 +58,7 @@ export default function DankaPage() {
       <div className="flex gap-4 items-center">
         <input
           type="text"
-          placeholder="氏名・檀家番号・住所で検索..."
+          placeholder="氏名・住所で検索..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="flex-1 border border-stone-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
@@ -99,7 +99,7 @@ export default function DankaPage() {
             <tbody className="divide-y divide-stone-100">
               {dankaList.map((danka) => (
                 <tr key={danka.id} className="hover:bg-stone-50">
-                  <td className="px-4 py-3 font-mono text-stone-500">{danka.dankaCode}</td>
+                  <td className="px-4 py-3 font-mono text-stone-500">{danka.dankaCode.slice(0, 8)}</td>
                   <td className="px-4 py-3">
                     <Link
                       href={`/danka/${danka.id}`}
