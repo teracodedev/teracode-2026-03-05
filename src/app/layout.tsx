@@ -48,6 +48,18 @@ export default function RootLayout({
                 >
                   法要・行事
                 </Link>
+                <Link
+                  href="/genzaicho"
+                  className="hover:text-stone-300 transition-colors text-sm font-medium"
+                >
+                  現在帳
+                </Link>
+                <Link
+                  href="/kakucho"
+                  className="hover:text-stone-300 transition-colors text-sm font-medium"
+                >
+                  過去帳
+                </Link>
               </div>
             </div>
           </div>

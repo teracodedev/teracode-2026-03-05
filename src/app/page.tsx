@@ -35,6 +35,32 @@ export default function Home() {
             法要・行事のスケジュールと参加者を管理します
           </p>
         </Link>
+
+        <Link
+          href="/genzaicho"
+          className="block bg-white rounded-xl shadow-sm border border-stone-200 p-8 hover:shadow-md hover:border-stone-300 transition-all group"
+        >
+          <div className="text-4xl mb-4">📋</div>
+          <h2 className="text-xl font-bold text-stone-800 mb-2 group-hover:text-stone-600">
+            現在帳
+          </h2>
+          <p className="text-stone-500 text-sm">
+            在籍中の世帯員一覧を管理します
+          </p>
+        </Link>
+
+        <Link
+          href="/kakucho"
+          className="block bg-white rounded-xl shadow-sm border border-stone-200 p-8 hover:shadow-md hover:border-stone-300 transition-all group"
+        >
+          <div className="text-4xl mb-4">📖</div>
+          <h2 className="text-xl font-bold text-stone-800 mb-2 group-hover:text-stone-600">
+            過去帳
+          </h2>
+          <p className="text-stone-500 text-sm">
+            故人の戒名・没年月日を記録します
+          </p>
+        </Link>
       </div>
     </div>
   );
