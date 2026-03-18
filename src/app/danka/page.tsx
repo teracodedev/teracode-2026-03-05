@@ -103,7 +103,7 @@ export default function DankaPage() {
                   <td className="px-4 py-3">
                     <Link
                       href={`/danka/${danka.id}`}
-                      className="font-medium text-stone-800 hover:text-stone-600 hover:underline"
+                      className="font-medium text-stone-500 hover:text-stone-400 hover:underline"
                     >
                       {danka.familyName} {danka.givenName}
                     </Link>

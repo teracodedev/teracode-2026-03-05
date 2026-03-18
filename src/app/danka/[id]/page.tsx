@@ -91,7 +91,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
         <Link href="/danka" className="text-stone-400 hover:text-stone-600 text-sm">
           ← 一覧へ
         </Link>
-        <h1 className="text-2xl font-bold text-stone-800">
+        <h1 className="text-2xl font-bold text-stone-500">
           {danka.familyName} {danka.givenName}
         </h1>
         <span
