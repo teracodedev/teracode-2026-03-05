@@ -111,7 +111,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
         <Link href={`/danka/${id}`} className="text-stone-400 hover:text-stone-600 text-sm">
           ← 詳細へ
         </Link>
-        <h1 className="text-2xl font-bold text-stone-800">檀家情報編集</h1>
+        <h1 className="text-2xl font-bold text-stone-500">檀家情報編集</h1>
       </div>
 
       {error && (
