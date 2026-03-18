@@ -74,7 +74,7 @@ export default function CeremoniesPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-stone-800">法要・行事</h1>
+        <h1 className="text-2xl font-bold text-stone-600">法要・行事</h1>
         <Link
           href="/ceremonies/new"
           className="bg-stone-700 text-white px-4 py-2 rounded-lg hover:bg-stone-800 transition-colors text-sm font-medium"

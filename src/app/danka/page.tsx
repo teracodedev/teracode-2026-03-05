@@ -57,7 +57,7 @@ export default function DankaPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-stone-800">戸主台帳</h1>
+        <h1 className="text-2xl font-bold text-stone-600">戸主台帳</h1>
         <Link
           href="/danka/new"
           className="bg-stone-700 text-white px-4 py-2 rounded-lg hover:bg-stone-800 transition-colors text-sm font-medium"

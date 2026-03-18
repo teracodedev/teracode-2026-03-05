@@ -56,7 +56,7 @@ export default function KakuchoPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-stone-800">過去帳</h1>
+          <h1 className="text-2xl font-bold text-stone-600">過去帳</h1>
           <p className="text-sm text-stone-500 mt-1">没年月日が登録されている故人の一覧</p>
         </div>
       </div>

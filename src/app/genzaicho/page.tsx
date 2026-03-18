@@ -65,7 +65,7 @@ export default function GenzaichoPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-stone-800">現在帳</h1>
+          <h1 className="text-2xl font-bold text-stone-600">現在帳</h1>
           <p className="text-sm text-stone-500 mt-1">在籍中の世帯員一覧</p>
         </div>
       </div>
