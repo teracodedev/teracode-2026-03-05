@@ -40,7 +40,7 @@ export default function RootLayout({
                   href="/danka"
                   className="hover:text-stone-300 transition-colors text-sm font-medium"
                 >
-                  檀家管理
+                  戸主台帳
                 </Link>
                 <Link
                   href="/ceremonies"

@@ -16,7 +16,7 @@ export default function Home() {
         >
           <div className="text-4xl mb-4">👨‍👩‍👧‍👦</div>
           <h2 className="text-xl font-bold text-stone-800 mb-2 group-hover:text-stone-600">
-            檀家管理
+            戸主台帳
           </h2>
           <p className="text-stone-500 text-sm">
             檀家・世帯員の情報を登録・管理します
