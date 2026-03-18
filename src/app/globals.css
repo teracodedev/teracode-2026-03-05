@@ -26,5 +26,5 @@ body {
 }
 
 input, textarea, select {
-  color: var(--foreground);
+  color: #000000;
 }
