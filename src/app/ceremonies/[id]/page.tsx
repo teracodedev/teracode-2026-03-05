@@ -175,7 +175,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
         <Link href="/ceremonies" className="text-stone-400 hover:text-stone-600 text-sm">
           ← 一覧へ
         </Link>
-        <h1 className="text-2xl font-bold text-stone-600">{ceremony.title}</h1>
+        <h1 className="text-2xl font-bold text-amber-700">{ceremony.title}</h1>
         <span
           className={`px-2 py-0.5 rounded-full text-xs font-medium ${
             STATUS_COLORS[ceremony.status] || "bg-stone-100 text-stone-500"

@@ -67,7 +67,7 @@ export default function NewCeremonyPage() {
         <Link href="/ceremonies" className="text-stone-400 hover:text-stone-600 text-sm">
           ← 一覧へ
         </Link>
-        <h1 className="text-2xl font-bold text-stone-600">法要・行事新規登録</h1>
+        <h1 className="text-2xl font-bold text-amber-700">法要・行事新規登録</h1>
       </div>
 
       {error && (
