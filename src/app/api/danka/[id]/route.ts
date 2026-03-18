@@ -30,7 +30,7 @@ export async function GET(_request: NextRequest, { params }: Params) {
     return NextResponse.json(danka);
   } catch (error) {
     console.error(`GET /api/danka/${id} error:`, error);
-    return NextResponse.json({ error: "データの取得に失敗しました" }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message || "エラーが発生しました" }, { status: 500 });
   }
 }
 
@@ -81,7 +81,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     return NextResponse.json(danka);
   } catch (error) {
     console.error(`PUT /api/danka/${id} error:`, error);
-    return NextResponse.json({ error: "更新に失敗しました" }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message || "エラーが発生しました" }, { status: 500 });
   }
 }
 
@@ -98,6 +98,6 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
     return NextResponse.json({ message: "削除しました" });
   } catch (error) {
     console.error(`DELETE /api/danka/${id} error:`, error);
-    return NextResponse.json({ error: "削除に失敗しました" }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message || "エラーが発生しました" }, { status: 500 });
   }
 }

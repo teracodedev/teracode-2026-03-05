@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(ceremonies);
   } catch (error) {
     console.error("GET /api/ceremonies error:", error);
-    return NextResponse.json({ error: "データの取得に失敗しました" }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message || "エラーが発生しました" }, { status: 500 });
   }
 }
 
@@ -80,6 +80,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(ceremony, { status: 201 });
   } catch (error) {
     console.error("POST /api/ceremonies error:", error);
-    return NextResponse.json({ error: "登録に失敗しました" }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message || "エラーが発生しました" }, { status: 500 });
   }
 }
