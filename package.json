@@ -6,7 +6,8 @@
     "dev": "next dev -H 0.0.0.0 -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "update-uuid": "npx prisma db execute --file scripts/update-uuid.sql"
   },
   "dependencies": {
     "@prisma/client": "^6.19.2",
