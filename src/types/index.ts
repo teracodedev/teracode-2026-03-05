@@ -1,5 +1,5 @@
 export interface DankaWithMembers {
-  id: number;
+  id: string;
   dankaCode: string;
   familyName: string;
   givenName: string;
@@ -16,8 +16,8 @@ export interface DankaWithMembers {
   createdAt: Date;
   updatedAt: Date;
   members: {
-    id: number;
-    dankaId: number;
+    id: string;
+    dankaId: string;
     name: string;
     nameKana: string | null;
     relation: string | null;

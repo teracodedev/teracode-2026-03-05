@@ -6,10 +6,7 @@ type Params = { params: Promise<{ id: string }> };
 // 参加者追加
 export async function POST(request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const ceremonyId = parseInt(id);
-  if (isNaN(ceremonyId)) {
-    return NextResponse.json({ error: "不正なID" }, { status: 400 });
-  }
+  const ceremonyId = id;
 
   try {
     const body = await request.json();

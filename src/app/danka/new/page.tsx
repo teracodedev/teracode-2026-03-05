@@ -19,7 +19,6 @@ export default function NewDankaPage() {
   const [error, setError] = useState("");
 
   const [form, setForm] = useState({
-    dankaCode: "",
     familyName: "",
     givenName: "",
     familyNameKana: "",
@@ -98,21 +97,6 @@ export default function NewDankaPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6 space-y-4">
           <h2 className="font-semibold text-stone-700">基本情報</h2>
-
-          <div>
-            <label className="block text-sm font-medium text-stone-600 mb-1">
-              檀家番号 <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="dankaCode"
-              value={form.dankaCode}
-              onChange={handleChange}
-              required
-              placeholder="例: D001"
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
-            />
-          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
