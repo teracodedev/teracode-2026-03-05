@@ -33,11 +33,7 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: [
-        { danka: { familyNameKana: "asc" } },
-        { danka: { familyName: "asc" } },
-        { id: "asc" },
-      ],
+      orderBy: { id: "asc" },
     });
 
     return NextResponse.json(records);

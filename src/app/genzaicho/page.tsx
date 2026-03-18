@@ -48,7 +48,7 @@ export default function GenzaichoPage() {
       if (query) params.set("q", query);
       const res = await fetch(`/api/genzaicho?${params}`);
       const data = await res.json();
-      setRecords(data);
+      setRecords(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
     } finally {

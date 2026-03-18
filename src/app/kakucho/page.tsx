@@ -39,7 +39,7 @@ export default function KakuchoPage() {
       if (query) params.set("q", query);
       const res = await fetch(`/api/kakucho?${params}`);
       const data = await res.json();
-      setRecords(data);
+      setRecords(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
     } finally {
