@@ -67,7 +67,7 @@ export default function KakuchoPage() {
           placeholder="法名・俗名・檀家名で検索..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 border border-stone-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+          className="flex-1 border border-stone-300 rounded-lg px-4 py-2 text-sm text-stone-800 bg-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400"
         />
       </div>
 
