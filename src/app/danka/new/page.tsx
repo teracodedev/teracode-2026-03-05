@@ -302,7 +302,7 @@ export default function NewDankaPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-stone-500 mb-1">戒名（法名）</label>
+                  <label className="block text-xs text-stone-500 mb-1">法名</label>
                   <input
                     type="text"
                     value={member.dharmaName}

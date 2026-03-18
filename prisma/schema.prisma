@@ -44,7 +44,7 @@ model DankaMember {
   relation      String?   // 続柄（世帯主、妻、子など）
   birthDate     DateTime? // 生年月日
   deathDate     DateTime? // 没年月日
-  dharmaName    String?   // 戒名（法名）
+  dharmaName    String?   // 法名
   note          String?   // 備考
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

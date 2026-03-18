@@ -64,7 +64,7 @@ export default function KakuchoPage() {
       <div className="flex gap-4 items-center">
         <input
           type="text"
-          placeholder="戒名・俗名・檀家名で検索..."
+          placeholder="法名・俗名・檀家名で検索..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="flex-1 border border-stone-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
@@ -85,7 +85,7 @@ export default function KakuchoPage() {
           <table className="w-full text-sm">
             <thead className="bg-stone-50 border-b border-stone-200">
               <tr>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">戒名（法名）</th>
+                <th className="text-left px-4 py-3 text-stone-600 font-medium">法名</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">俗名</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">没年月日</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">生年月日</th>

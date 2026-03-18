@@ -83,7 +83,7 @@ function MemberFormFields({ form, onChange }: { form: MemberForm; onChange: (f: 
         <input type="text" value={form.relation} onChange={(e) => set("relation", e.target.value)} placeholder="妻・子など" className={cls} />
       </div>
       <div>
-        <label className="block text-xs text-stone-500 mb-1">戒名（法名）</label>
+        <label className="block text-xs text-stone-500 mb-1">法名</label>
         <input type="text" value={form.dharmaName} onChange={(e) => set("dharmaName", e.target.value)} className={cls} />
       </div>
       <div>
@@ -321,7 +321,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
                       {member.nameKana && <div><dt className="inline">カナ: </dt><dd className="inline">{member.nameKana}</dd></div>}
                       {member.birthDate && <div><dt className="inline">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>}
                       {member.deathDate && <div><dt className="inline">没年月日: </dt><dd className="inline">{formatDate(member.deathDate)}</dd></div>}
-                      {member.dharmaName && <div><dt className="inline">戒名: </dt><dd className="inline">{member.dharmaName}</dd></div>}
+                      {member.dharmaName && <div><dt className="inline">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>}
                     </dl>
                   </>
                 )}
