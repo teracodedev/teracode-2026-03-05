@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const runtime = "nodejs";
+
 // 檀家一覧取得
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;

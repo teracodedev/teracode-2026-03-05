@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const runtime = "nodejs";
+
 // 過去帳一覧取得（没年月日が設定されている世帯員）
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;

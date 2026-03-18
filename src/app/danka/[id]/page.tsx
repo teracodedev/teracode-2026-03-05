@@ -112,7 +112,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
   const [addForm, setAddForm] = useState<MemberForm>(emptyMemberForm);
   const [addSubmitting, setAddSubmitting] = useState(false);
   const [addError, setAddError] = useState("");
-  const [editingMemberId, setEditingMemberId] = useState<number | null>(null);
+  const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<MemberForm>(emptyMemberForm);
   const [editSubmitting, setEditSubmitting] = useState(false);
   const [editError, setEditError] = useState("");
@@ -169,7 +169,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
     setEditError("");
   };
 
-  const handleEditMember = async (e: React.FormEvent, memberId: number) => {
+  const handleEditMember = async (e: React.FormEvent, memberId: string) => {
     e.preventDefault();
     setEditSubmitting(true);
     setEditError("");
@@ -187,7 +187,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
     finally { setEditSubmitting(false); }
   };
 
-  const handleDeleteMember = async (memberId: number, memberName: string) => {
+  const handleDeleteMember = async (memberId: string, memberName: string) => {
     if (!confirm(`「${memberName}」を削除してもよろしいですか？`)) return;
     try {
       await fetch(`/api/danka/${id}/members/${memberId}`, { method: "DELETE" });

@@ -3,16 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -H 0.0.0.0 -p 3000",
+    "dev": "next dev --webpack -H 0.0.0.0 -p 3000",
     "build": "next build",
-<<<<<<< HEAD
     "start": "next start -H 0.0.0.0 -p 3000",
-    "lint": "eslint"
-=======
-    "start": "next start",
     "lint": "eslint",
     "update-uuid": "npx prisma db execute --file scripts/update-uuid.sql"
->>>>>>> 56a96afa189021e9b6e78942c46f70b0d82fa94a
   },
   "dependencies": {
     "@prisma/client": "^6.19.2",

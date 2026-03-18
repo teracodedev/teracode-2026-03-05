@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const runtime = "nodejs";
+
 type Params = { params: Promise<{ id: string; memberId: string }> };
 
 // 世帯員更新
 export async function PUT(request: NextRequest, { params }: Params) {
   const { memberId } = await params;
-  const id = parseInt(memberId);
-  if (isNaN(id)) {
-    return NextResponse.json({ error: "不正なID" }, { status: 400 });
-  }
+  const id = memberId;
 
   try {
     const body = await request.json();
@@ -42,10 +41,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 // 世帯員削除
 export async function DELETE(_request: NextRequest, { params }: Params) {
   const { memberId } = await params;
-  const id = parseInt(memberId);
-  if (isNaN(id)) {
-    return NextResponse.json({ error: "不正なID" }, { status: 400 });
-  }
+  const id = memberId;
 
   try {
     await prisma.dankaMember.delete({ where: { id } });

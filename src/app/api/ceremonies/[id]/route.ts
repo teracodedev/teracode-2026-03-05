@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const runtime = "nodejs";
+
 type Params = { params: Promise<{ id: string }> };
 
 // 法要詳細取得
@@ -49,6 +51,14 @@ export async function PUT(request: NextRequest, { params }: Params) {
       note,
     } = body;
 
+    const maxAttendeesNum =
+      typeof maxAttendees === "number"
+        ? maxAttendees
+        : typeof maxAttendees === "string"
+          ? parseInt(maxAttendees, 10)
+          : undefined;
+    const feeNum = typeof fee === "number" ? fee : typeof fee === "string" ? parseInt(fee, 10) : undefined;
+
     const ceremony = await prisma.ceremony.update({
       where: { id: ceremonyId },
       data: {
@@ -58,8 +68,8 @@ export async function PUT(request: NextRequest, { params }: Params) {
         endAt: endAt ? new Date(endAt) : null,
         location: location || null,
         description: description || null,
-        maxAttendees: maxAttendees ? parseInt(maxAttendees) : null,
-        fee: fee ? parseInt(fee) : null,
+        maxAttendees: maxAttendeesNum ?? null,
+        fee: feeNum ?? null,
         status,
         note: note || null,
       },

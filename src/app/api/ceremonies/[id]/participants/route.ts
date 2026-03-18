@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const runtime = "nodejs";
+
 type Params = { params: Promise<{ id: string }> };
 
 // 参加者追加
@@ -12,24 +14,29 @@ export async function POST(request: NextRequest, { params }: Params) {
     const body = await request.json();
     const { dankaId, attendees, offering, note } = body;
 
-    if (!dankaId) {
+    if (typeof ceremonyId !== "string" || !ceremonyId || typeof dankaId !== "string" || !dankaId) {
       return NextResponse.json({ error: "檀家IDは必須です" }, { status: 400 });
     }
 
+    const attendeesNum =
+      typeof attendees === "number" ? attendees : typeof attendees === "string" ? parseInt(attendees, 10) : undefined;
+    const offeringNum =
+      typeof offering === "number" ? offering : typeof offering === "string" ? parseInt(offering, 10) : undefined;
+
     const participant = await prisma.ceremonyParticipant.upsert({
       where: {
-        ceremonyId_dankaId: { ceremonyId, dankaId: parseInt(dankaId) },
+        ceremonyId_dankaId: { ceremonyId, dankaId },
       },
       update: {
-        attendees: attendees ? parseInt(attendees) : 1,
-        offering: offering ? parseInt(offering) : null,
+        attendees: attendeesNum ?? 1,
+        offering: offeringNum ?? null,
         note: note || null,
       },
       create: {
         ceremonyId,
-        dankaId: parseInt(dankaId),
-        attendees: attendees ? parseInt(attendees) : 1,
-        offering: offering ? parseInt(offering) : null,
+        dankaId,
+        attendees: attendeesNum ?? 1,
+        offering: offeringNum ?? null,
         note: note || null,
       },
       include: { danka: true },
@@ -45,18 +52,18 @@ export async function POST(request: NextRequest, { params }: Params) {
 // 参加者削除
 export async function DELETE(request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const ceremonyId = parseInt(id);
+  const ceremonyId = id;
   const searchParams = request.nextUrl.searchParams;
   const dankaId = searchParams.get("dankaId");
 
-  if (isNaN(ceremonyId) || !dankaId) {
+  if (!ceremonyId || !dankaId) {
     return NextResponse.json({ error: "不正なパラメータ" }, { status: 400 });
   }
 
   try {
     await prisma.ceremonyParticipant.delete({
       where: {
-        ceremonyId_dankaId: { ceremonyId, dankaId: parseInt(dankaId) },
+        ceremonyId_dankaId: { ceremonyId, dankaId },
       },
     });
 
