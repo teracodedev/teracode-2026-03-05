@@ -39,6 +39,7 @@ interface DankaDetail {
   phone1: string | null;
   phone2: string | null;
   email: string | null;
+  domicile: string | null;
   note: string | null;
   joinedAt: string | null;
   leftAt: string | null;
@@ -71,7 +72,7 @@ const emptyMemberForm = {
 };
 
 type MemberForm = typeof emptyMemberForm;
-type TabId = "info" | "genzaicho" | "kakucho";
+type TabId = "info" | "detail" | "genzaicho" | "kakucho";
 
 function MemberFormFields({ form, onChange }: { form: MemberForm; onChange: (f: MemberForm) => void }) {
   const set = (k: keyof MemberForm, v: string) => onChange({ ...form, [k]: v });
@@ -306,6 +307,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
 
   const tabs: { id: TabId; label: string; count?: number }[] = [
     { id: "info", label: "基本情報" },
+    { id: "detail", label: "戸主詳細" },
     { id: "genzaicho", label: "現在帳", count: livingMembers.length },
     { id: "kakucho", label: "過去帳", count: deceasedMembers.length },
   ];
@@ -415,6 +417,18 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* 戸主詳細タブ */}
+      {activeTab === "detail" && (
+        <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
+          <dl className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
+            <div className="col-span-2">
+              <dt className="text-stone-400 mb-1">本籍地</dt>
+              <dd className="text-stone-700">{danka.domicile || "-"}</dd>
+            </div>
+          </dl>
         </div>
       )}
 

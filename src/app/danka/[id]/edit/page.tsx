@@ -16,6 +16,7 @@ interface DankaForm {
   phone1: string;
   phone2: string;
   email: string;
+  domicile: string;
   note: string;
   joinedAt: string;
   leftAt: string;
@@ -46,6 +47,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
     phone1: "",
     phone2: "",
     email: "",
+    domicile: "",
     note: "",
     joinedAt: "",
     leftAt: "",
@@ -68,6 +70,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
           phone1: data.phone1 || "",
           phone2: data.phone2 || "",
           email: data.email || "",
+          domicile: data.domicile || "",
           note: data.note || "",
           joinedAt: toDateInput(data.joinedAt),
           leftAt: toDateInput(data.leftAt),
@@ -262,6 +265,18 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-stone-600 mb-1">本籍地</label>
+            <input
+              type="text"
+              name="domicile"
+              value={form.domicile}
+              onChange={handleChange}
+              placeholder="東京都千代田区〇〇番地"
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">

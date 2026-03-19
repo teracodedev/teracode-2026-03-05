@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
       phone1,
       phone2,
       email,
+      domicile,
       note,
       joinedAt,
       members,
@@ -80,6 +81,7 @@ export async function POST(request: NextRequest) {
         phone1: phone1 || null,
         phone2: phone2 || null,
         email: email || null,
+        domicile: domicile || null,
         note: note || null,
         joinedAt: joinedAt ? new Date(joinedAt) : null,
         members: members?.length

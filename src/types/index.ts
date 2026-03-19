@@ -12,6 +12,7 @@ export interface DankaWithMembers {
   phone1: string | null;
   phone2: string | null;
   email: string | null;
+  domicile: string | null;
   note: string | null;
   joinedAt: Date | null;
   leftAt: Date | null;

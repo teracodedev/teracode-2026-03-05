@@ -25,6 +25,7 @@ model Danka {
   phone1        String?   // 電話番号1
   phone2        String?   // 電話番号2
   email         String?   // メールアドレス
+  domicile      String?   // 本籍地
   note          String?   // 備考
   joinedAt      DateTime? // 入檀日
   leftAt        DateTime? // 離檀日
