@@ -325,6 +325,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
                       </div>
                     </div>
                     <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-stone-500">
+                      <div className="col-span-2"><dt className="inline">UUID: </dt><dd className="inline font-mono break-all">{member.id}</dd></div>
                       {member.nameKana && <div><dt className="inline">カナ: </dt><dd className="inline">{member.nameKana}</dd></div>}
                       {member.birthDate && <div><dt className="inline">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>}
                       {member.deathDate && <div><dt className="inline">没年月日: </dt><dd className="inline">{formatDate(member.deathDate)}</dd></div>}
