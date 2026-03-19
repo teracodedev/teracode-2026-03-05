@@ -84,6 +84,17 @@ enum CeremonyStatus {
   CANCELLED      // 中止
 }
 
+// ユーザー（ログインアカウント）
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // 法要参加者
 model CeremonyParticipant {
   id            String    @id @default(uuid())

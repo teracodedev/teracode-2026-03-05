@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { auth, signOut } from "@/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,11 +19,13 @@ export const metadata: Metadata = {
   description: "檀家・法要を管理するシステム",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html lang="ja">
       <body
@@ -35,7 +38,7 @@ export default function RootLayout({
                 <span className="text-2xl">⛩</span>
                 <span className="font-bold text-xl tracking-wide">テラコード</span>
               </Link>
-              <div className="flex gap-6">
+              <div className="flex items-center gap-6">
                 <Link
                   href="/danka"
                   className="hover:text-stone-300 transition-colors text-sm font-medium"
@@ -60,6 +63,34 @@ export default function RootLayout({
                 >
                   法要・行事
                 </Link>
+                {session?.user && (
+                  <>
+                    {session.user.isAdmin && (
+                      <Link
+                        href="/admin/accounts"
+                        className="hover:text-stone-300 transition-colors text-sm font-medium"
+                      >
+                        アカウント管理
+                      </Link>
+                    )}
+                    <div className="flex items-center gap-3 border-l border-stone-600 pl-6">
+                      <span className="text-stone-400 text-sm">{session.user.name}</span>
+                      <form
+                        action={async () => {
+                          "use server";
+                          await signOut({ redirectTo: "/login" });
+                        }}
+                      >
+                        <button
+                          type="submit"
+                          className="text-sm text-stone-300 hover:text-white transition-colors"
+                        >
+                          ログアウト
+                        </button>
+                      </form>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
