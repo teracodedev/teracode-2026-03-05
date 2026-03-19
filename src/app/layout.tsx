@@ -43,10 +43,10 @@ export default function RootLayout({
                   戸主台帳
                 </Link>
                 <Link
-                  href="/ceremonies"
+                  href="/kakucho"
                   className="hover:text-stone-300 transition-colors text-sm font-medium"
                 >
-                  法要・行事
+                  過去帳
                 </Link>
                 <Link
                   href="/genzaicho"
@@ -55,10 +55,10 @@ export default function RootLayout({
                   現在帳
                 </Link>
                 <Link
-                  href="/kakucho"
+                  href="/ceremonies"
                   className="hover:text-stone-300 transition-colors text-sm font-medium"
                 >
-                  過去帳
+                  法要・行事
                 </Link>
               </div>
             </div>
