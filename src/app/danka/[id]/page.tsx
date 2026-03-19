@@ -112,7 +112,7 @@ function MemberFormFields({ form, onChange }: { form: MemberForm; onChange: (f: 
         <input type="date" value={form.birthDate} onChange={(e) => set("birthDate", e.target.value)} className={cls} />
       </div>
       <div>
-        <label className="block text-xs text-stone-500 mb-1">没年月日</label>
+        <label className="block text-xs text-stone-500 mb-1">命日</label>
         <input type="date" value={form.deathDate} onChange={(e) => set("deathDate", e.target.value)} className={cls} />
       </div>
       <div className="col-span-2">
@@ -186,7 +186,7 @@ function MemberCard({
             <div className="col-span-2"><dt className="inline">UUID: </dt><dd className="inline font-mono break-all">{member.id}</dd></div>
             {member.relation && <div><dt className="inline">続柄: </dt><dd className="inline">{member.relation}</dd></div>}
             {member.birthDate && <div><dt className="inline">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>}
-            {member.deathDate && <div><dt className="inline">没年月日: </dt><dd className="inline">{formatDate(member.deathDate)}</dd></div>}
+            {member.deathDate && <div><dt className="inline">命日: </dt><dd className="inline">{formatDate(member.deathDate)}</dd></div>}
             {member.dharmaName && <div><dt className="inline">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>}
             {member.dharmaNameKana && <div><dt className="inline">法名（カナ）: </dt><dd className="inline">{member.dharmaNameKana}</dd></div>}
           </dl>

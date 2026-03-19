@@ -58,7 +58,7 @@ export default function Home() {
             過去帳
           </h2>
           <p className="text-stone-500 text-sm">
-            故人の法名・没年月日を記録します
+            故人の法名・命日を記録します
           </p>
         </Link>
       </div>

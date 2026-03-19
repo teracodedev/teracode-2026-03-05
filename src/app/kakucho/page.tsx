@@ -60,7 +60,7 @@ export default function KakuchoPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-amber-700">過去帳</h1>
-          <p className="text-sm text-stone-500 mt-1">没年月日が登録されている故人の一覧</p>
+          <p className="text-sm text-stone-500 mt-1">命日が登録されている故人の一覧</p>
         </div>
       </div>
 
@@ -80,7 +80,7 @@ export default function KakuchoPage() {
         <div className="text-center py-12 text-stone-400">
           <p>過去帳の記録がありません</p>
           <p className="text-xs mt-2">
-            戸主の世帯員に没年月日を登録すると過去帳に表示されます
+            戸主の世帯員に命日を登録すると過去帳に表示されます
           </p>
         </div>
       ) : (
@@ -91,7 +91,7 @@ export default function KakuchoPage() {
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">法名</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">俗名（姓）</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">俗名（名）</th>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">没年月日</th>
+                <th className="text-left px-4 py-3 text-stone-600 font-medium">命日</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">生年月日</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">続柄</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">戸主</th>
