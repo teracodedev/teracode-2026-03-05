@@ -184,6 +184,7 @@ function MemberCard({
           </div>
           <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-stone-500">
             <div className="col-span-2"><dt className="inline">UUID: </dt><dd className="inline font-mono break-all">{member.id}</dd></div>
+            {member.relation && <div><dt className="inline">続柄: </dt><dd className="inline">{member.relation}</dd></div>}
             {member.birthDate && <div><dt className="inline">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>}
             {member.deathDate && <div><dt className="inline">没年月日: </dt><dd className="inline">{formatDate(member.deathDate)}</dd></div>}
             {member.dharmaName && <div><dt className="inline">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>}
