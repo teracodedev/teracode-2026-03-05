@@ -15,7 +15,7 @@ interface Danka {
   address3: string | null;
   phone: string | null;
   isActive: boolean;
-  members: { id: number; name: string; relation: string | null }[];
+  members: { id: string; familyName: string; givenName: string | null; relation: string | null }[];
 }
 
 export default function DankaPage() {
