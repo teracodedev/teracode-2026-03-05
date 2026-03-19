@@ -13,7 +13,8 @@ interface Danka {
   address1: string | null;
   address2: string | null;
   address3: string | null;
-  phone: string | null;
+  phone1: string | null;
+  phone2: string | null;
   isActive: boolean;
   members: { id: string; familyName: string; givenName: string | null; relation: string | null }[];
 }
@@ -131,7 +132,10 @@ export default function DankaPage() {
                   <td className="px-4 py-3 text-stone-600">
                     {[danka.address1, danka.address2, danka.address3].filter(Boolean).join(" ") || "-"}
                   </td>
-                  <td className="px-4 py-3 text-stone-600">{danka.phone || "-"}</td>
+                  <td className="px-4 py-3 text-stone-600">
+                    {danka.phone1 || "-"}
+                    {danka.phone2 && <div className="text-xs text-stone-400">{danka.phone2}</div>}
+                  </td>
                   <td className="px-4 py-3 text-stone-600">{danka.members.length}名</td>
                   <td className="px-4 py-3">
                     <span

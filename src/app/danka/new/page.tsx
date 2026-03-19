@@ -30,7 +30,8 @@ export default function NewDankaPage() {
     address1: "",
     address2: "",
     address3: "",
-    phone: "",
+    phone1: "",
+    phone2: "",
     email: "",
     note: "",
     joinedAt: "",
@@ -213,16 +214,30 @@ export default function NewDankaPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-stone-600 mb-1">電話番号</label>
+              <label className="block text-sm font-medium text-stone-600 mb-1">電話番号1</label>
               <input
                 type="tel"
-                name="phone"
-                value={form.phone}
+                name="phone1"
+                value={form.phone1}
                 onChange={handleChange}
                 placeholder="03-1234-5678"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">電話番号2</label>
+              <input
+                type="tel"
+                name="phone2"
+                value={form.phone2}
+                onChange={handleChange}
+                placeholder="090-1234-5678"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-stone-600 mb-1">メールアドレス</label>
               <input

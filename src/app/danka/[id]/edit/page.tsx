@@ -13,7 +13,8 @@ interface DankaForm {
   address1: string;
   address2: string;
   address3: string;
-  phone: string;
+  phone1: string;
+  phone2: string;
   email: string;
   note: string;
   joinedAt: string;
@@ -42,7 +43,8 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
     address1: "",
     address2: "",
     address3: "",
-    phone: "",
+    phone1: "",
+    phone2: "",
     email: "",
     note: "",
     joinedAt: "",
@@ -63,7 +65,8 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
           address1: data.address1 || "",
           address2: data.address2 || "",
           address3: data.address3 || "",
-          phone: data.phone || "",
+          phone1: data.phone1 || "",
+          phone2: data.phone2 || "",
           email: data.email || "",
           note: data.note || "",
           joinedAt: toDateInput(data.joinedAt),
@@ -227,15 +230,28 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-stone-600 mb-1">電話番号</label>
+              <label className="block text-sm font-medium text-stone-600 mb-1">電話番号1</label>
               <input
                 type="tel"
-                name="phone"
-                value={form.phone}
+                name="phone1"
+                value={form.phone1}
                 onChange={handleChange}
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">電話番号2</label>
+              <input
+                type="tel"
+                name="phone2"
+                value={form.phone2}
+                onChange={handleChange}
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-stone-600 mb-1">メールアドレス</label>
               <input

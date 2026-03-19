@@ -36,7 +36,8 @@ interface DankaDetail {
   address1: string | null;
   address2: string | null;
   address3: string | null;
-  phone: string | null;
+  phone1: string | null;
+  phone2: string | null;
   email: string | null;
   note: string | null;
   joinedAt: string | null;
@@ -379,7 +380,8 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
                 {[danka.address1, danka.address2, danka.address3].filter(Boolean).join(" ") || "-"}
               </dd>
             </div>
-            <div><dt className="text-stone-400">電話番号</dt><dd className="text-stone-700">{danka.phone || "-"}</dd></div>
+            <div><dt className="text-stone-400">電話番号1</dt><dd className="text-stone-700">{danka.phone1 || "-"}</dd></div>
+          <div><dt className="text-stone-400">電話番号2</dt><dd className="text-stone-700">{danka.phone2 || "-"}</dd></div>
             <div><dt className="text-stone-400">メールアドレス</dt><dd className="text-stone-700">{danka.email || "-"}</dd></div>
             <div><dt className="text-stone-400">入檀日</dt><dd className="text-stone-700">{formatDate(danka.joinedAt)}</dd></div>
             {danka.leftAt && (
