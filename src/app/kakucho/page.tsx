@@ -8,7 +8,8 @@ interface KakuchoRecord {
   dankaId: string;
   familyName: string;
   givenName: string | null;
-  nameKana: string | null;
+  familyNameKana: string | null;
+  givenNameKana: string | null;
   relation: string | null;
   birthDate: string | null;
   deathDate: string | null;
@@ -108,8 +109,10 @@ export default function KakuchoPage() {
                   </td>
                   <td className="px-4 py-3 text-stone-700">
                     {[record.familyName, record.givenName].filter(Boolean).join(" ")}
-                    {record.nameKana && (
-                      <div className="text-xs text-stone-400">{record.nameKana}</div>
+                    {(record.familyNameKana || record.givenNameKana) && (
+                      <div className="text-xs text-stone-400">
+                        {[record.familyNameKana, record.givenNameKana].filter(Boolean).join(" ")}
+                      </div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-stone-600">{formatDate(record.deathDate)}</td>

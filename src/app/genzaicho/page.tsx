@@ -6,8 +6,10 @@ import Link from "next/link";
 interface GenzaichoRecord {
   id: string;
   dankaId: string;
-  name: string;
-  nameKana: string | null;
+  familyName: string;
+  givenName: string | null;
+  familyNameKana: string | null;
+  givenNameKana: string | null;
   relation: string | null;
   birthDate: string | null;
   note: string | null;
@@ -108,9 +110,11 @@ export default function GenzaichoPage() {
               {records.map((record) => (
                 <tr key={record.id} className="hover:bg-stone-50">
                   <td className="px-4 py-3 font-medium text-stone-700">
-                    {record.name}
-                    {record.nameKana && (
-                      <div className="text-xs text-stone-400">{record.nameKana}</div>
+                    {[record.familyName, record.givenName].filter(Boolean).join(" ")}
+                    {(record.familyNameKana || record.givenNameKana) && (
+                      <div className="text-xs text-stone-400">
+                        {[record.familyNameKana, record.givenNameKana].filter(Boolean).join(" ")}
+                      </div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-stone-600">{record.relation || "-"}</td>

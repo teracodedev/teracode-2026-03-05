@@ -85,7 +85,8 @@ export async function POST(request: NextRequest) {
               create: members.map((m: {
                 familyName: string;
                 givenName?: string;
-                nameKana?: string;
+                familyNameKana?: string;
+                givenNameKana?: string;
                 relation?: string;
                 birthDate?: string;
                 dharmaName?: string;
@@ -94,7 +95,8 @@ export async function POST(request: NextRequest) {
               }) => ({
                 familyName: m.familyName,
                 givenName: m.givenName || null,
-                nameKana: m.nameKana || null,
+                familyNameKana: m.familyNameKana || null,
+                givenNameKana: m.givenNameKana || null,
                 relation: m.relation || null,
                 birthDate: m.birthDate ? new Date(m.birthDate) : null,
                 dharmaName: m.dharmaName || null,

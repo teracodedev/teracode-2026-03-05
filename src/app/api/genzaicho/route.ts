@@ -15,10 +15,13 @@ export async function GET(request: NextRequest) {
         danka: { isActive: true },
         OR: query
           ? [
-              { name: { contains: query, mode: "insensitive" } },
-              { nameKana: { contains: query, mode: "insensitive" } },
+              { familyName: { contains: query, mode: "insensitive" } },
+              { givenName: { contains: query, mode: "insensitive" } },
+              { familyNameKana: { contains: query, mode: "insensitive" } },
+              { givenNameKana: { contains: query, mode: "insensitive" } },
               { relation: { contains: query, mode: "insensitive" } },
               { danka: { familyName: { contains: query, mode: "insensitive" } } },
+              { danka: { givenName: { contains: query, mode: "insensitive" } } },
               { danka: { dankaCode: { contains: query, mode: "insensitive" } } },
               { danka: { address1: { contains: query, mode: "insensitive" } } },
               { danka: { address2: { contains: query, mode: "insensitive" } } },

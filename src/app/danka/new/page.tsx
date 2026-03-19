@@ -7,7 +7,8 @@ import Link from "next/link";
 interface MemberForm {
   familyName: string;
   givenName: string;
-  nameKana: string;
+  familyNameKana: string;
+  givenNameKana: string;
   relation: string;
   birthDate: string;
   dharmaName: string;
@@ -42,7 +43,10 @@ export default function NewDankaPage() {
   };
 
   const addMember = () => {
-    setMembers([...members, { familyName: "", givenName: "", nameKana: "", relation: "", birthDate: "", dharmaName: "", dharmaNameKana: "", note: "" }]);
+    setMembers([...members, {
+      familyName: "", givenName: "", familyNameKana: "", givenNameKana: "",
+      relation: "", birthDate: "", dharmaName: "", dharmaNameKana: "", note: "",
+    }]);
   };
 
   const updateMember = (index: number, field: keyof MemberForm, value: string) => {
@@ -304,13 +308,23 @@ export default function NewDankaPage() {
                     className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>
-                <div className="col-span-2">
-                  <label className="block text-xs text-stone-500 mb-1">氏名（カナ）</label>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">姓（カナ）</label>
                   <input
                     type="text"
-                    value={member.nameKana}
-                    onChange={(e) => updateMember(index, "nameKana", e.target.value)}
-                    placeholder="ヤマダ ハナコ"
+                    value={member.familyNameKana}
+                    onChange={(e) => updateMember(index, "familyNameKana", e.target.value)}
+                    placeholder="ヤマダ"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">名（カナ）</label>
+                  <input
+                    type="text"
+                    value={member.givenNameKana}
+                    onChange={(e) => updateMember(index, "givenNameKana", e.target.value)}
+                    placeholder="ハナコ"
                     className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>

@@ -8,7 +8,8 @@ interface Member {
   id: string;
   familyName: string;
   givenName: string | null;
-  nameKana: string | null;
+  familyNameKana: string | null;
+  givenNameKana: string | null;
   relation: string | null;
   birthDate: string | null;
   deathDate: string | null;
@@ -64,7 +65,8 @@ function toInputDate(dateStr: string | null): string {
 }
 
 const emptyMemberForm = {
-  familyName: "", givenName: "", nameKana: "", relation: "", birthDate: "", deathDate: "", dharmaName: "", dharmaNameKana: "", note: "",
+  familyName: "", givenName: "", familyNameKana: "", givenNameKana: "",
+  relation: "", birthDate: "", deathDate: "", dharmaName: "", dharmaNameKana: "", note: "",
 };
 
 type MemberForm = typeof emptyMemberForm;
@@ -82,9 +84,13 @@ function MemberFormFields({ form, onChange }: { form: MemberForm; onChange: (f: 
         <label className="block text-xs text-stone-500 mb-1">名</label>
         <input type="text" value={form.givenName} onChange={(e) => set("givenName", e.target.value)} placeholder="花子" className={cls} />
       </div>
-      <div className="col-span-2">
-        <label className="block text-xs text-stone-500 mb-1">氏名（カナ）</label>
-        <input type="text" value={form.nameKana} onChange={(e) => set("nameKana", e.target.value)} placeholder="ヤマダ ハナコ" className={cls} />
+      <div>
+        <label className="block text-xs text-stone-500 mb-1">姓（カナ）</label>
+        <input type="text" value={form.familyNameKana} onChange={(e) => set("familyNameKana", e.target.value)} placeholder="ヤマダ" className={cls} />
+      </div>
+      <div>
+        <label className="block text-xs text-stone-500 mb-1">名（カナ）</label>
+        <input type="text" value={form.givenNameKana} onChange={(e) => set("givenNameKana", e.target.value)} placeholder="ハナコ" className={cls} />
       </div>
       <div>
         <label className="block text-xs text-stone-500 mb-1">続柄</label>
@@ -172,7 +178,8 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
     setEditForm({
       familyName: member.familyName,
       givenName: member.givenName || "",
-      nameKana: member.nameKana || "",
+      familyNameKana: member.familyNameKana || "",
+      givenNameKana: member.givenNameKana || "",
       relation: member.relation || "",
       birthDate: toInputDate(member.birthDate),
       deathDate: toInputDate(member.deathDate),
@@ -297,6 +304,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
           <div className="space-y-3">
             {danka.members.map((member) => {
               const displayName = [member.familyName, member.givenName].filter(Boolean).join(" ");
+              const displayKana = [member.familyNameKana, member.givenNameKana].filter(Boolean).join(" ");
               return (
                 <div key={member.id} className="border border-stone-100 rounded-lg p-4 text-sm">
                   {editingMemberId === member.id ? (
@@ -319,7 +327,10 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
                     <>
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
-                          <span className="font-medium text-stone-800">{displayName}</span>
+                          <div>
+                            <span className="font-medium text-stone-800">{displayName}</span>
+                            {displayKana && <div className="text-xs text-stone-400">{displayKana}</div>}
+                          </div>
                           {member.relation && (
                             <span className="text-xs bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full">{member.relation}</span>
                           )}
@@ -340,7 +351,6 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
                       </div>
                       <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-stone-500">
                         <div className="col-span-2"><dt className="inline">UUID: </dt><dd className="inline font-mono break-all">{member.id}</dd></div>
-                        {member.nameKana && <div><dt className="inline">カナ: </dt><dd className="inline">{member.nameKana}</dd></div>}
                         {member.birthDate && <div><dt className="inline">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>}
                         {member.deathDate && <div><dt className="inline">没年月日: </dt><dd className="inline">{formatDate(member.deathDate)}</dd></div>}
                         {member.dharmaName && <div><dt className="inline">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>}

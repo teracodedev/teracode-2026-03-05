@@ -12,7 +12,7 @@ export async function POST(request: NextRequest, { params }: Params) {
 
   try {
     const body = await request.json();
-    const { familyName, givenName, nameKana, relation, birthDate, deathDate, dharmaName, dharmaNameKana, note } = body;
+    const { familyName, givenName, familyNameKana, givenNameKana, relation, birthDate, deathDate, dharmaName, dharmaNameKana, note } = body;
 
     if (!familyName) {
       return NextResponse.json({ error: "姓は必須です" }, { status: 400 });
@@ -23,7 +23,8 @@ export async function POST(request: NextRequest, { params }: Params) {
         dankaId,
         familyName,
         givenName: givenName || null,
-        nameKana: nameKana || null,
+        familyNameKana: familyNameKana || null,
+        givenNameKana: givenNameKana || null,
         relation: relation || null,
         birthDate: birthDate ? new Date(birthDate) : null,
         deathDate: deathDate ? new Date(deathDate) : null,
