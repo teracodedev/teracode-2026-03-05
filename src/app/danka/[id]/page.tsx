@@ -120,6 +120,86 @@ function MemberFormFields({ form, onChange }: { form: MemberForm; onChange: (f: 
   );
 }
 
+function MemberCard({
+  member,
+  isEditing,
+  editForm,
+  editError,
+  editSubmitting,
+  onStartEdit,
+  onCancelEdit,
+  onEditChange,
+  onEditSubmit,
+  onDelete,
+}: {
+  member: Member;
+  isEditing: boolean;
+  editForm: MemberForm;
+  editError: string;
+  editSubmitting: boolean;
+  onStartEdit: () => void;
+  onCancelEdit: () => void;
+  onEditChange: (f: MemberForm) => void;
+  onEditSubmit: (e: React.FormEvent) => void;
+  onDelete: () => void;
+}) {
+  const displayName = [member.familyName, member.givenName].filter(Boolean).join(" ");
+  const displayKana = [member.familyNameKana, member.givenNameKana].filter(Boolean).join(" ");
+
+  return (
+    <div className="border border-stone-100 rounded-lg p-4 text-sm">
+      {isEditing ? (
+        <form onSubmit={onEditSubmit}>
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium text-stone-700">編集中</p>
+            <button type="button" onClick={onCancelEdit}
+              className="text-xs text-stone-400 hover:text-stone-600">キャンセル</button>
+          </div>
+          {editError && <p className="text-red-600 text-xs mt-1">{editError}</p>}
+          <MemberFormFields form={editForm} onChange={onEditChange} />
+          <div className="flex gap-2 mt-3">
+            <button type="submit" disabled={editSubmitting}
+              className="bg-stone-700 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-stone-800 disabled:opacity-50">
+              {editSubmitting ? "保存中..." : "保存する"}
+            </button>
+          </div>
+        </form>
+      ) : (
+        <>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <div>
+                <span className="font-medium text-stone-800">{displayName}</span>
+                {displayKana && <div className="text-xs text-stone-400">{displayKana}</div>}
+              </div>
+              {member.relation && (
+                <span className="text-xs bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full">{member.relation}</span>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <button onClick={onStartEdit}
+                className="text-xs text-stone-500 hover:text-stone-700 border border-stone-200 px-2 py-0.5 rounded">
+                編集
+              </button>
+              <button onClick={onDelete}
+                className="text-xs text-red-400 hover:text-red-600 border border-red-100 px-2 py-0.5 rounded">
+                削除
+              </button>
+            </div>
+          </div>
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-stone-500">
+            <div className="col-span-2"><dt className="inline">UUID: </dt><dd className="inline font-mono break-all">{member.id}</dd></div>
+            {member.birthDate && <div><dt className="inline">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>}
+            {member.deathDate && <div><dt className="inline">没年月日: </dt><dd className="inline">{formatDate(member.deathDate)}</dd></div>}
+            {member.dharmaName && <div><dt className="inline">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>}
+            {member.dharmaNameKana && <div><dt className="inline">法名（カナ）: </dt><dd className="inline">{member.dharmaNameKana}</dd></div>}
+          </dl>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function DankaDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
@@ -226,6 +306,9 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
   if (loading) return <div className="text-center py-12 text-stone-400">読み込み中...</div>;
   if (!danka) return <div className="text-center py-12 text-stone-400">戸主が見つかりません</div>;
 
+  const livingMembers = danka.members.filter((m) => !m.deathDate);
+  const deceasedMembers = danka.members.filter((m) => !!m.deathDate);
+
   return (
     <div className="max-w-3xl space-y-6">
       <div className="flex items-center gap-4">
@@ -247,6 +330,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
         </button>
       </div>
 
+      {/* 基本情報 */}
       <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
         <h2 className="font-semibold text-stone-700 mb-4">基本情報</h2>
         <dl className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
@@ -280,9 +364,13 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
         </dl>
       </div>
 
+      {/* 現在帳（存命の世帯員） */}
       <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-stone-700">世帯員 ({danka.members.length}名)</h2>
+          <h2 className="font-semibold text-stone-700">
+            現在帳
+            <span className="ml-2 text-sm font-normal text-stone-400">存命の世帯員 {livingMembers.length}名</span>
+          </h2>
           <button
             onClick={() => { setShowAddForm(!showAddForm); setAddError(""); setAddForm(emptyMemberForm); }}
             className="text-sm text-stone-600 hover:text-stone-800 border border-stone-300 px-3 py-1 rounded-lg"
@@ -305,73 +393,60 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
           </form>
         )}
 
-        {danka.members.length === 0 && !showAddForm ? (
-          <p className="text-stone-400 text-sm">世帯員が登録されていません</p>
+        {livingMembers.length === 0 && !showAddForm ? (
+          <p className="text-stone-400 text-sm">存命の世帯員が登録されていません</p>
         ) : (
           <div className="space-y-3">
-            {danka.members.map((member) => {
-              const displayName = [member.familyName, member.givenName].filter(Boolean).join(" ");
-              const displayKana = [member.familyNameKana, member.givenNameKana].filter(Boolean).join(" ");
-              return (
-                <div key={member.id} className="border border-stone-100 rounded-lg p-4 text-sm">
-                  {editingMemberId === member.id ? (
-                    <form onSubmit={(e) => handleEditMember(e, member.id)}>
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-stone-700">編集中</p>
-                        <button type="button" onClick={() => setEditingMemberId(null)}
-                          className="text-xs text-stone-400 hover:text-stone-600">キャンセル</button>
-                      </div>
-                      {editError && <p className="text-red-600 text-xs mt-1">{editError}</p>}
-                      <MemberFormFields form={editForm} onChange={setEditForm} />
-                      <div className="flex gap-2 mt-3">
-                        <button type="submit" disabled={editSubmitting}
-                          className="bg-stone-700 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-stone-800 disabled:opacity-50">
-                          {editSubmitting ? "保存中..." : "保存する"}
-                        </button>
-                      </div>
-                    </form>
-                  ) : (
-                    <>
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                          <div>
-                            <span className="font-medium text-stone-800">{displayName}</span>
-                            {displayKana && <div className="text-xs text-stone-400">{displayKana}</div>}
-                          </div>
-                          {member.relation && (
-                            <span className="text-xs bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full">{member.relation}</span>
-                          )}
-                          {member.deathDate && (
-                            <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">故人</span>
-                          )}
-                        </div>
-                        <div className="flex gap-2">
-                          <button onClick={() => startEdit(member)}
-                            className="text-xs text-stone-500 hover:text-stone-700 border border-stone-200 px-2 py-0.5 rounded">
-                            編集
-                          </button>
-                          <button onClick={() => handleDeleteMember(member.id, displayName)}
-                            className="text-xs text-red-400 hover:text-red-600 border border-red-100 px-2 py-0.5 rounded">
-                            削除
-                          </button>
-                        </div>
-                      </div>
-                      <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-stone-500">
-                        <div className="col-span-2"><dt className="inline">UUID: </dt><dd className="inline font-mono break-all">{member.id}</dd></div>
-                        {member.birthDate && <div><dt className="inline">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>}
-                        {member.deathDate && <div><dt className="inline">没年月日: </dt><dd className="inline">{formatDate(member.deathDate)}</dd></div>}
-                        {member.dharmaName && <div><dt className="inline">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>}
-                        {member.dharmaNameKana && <div><dt className="inline">法名（カナ）: </dt><dd className="inline">{member.dharmaNameKana}</dd></div>}
-                      </dl>
-                    </>
-                  )}
-                </div>
-              );
-            })}
+            {livingMembers.map((member) => (
+              <MemberCard
+                key={member.id}
+                member={member}
+                isEditing={editingMemberId === member.id}
+                editForm={editForm}
+                editError={editError}
+                editSubmitting={editSubmitting}
+                onStartEdit={() => startEdit(member)}
+                onCancelEdit={() => setEditingMemberId(null)}
+                onEditChange={setEditForm}
+                onEditSubmit={(e) => handleEditMember(e, member.id)}
+                onDelete={() => handleDeleteMember(member.id, [member.familyName, member.givenName].filter(Boolean).join(" "))}
+              />
+            ))}
           </div>
         )}
       </div>
 
+      {/* 過去帳（故人の世帯員） */}
+      <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
+        <h2 className="font-semibold text-stone-700 mb-4">
+          過去帳
+          <span className="ml-2 text-sm font-normal text-stone-400">故人の世帯員 {deceasedMembers.length}名</span>
+        </h2>
+
+        {deceasedMembers.length === 0 ? (
+          <p className="text-stone-400 text-sm">故人の世帯員が登録されていません</p>
+        ) : (
+          <div className="space-y-3">
+            {deceasedMembers.map((member) => (
+              <MemberCard
+                key={member.id}
+                member={member}
+                isEditing={editingMemberId === member.id}
+                editForm={editForm}
+                editError={editError}
+                editSubmitting={editSubmitting}
+                onStartEdit={() => startEdit(member)}
+                onCancelEdit={() => setEditingMemberId(null)}
+                onEditChange={setEditForm}
+                onEditSubmit={(e) => handleEditMember(e, member.id)}
+                onDelete={() => handleDeleteMember(member.id, [member.familyName, member.givenName].filter(Boolean).join(" "))}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* 参加法要履歴 */}
       {danka.ceremonies.length > 0 && (
         <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
           <h2 className="font-semibold text-stone-700 mb-4">参加法要履歴</h2>

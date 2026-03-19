@@ -98,7 +98,8 @@ export default function GenzaichoPage() {
           <table className="w-full text-sm">
             <thead className="bg-stone-50 border-b border-stone-200">
               <tr>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">氏名</th>
+                <th className="text-left px-4 py-3 text-stone-600 font-medium">姓</th>
+                <th className="text-left px-4 py-3 text-stone-600 font-medium">名</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">続柄</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">生年月日</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">年齢</th>
@@ -110,11 +111,15 @@ export default function GenzaichoPage() {
               {records.map((record) => (
                 <tr key={record.id} className="hover:bg-stone-50">
                   <td className="px-4 py-3 font-medium text-stone-700">
-                    {[record.familyName, record.givenName].filter(Boolean).join(" ")}
-                    {(record.familyNameKana || record.givenNameKana) && (
-                      <div className="text-xs text-stone-400">
-                        {[record.familyNameKana, record.givenNameKana].filter(Boolean).join(" ")}
-                      </div>
+                    {record.familyName}
+                    {record.familyNameKana && (
+                      <div className="text-xs text-stone-400 font-normal">{record.familyNameKana}</div>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-stone-700">
+                    {record.givenName || <span className="text-stone-300">-</span>}
+                    {record.givenNameKana && (
+                      <div className="text-xs text-stone-400">{record.givenNameKana}</div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-stone-600">{record.relation || "-"}</td>

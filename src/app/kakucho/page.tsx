@@ -89,7 +89,8 @@ export default function KakuchoPage() {
             <thead className="bg-stone-50 border-b border-stone-200">
               <tr>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">法名</th>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">俗名</th>
+                <th className="text-left px-4 py-3 text-stone-600 font-medium">俗名（姓）</th>
+                <th className="text-left px-4 py-3 text-stone-600 font-medium">俗名（名）</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">没年月日</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">生年月日</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">続柄</th>
@@ -108,11 +109,15 @@ export default function KakuchoPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-stone-700">
-                    {[record.familyName, record.givenName].filter(Boolean).join(" ")}
-                    {(record.familyNameKana || record.givenNameKana) && (
-                      <div className="text-xs text-stone-400">
-                        {[record.familyNameKana, record.givenNameKana].filter(Boolean).join(" ")}
-                      </div>
+                    {record.familyName}
+                    {record.familyNameKana && (
+                      <div className="text-xs text-stone-400">{record.familyNameKana}</div>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-stone-700">
+                    {record.givenName || <span className="text-stone-300">-</span>}
+                    {record.givenNameKana && (
+                      <div className="text-xs text-stone-400">{record.givenNameKana}</div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-stone-600">{formatDate(record.deathDate)}</td>
