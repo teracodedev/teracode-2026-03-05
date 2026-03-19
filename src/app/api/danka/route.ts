@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
                 relation?: string;
                 birthDate?: string;
                 dharmaName?: string;
+                dharmaNameKana?: string;
                 note?: string;
               }) => ({
                 name: m.name,
@@ -95,6 +96,7 @@ export async function POST(request: NextRequest) {
                 relation: m.relation || null,
                 birthDate: m.birthDate ? new Date(m.birthDate) : null,
                 dharmaName: m.dharmaName || null,
+                dharmaNameKana: m.dharmaNameKana || null,
                 note: m.note || null,
               })),
             }

@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
               { name: { contains: query, mode: "insensitive" } },
               { nameKana: { contains: query, mode: "insensitive" } },
               { dharmaName: { contains: query, mode: "insensitive" } },
+              { dharmaNameKana: { contains: query, mode: "insensitive" } },
               { danka: { familyName: { contains: query, mode: "insensitive" } } },
               { danka: { dankaCode: { contains: query, mode: "insensitive" } } },
             ]

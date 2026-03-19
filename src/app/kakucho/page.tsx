@@ -12,6 +12,7 @@ interface KakuchoRecord {
   birthDate: string | null;
   deathDate: string | null;
   dharmaName: string | null;
+  dharmaNameKana: string | null;
   note: string | null;
   danka: {
     id: string;
@@ -99,6 +100,9 @@ export default function KakuchoPage() {
                   <td className="px-4 py-3 font-medium text-stone-700">
                     {record.dharmaName || (
                       <span className="text-stone-300">未登録</span>
+                    )}
+                    {record.dharmaNameKana && (
+                      <div className="text-xs text-stone-400 font-normal">{record.dharmaNameKana}</div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-stone-700">

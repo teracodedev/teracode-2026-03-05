@@ -12,6 +12,7 @@ interface Member {
   birthDate: string | null;
   deathDate: string | null;
   dharmaName: string | null;
+  dharmaNameKana: string | null;
   note: string | null;
 }
 
@@ -62,7 +63,7 @@ function toInputDate(dateStr: string | null): string {
 }
 
 const emptyMemberForm = {
-  name: "", nameKana: "", relation: "", birthDate: "", deathDate: "", dharmaName: "", note: "",
+  name: "", nameKana: "", relation: "", birthDate: "", deathDate: "", dharmaName: "", dharmaNameKana: "", note: "",
 };
 
 type MemberForm = typeof emptyMemberForm;
@@ -87,6 +88,10 @@ function MemberFormFields({ form, onChange }: { form: MemberForm; onChange: (f: 
       <div>
         <label className="block text-xs text-stone-500 mb-1">法名</label>
         <input type="text" value={form.dharmaName} onChange={(e) => set("dharmaName", e.target.value)} className={cls} />
+      </div>
+      <div>
+        <label className="block text-xs text-stone-500 mb-1">法名（カナ）</label>
+        <input type="text" value={form.dharmaNameKana} onChange={(e) => set("dharmaNameKana", e.target.value)} className={cls} />
       </div>
       <div>
         <label className="block text-xs text-stone-500 mb-1">生年月日</label>
@@ -166,6 +171,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
       birthDate: toInputDate(member.birthDate),
       deathDate: toInputDate(member.deathDate),
       dharmaName: member.dharmaName || "",
+      dharmaNameKana: member.dharmaNameKana || "",
       note: member.note || "",
     });
     setEditError("");
@@ -330,6 +336,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
                       {member.birthDate && <div><dt className="inline">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>}
                       {member.deathDate && <div><dt className="inline">没年月日: </dt><dd className="inline">{formatDate(member.deathDate)}</dd></div>}
                       {member.dharmaName && <div><dt className="inline">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>}
+                      {member.dharmaNameKana && <div><dt className="inline">法名（カナ）: </dt><dd className="inline">{member.dharmaNameKana}</dd></div>}
                     </dl>
                   </>
                 )}

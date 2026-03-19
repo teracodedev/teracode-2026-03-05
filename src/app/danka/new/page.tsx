@@ -10,6 +10,7 @@ interface MemberForm {
   relation: string;
   birthDate: string;
   dharmaName: string;
+  dharmaNameKana: string;
   note: string;
 }
 
@@ -40,7 +41,7 @@ export default function NewDankaPage() {
   };
 
   const addMember = () => {
-    setMembers([...members, { name: "", nameKana: "", relation: "", birthDate: "", dharmaName: "", note: "" }]);
+    setMembers([...members, { name: "", nameKana: "", relation: "", birthDate: "", dharmaName: "", dharmaNameKana: "", note: "" }]);
   };
 
   const updateMember = (index: number, field: keyof MemberForm, value: string) => {
@@ -317,6 +318,15 @@ export default function NewDankaPage() {
                     type="text"
                     value={member.dharmaName}
                     onChange={(e) => updateMember(index, "dharmaName", e.target.value)}
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">法名（カナ）</label>
+                  <input
+                    type="text"
+                    value={member.dharmaNameKana}
+                    onChange={(e) => updateMember(index, "dharmaNameKana", e.target.value)}
                     className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>

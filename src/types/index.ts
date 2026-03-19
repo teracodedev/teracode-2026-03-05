@@ -26,6 +26,7 @@ export interface DankaWithMembers {
     birthDate: Date | null;
     deathDate: Date | null;
     dharmaName: string | null;
+    dharmaNameKana: string | null;
     note: string | null;
     createdAt: Date;
     updatedAt: Date;

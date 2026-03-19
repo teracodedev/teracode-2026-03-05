@@ -12,7 +12,7 @@ export async function POST(request: NextRequest, { params }: Params) {
 
   try {
     const body = await request.json();
-    const { name, nameKana, relation, birthDate, deathDate, dharmaName, note } = body;
+    const { name, nameKana, relation, birthDate, deathDate, dharmaName, dharmaNameKana, note } = body;
 
     if (!name) {
       return NextResponse.json({ error: "氏名は必須です" }, { status: 400 });
@@ -27,6 +27,7 @@ export async function POST(request: NextRequest, { params }: Params) {
         birthDate: birthDate ? new Date(birthDate) : null,
         deathDate: deathDate ? new Date(deathDate) : null,
         dharmaName: dharmaName || null,
+        dharmaNameKana: dharmaNameKana || null,
         note: note || null,
       },
     });
