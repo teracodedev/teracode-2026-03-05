@@ -138,7 +138,14 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
   const fetchDanka = () => {
     fetch(`/api/danka/${id}`)
       .then((res) => res.json())
-      .then((data) => { setDanka(data); setLoading(false); })
+      .then((data) => {
+        setDanka({
+          ...data,
+          members: Array.isArray(data?.members) ? data.members : [],
+          ceremonies: Array.isArray(data?.ceremonies) ? data.ceremonies : [],
+        });
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   };
 
