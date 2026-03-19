@@ -19,7 +19,7 @@ export default function Home() {
             戸主台帳
           </h2>
           <p className="text-stone-500 text-sm">
-            檀家・世帯員の情報を登録・管理します
+            戸主・世帯員の情報を登録・管理します
           </p>
         </Link>
 

@@ -64,7 +64,7 @@ export default function KakuchoPage() {
       <div className="flex gap-4 items-center">
         <input
           type="text"
-          placeholder="法名・俗名・檀家名で検索..."
+          placeholder="法名・俗名・戸主名で検索..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="flex-1 border border-stone-300 rounded-lg px-4 py-2 text-sm text-stone-800 bg-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400"
@@ -77,7 +77,7 @@ export default function KakuchoPage() {
         <div className="text-center py-12 text-stone-400">
           <p>過去帳の記録がありません</p>
           <p className="text-xs mt-2">
-            檀家の世帯員に没年月日を登録すると過去帳に表示されます
+            戸主の世帯員に没年月日を登録すると過去帳に表示されます
           </p>
         </div>
       ) : (
@@ -90,7 +90,7 @@ export default function KakuchoPage() {
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">没年月日</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">生年月日</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">続柄</th>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">檀家</th>
+                <th className="text-left px-4 py-3 text-stone-600 font-medium">戸主</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">

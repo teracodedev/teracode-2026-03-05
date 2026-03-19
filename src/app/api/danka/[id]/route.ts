@@ -23,7 +23,7 @@ export async function GET(_request: NextRequest, { params }: Params) {
     });
 
     if (!danka) {
-      return NextResponse.json({ error: "檀家が見つかりません" }, { status: 404 });
+      return NextResponse.json({ error: "戸主が見つかりません" }, { status: 404 });
     }
 
     return NextResponse.json(danka);

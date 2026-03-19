@@ -75,7 +75,7 @@ export default function GenzaichoPage() {
       <div className="flex gap-4 items-center">
         <input
           type="text"
-          placeholder="氏名・檀家名・住所で検索..."
+          placeholder="氏名・戸主名・住所で検索..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="flex-1 border border-stone-300 rounded-lg px-4 py-2 text-sm text-stone-800 bg-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400"
@@ -88,7 +88,7 @@ export default function GenzaichoPage() {
         <div className="text-center py-12 text-stone-400">
           <p>現在帳の記録がありません</p>
           <p className="text-xs mt-2">
-            檀家の世帯員を登録すると現在帳に表示されます
+            戸主の世帯員を登録すると現在帳に表示されます
           </p>
         </div>
       ) : (
@@ -100,7 +100,7 @@ export default function GenzaichoPage() {
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">続柄</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">生年月日</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">年齢</th>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">檀家</th>
+                <th className="text-left px-4 py-3 text-stone-600 font-medium">戸主</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">住所</th>
               </tr>
             </thead>

@@ -87,7 +87,7 @@ export default function NewDankaPage() {
         <Link href="/danka" className="text-stone-400 hover:text-stone-600 text-sm">
           ← 一覧へ
         </Link>
-        <h1 className="text-2xl font-bold text-amber-700">檀家新規登録</h1>
+        <h1 className="text-2xl font-bold text-amber-700">戸主新規登録</h1>
       </div>
 
       {error && (

@@ -93,9 +93,9 @@ export default function DankaPage() {
         <div className="text-center py-12 text-stone-400">{error}</div>
       ) : dankaList.length === 0 ? (
         <div className="text-center py-12 text-stone-400">
-          <p>檀家が登録されていません</p>
+          <p>戸主が登録されていません</p>
           <Link href="/danka/new" className="text-stone-600 underline mt-2 inline-block">
-            最初の檀家を登録する
+            最初の戸主を登録する
           </Link>
         </div>
       ) : (

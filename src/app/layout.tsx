@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "テラコード - 寺院管理システム",
-  description: "檀家・法要を管理するシステム",
+  description: "戸主・法要を管理するシステム",
 };
 
 export default async function RootLayout({

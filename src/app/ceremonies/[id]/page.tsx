@@ -270,7 +270,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
       <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-semibold text-stone-700">
-            参加檀家 ({ceremony.participants.length}件 / {totalAttendees}名)
+            参加戸主 ({ceremony.participants.length}件 / {totalAttendees}名)
           </h2>
           <div className="flex items-center gap-4">
             {totalOffering > 0 && (
@@ -294,7 +294,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
             )}
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2">
-                <label className="block text-xs text-stone-500 mb-1">檀家 *</label>
+                <label className="block text-xs text-stone-500 mb-1">戸主 *</label>
                 <select
                   value={participantForm.dankaId}
                   onChange={(e) => setParticipantForm({ ...participantForm, dankaId: e.target.value })}
@@ -357,7 +357,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
           <table className="w-full text-sm">
             <thead className="border-b border-stone-200">
               <tr>
-                <th className="text-left pb-2 text-stone-500 font-medium">檀家</th>
+                <th className="text-left pb-2 text-stone-500 font-medium">戸主</th>
                 <th className="text-right pb-2 text-stone-500 font-medium">人数</th>
                 <th className="text-right pb-2 text-stone-500 font-medium">御布施</th>
                 <th className="pb-2"></th>

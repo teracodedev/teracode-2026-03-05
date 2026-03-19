@@ -130,7 +130,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
   useEffect(() => { fetchDanka(); }, [id]);
 
   const handleDelete = async () => {
-    if (!confirm("この檀家を削除してもよろしいですか？")) return;
+    if (!confirm("この戸主を削除してもよろしいですか？")) return;
     setDeleting(true);
     try {
       await fetch(`/api/danka/${id}`, { method: "DELETE" });
@@ -198,7 +198,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
   };
 
   if (loading) return <div className="text-center py-12 text-stone-400">読み込み中...</div>;
-  if (!danka) return <div className="text-center py-12 text-stone-400">檀家が見つかりません</div>;
+  if (!danka) return <div className="text-center py-12 text-stone-400">戸主が見つかりません</div>;
 
   return (
     <div className="max-w-3xl space-y-6">

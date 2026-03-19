@@ -15,7 +15,7 @@ export async function POST(request: NextRequest, { params }: Params) {
     const { dankaId, attendees, offering, note } = body;
 
     if (typeof ceremonyId !== "string" || !ceremonyId || typeof dankaId !== "string" || !dankaId) {
-      return NextResponse.json({ error: "檀家IDは必須です" }, { status: 400 });
+      return NextResponse.json({ error: "戸主IDは必須です" }, { status: 400 });
     }
 
     const attendeesNum =
