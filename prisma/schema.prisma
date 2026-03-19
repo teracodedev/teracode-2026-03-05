@@ -19,7 +19,9 @@ model Danka {
   familyNameKana String?  // 姓（カナ）
   givenNameKana  String?  // 名（カナ）
   postalCode    String?   // 郵便番号
-  address       String?   // 住所
+  address1      String?   // 住所1（都道府県・市区町村）
+  address2      String?   // 住所2（丁目・番地）
+  address3      String?   // 住所3（建物名・部屋番号）
   phone         String?   // 電話番号
   email         String?   // メールアドレス
   note          String?   // 備考

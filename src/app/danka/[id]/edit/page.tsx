@@ -10,7 +10,9 @@ interface DankaForm {
   familyNameKana: string;
   givenNameKana: string;
   postalCode: string;
-  address: string;
+  address1: string;
+  address2: string;
+  address3: string;
   phone: string;
   email: string;
   note: string;
@@ -37,7 +39,9 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
     familyNameKana: "",
     givenNameKana: "",
     postalCode: "",
-    address: "",
+    address1: "",
+    address2: "",
+    address3: "",
     phone: "",
     email: "",
     note: "",
@@ -56,7 +60,9 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
           familyNameKana: data.familyNameKana || "",
           givenNameKana: data.givenNameKana || "",
           postalCode: data.postalCode || "",
-          address: data.address || "",
+          address1: data.address1 || "",
+          address2: data.address2 || "",
+          address3: data.address3 || "",
           phone: data.phone || "",
           email: data.email || "",
           note: data.note || "",
@@ -186,11 +192,33 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
               />
             </div>
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-stone-600 mb-1">住所</label>
+              <label className="block text-sm font-medium text-stone-600 mb-1">住所1（都道府県・市区町村）</label>
               <input
                 type="text"
-                name="address"
-                value={form.address}
+                name="address1"
+                value={form.address1}
+                onChange={handleChange}
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">住所2（丁目・番地）</label>
+              <input
+                type="text"
+                name="address2"
+                value={form.address2}
+                onChange={handleChange}
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">住所3（建物名・部屋番号）</label>
+              <input
+                type="text"
+                name="address3"
+                value={form.address3}
                 onChange={handleChange}
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />

@@ -6,7 +6,9 @@ export interface DankaWithMembers {
   familyNameKana: string | null;
   givenNameKana: string | null;
   postalCode: string | null;
-  address: string | null;
+  address1: string | null;
+  address2: string | null;
+  address3: string | null;
   phone: string | null;
   email: string | null;
   note: string | null;

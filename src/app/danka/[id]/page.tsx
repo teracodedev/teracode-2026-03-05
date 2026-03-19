@@ -30,7 +30,9 @@ interface DankaDetail {
   familyNameKana: string | null;
   givenNameKana: string | null;
   postalCode: string | null;
-  address: string | null;
+  address1: string | null;
+  address2: string | null;
+  address3: string | null;
   phone: string | null;
   email: string | null;
   note: string | null;
@@ -231,7 +233,12 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
             </dd>
           </div>
           <div><dt className="text-stone-400">郵便番号</dt><dd className="text-stone-700">{danka.postalCode || "-"}</dd></div>
-          <div><dt className="text-stone-400">住所</dt><dd className="text-stone-700">{danka.address || "-"}</dd></div>
+          <div className="col-span-2">
+            <dt className="text-stone-400">住所</dt>
+            <dd className="text-stone-700">
+              {[danka.address1, danka.address2, danka.address3].filter(Boolean).join(" ") || "-"}
+            </dd>
+          </div>
           <div><dt className="text-stone-400">電話番号</dt><dd className="text-stone-700">{danka.phone || "-"}</dd></div>
           <div><dt className="text-stone-400">メールアドレス</dt><dd className="text-stone-700">{danka.email || "-"}</dd></div>
           <div><dt className="text-stone-400">入檀日</dt><dd className="text-stone-700">{formatDate(danka.joinedAt)}</dd></div>

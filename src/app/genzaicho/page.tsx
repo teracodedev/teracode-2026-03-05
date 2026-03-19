@@ -16,7 +16,9 @@ interface GenzaichoRecord {
     dankaCode: string;
     familyName: string;
     givenName: string;
-    address: string | null;
+    address1: string | null;
+    address2: string | null;
+    address3: string | null;
   };
 }
 
@@ -126,7 +128,7 @@ export default function GenzaichoPage() {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-stone-600 text-xs">
-                    {record.danka.address || "-"}
+                    {[record.danka.address1, record.danka.address2, record.danka.address3].filter(Boolean).join(" ") || "-"}
                   </td>
                 </tr>
               ))}
