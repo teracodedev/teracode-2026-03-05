@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getHouseholderDelegate, getHouseholderFieldMap, getHouseholderModelKind } from "@/lib/prisma-models";
 
 export const runtime = "nodejs";
 
@@ -10,7 +10,13 @@ export async function GET(_request: NextRequest, { params }: Params) {
   const { id } = await params;
 
   try {
-    const householder = await prisma.householder.findUnique({
+    const kind = getHouseholderModelKind();
+    const delegate = getHouseholderDelegate() as {
+      findUnique: (args: unknown) => Promise<unknown>;
+      update: (args: unknown) => Promise<unknown>;
+      delete: (args: unknown) => Promise<unknown>;
+    };
+    const householder = await delegate.findUnique({
       where: { id },
       include: {
         members: true,
@@ -37,6 +43,11 @@ export async function PUT(request: NextRequest, { params }: Params) {
   const { id } = await params;
 
   try {
+    const kind = getHouseholderModelKind();
+    const delegate = getHouseholderDelegate() as {
+      update: (args: unknown) => Promise<unknown>;
+    };
+    const fields = getHouseholderFieldMap(kind);
     const body = await request.json();
     const {
       familyName,
@@ -57,9 +68,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
       isActive,
     } = body;
 
-    const householder = await prisma.householder.update({
-      where: { id },
-      data: {
+    const data: Record<string, unknown> = {
         familyName,
         givenName,
         familyNameKana: familyNameKana || null,
@@ -68,15 +77,25 @@ export async function PUT(request: NextRequest, { params }: Params) {
         address1: address1 || null,
         address2: address2 || null,
         address3: address3 || null,
-        phone1: phone1 || null,
-        phone2: phone2 || null,
+        [fields.phoneMain]: phone1 || null,
         email: email || null,
-        domicile: domicile || null,
         note: note || null,
         joinedAt: joinedAt ? new Date(joinedAt) : null,
         leftAt: leftAt ? new Date(leftAt) : null,
         isActive: isActive ?? true,
-      },
+      };
+
+    if (fields.phoneSub) {
+      data[fields.phoneSub] = phone2 || null;
+    }
+
+    if (fields.domicile) {
+      data[fields.domicile] = domicile || null;
+    }
+
+    const householder = await delegate.update({
+      where: { id },
+      data,
       include: { members: true },
     });
 
@@ -92,7 +111,10 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
   const { id } = await params;
 
   try {
-    await prisma.householder.delete({ where: { id } });
+    const delegate = getHouseholderDelegate() as {
+      delete: (args: unknown) => Promise<unknown>;
+    };
+    await delegate.delete({ where: { id } });
     return NextResponse.json({ message: "削除しました" });
   } catch (error) {
     console.error(`DELETE /api/householder/${id} error:`, error);

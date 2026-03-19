@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getHouseholderFieldMap, getHouseholderModelKind, getMemberDelegate } from "@/lib/prisma-models";
 
 export const runtime = "nodejs";
 
@@ -9,10 +9,20 @@ export async function GET(request: NextRequest) {
   const query = searchParams.get("q") || "";
 
   try {
-    const records = await prisma.householderMember.findMany({
+    const kind = getHouseholderModelKind();
+    const memberDelegate = getMemberDelegate() as {
+      findMany: (args: unknown) => Promise<unknown>;
+    };
+    const fields = getHouseholderFieldMap(kind);
+    const relationName = fields.relation;
+    const codeFilter = {
+      [relationName]: { [fields.code]: { contains: query, mode: "insensitive" } },
+    };
+
+    const records = await memberDelegate.findMany({
       where: {
         deathDate: null,
-        householder: { isActive: true },
+        [relationName]: { isActive: true },
         OR: query
           ? [
               { familyName: { contains: query, mode: "insensitive" } },
@@ -20,20 +30,20 @@ export async function GET(request: NextRequest) {
               { familyNameKana: { contains: query, mode: "insensitive" } },
               { givenNameKana: { contains: query, mode: "insensitive" } },
               { relation: { contains: query, mode: "insensitive" } },
-              { householder: { familyName: { contains: query, mode: "insensitive" } } },
-              { householder: { givenName: { contains: query, mode: "insensitive" } } },
-              { householder: { householderCode: { contains: query, mode: "insensitive" } } },
-              { householder: { address1: { contains: query, mode: "insensitive" } } },
-              { householder: { address2: { contains: query, mode: "insensitive" } } },
-              { householder: { address3: { contains: query, mode: "insensitive" } } },
+              { [relationName]: { familyName: { contains: query, mode: "insensitive" } } },
+              { [relationName]: { givenName: { contains: query, mode: "insensitive" } } },
+              codeFilter,
+              { [relationName]: { address1: { contains: query, mode: "insensitive" } } },
+              { [relationName]: { address2: { contains: query, mode: "insensitive" } } },
+              { [relationName]: { address3: { contains: query, mode: "insensitive" } } },
             ]
           : undefined,
       },
       include: {
-        householder: {
+        [relationName]: {
           select: {
             id: true,
-            householderCode: true,
+            [fields.code]: true,
             familyName: true,
             givenName: true,
             address1: true,

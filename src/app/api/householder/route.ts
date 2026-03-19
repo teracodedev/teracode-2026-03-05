@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getHouseholderDelegate, getHouseholderFieldMap, getHouseholderModelKind } from "@/lib/prisma-models";
 
 export const runtime = "nodejs";
 
@@ -10,7 +10,14 @@ export async function GET(request: NextRequest) {
   const activeOnly = searchParams.get("active") !== "false";
 
   try {
-    const householderList = await prisma.householder.findMany({
+    const kind = getHouseholderModelKind();
+    const delegate = getHouseholderDelegate() as {
+      findMany: (args: unknown) => Promise<unknown>;
+    };
+    const fields = getHouseholderFieldMap(kind);
+    const codeFilter = { [fields.code]: { contains: query, mode: "insensitive" } };
+
+    const householderList = await delegate.findMany({
       where: {
         isActive: activeOnly ? true : undefined,
         OR: query
@@ -19,7 +26,7 @@ export async function GET(request: NextRequest) {
               { givenName: { contains: query, mode: "insensitive" } },
               { familyNameKana: { contains: query, mode: "insensitive" } },
               { givenNameKana: { contains: query, mode: "insensitive" } },
-              { householderCode: { contains: query, mode: "insensitive" } },
+              codeFilter,
               { address1: { contains: query, mode: "insensitive" } },
               { address2: { contains: query, mode: "insensitive" } },
               { address3: { contains: query, mode: "insensitive" } },
@@ -42,6 +49,11 @@ export async function GET(request: NextRequest) {
 // 戸主新規登録
 export async function POST(request: NextRequest) {
   try {
+    const kind = getHouseholderModelKind();
+    const delegate = getHouseholderDelegate() as {
+      create: (args: unknown) => Promise<unknown>;
+    };
+    const fields = getHouseholderFieldMap(kind);
     const body = await request.json();
     const {
       familyName,
@@ -68,8 +80,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const householder = await prisma.householder.create({
-      data: {
+    const data: Record<string, unknown> = {
         familyName,
         givenName,
         familyNameKana: familyNameKana || null,
@@ -78,10 +89,8 @@ export async function POST(request: NextRequest) {
         address1: address1 || null,
         address2: address2 || null,
         address3: address3 || null,
-        phone1: phone1 || null,
-        phone2: phone2 || null,
+        [fields.phoneMain]: phone1 || null,
         email: email || null,
-        domicile: domicile || null,
         note: note || null,
         joinedAt: joinedAt ? new Date(joinedAt) : null,
         members: members?.length
@@ -109,7 +118,18 @@ export async function POST(request: NextRequest) {
               })),
             }
           : undefined,
-      },
+      };
+
+    if (fields.phoneSub) {
+      data[fields.phoneSub] = phone2 || null;
+    }
+
+    if (fields.domicile) {
+      data[fields.domicile] = domicile || null;
+    }
+
+    const householder = await delegate.create({
+      data,
       include: { members: true },
     });
 

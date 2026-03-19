@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getHouseholderFieldMap, getHouseholderModelKind, getMemberDelegate } from "@/lib/prisma-models";
 
 export const runtime = "nodejs";
 
@@ -9,7 +9,20 @@ export async function GET(request: NextRequest) {
   const query = searchParams.get("q") || "";
 
   try {
-    const records = await prisma.householderMember.findMany({
+    const kind = getHouseholderModelKind();
+    const memberDelegate = getMemberDelegate() as {
+      findMany: (args: unknown) => Promise<unknown>;
+    };
+    const fields = getHouseholderFieldMap(kind);
+    const relationName = fields.relation;
+    const codeFilter = {
+      [relationName]: { [fields.code]: { contains: query, mode: "insensitive" } },
+    };
+    const familyNameFilter = {
+      [relationName]: { familyName: { contains: query, mode: "insensitive" } },
+    };
+
+    const records = await memberDelegate.findMany({
       where: {
         deathDate: { not: null },
         OR: query
@@ -20,16 +33,16 @@ export async function GET(request: NextRequest) {
               { givenNameKana: { contains: query, mode: "insensitive" } },
               { dharmaName: { contains: query, mode: "insensitive" } },
               { dharmaNameKana: { contains: query, mode: "insensitive" } },
-              { householder: { familyName: { contains: query, mode: "insensitive" } } },
-              { householder: { householderCode: { contains: query, mode: "insensitive" } } },
+              familyNameFilter,
+              codeFilter,
             ]
           : undefined,
       },
       include: {
-        householder: {
+        [relationName]: {
           select: {
             id: true,
-            householderCode: true,
+            [fields.code]: true,
             familyName: true,
             givenName: true,
           },

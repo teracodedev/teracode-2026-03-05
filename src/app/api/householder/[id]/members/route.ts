@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getHouseholderFieldMap, getHouseholderModelKind, getMemberDelegate } from "@/lib/prisma-models";
 
 export const runtime = "nodejs";
 
@@ -11,6 +11,11 @@ export async function POST(request: NextRequest, { params }: Params) {
   const householderId = id;
 
   try {
+    const kind = getHouseholderModelKind();
+    const fields = getHouseholderFieldMap(kind);
+    const memberDelegate = getMemberDelegate() as {
+      create: (args: unknown) => Promise<unknown>;
+    };
     const body = await request.json();
     const { familyName, givenName, familyNameKana, givenNameKana, relation, birthDate, deathDate, dharmaName, dharmaNameKana, note } = body;
 
@@ -18,9 +23,9 @@ export async function POST(request: NextRequest, { params }: Params) {
       return NextResponse.json({ error: "姓は必須です" }, { status: 400 });
     }
 
-    const member = await prisma.householderMember.create({
+    const member = await memberDelegate.create({
       data: {
-        householderId,
+        [fields.relationId]: householderId,
         familyName,
         givenName: givenName || null,
         familyNameKana: familyNameKana || null,

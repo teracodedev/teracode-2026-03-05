@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getMemberDelegate } from "@/lib/prisma-models";
 
 export const runtime = "nodejs";
 
@@ -10,6 +10,9 @@ export async function PUT(request: NextRequest, { params }: Params) {
   const { memberId } = await params;
 
   try {
+    const memberDelegate = getMemberDelegate() as {
+      update: (args: unknown) => Promise<unknown>;
+    };
     const body = await request.json();
     const { familyName, givenName, familyNameKana, givenNameKana, relation, birthDate, deathDate, dharmaName, dharmaNameKana, note } = body;
 
@@ -17,7 +20,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
       return NextResponse.json({ error: "姓は必須です" }, { status: 400 });
     }
 
-    const member = await prisma.householderMember.update({
+    const member = await memberDelegate.update({
       where: { id: memberId },
       data: {
         familyName,
@@ -45,7 +48,10 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
   const { memberId } = await params;
 
   try {
-    await prisma.householderMember.delete({ where: { id: memberId } });
+    const memberDelegate = getMemberDelegate() as {
+      delete: (args: unknown) => Promise<unknown>;
+    };
+    await memberDelegate.delete({ where: { id: memberId } });
     return NextResponse.json({ message: "削除しました" });
   } catch (error) {
     console.error(`DELETE /api/householder/members/${memberId} error:`, error);
