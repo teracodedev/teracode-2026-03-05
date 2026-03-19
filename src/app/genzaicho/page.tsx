@@ -5,7 +5,7 @@ import Link from "next/link";
 
 interface GenzaichoRecord {
   id: string;
-  dankaId: string;
+  householderId: string;
   familyName: string;
   givenName: string | null;
   familyNameKana: string | null;
@@ -13,9 +13,9 @@ interface GenzaichoRecord {
   relation: string | null;
   birthDate: string | null;
   note: string | null;
-  danka: {
+  householder: {
     id: string;
-    dankaCode: string;
+    householderCode: string;
     familyName: string;
     givenName: string;
     address1: string | null;
@@ -127,17 +127,17 @@ export default function GenzaichoPage() {
                   <td className="px-4 py-3 text-stone-600">{calcAge(record.birthDate)}</td>
                   <td className="px-4 py-3">
                     <Link
-                      href={`/danka/${record.danka.id}`}
+                      href={`/householder/${record.householder.id}`}
                       className="text-stone-500 hover:text-stone-400 hover:underline"
                     >
-                      {record.danka.familyName} {record.danka.givenName}
+                      {record.householder.familyName} {record.householder.givenName}
                       <span className="text-xs text-stone-400 ml-1">
-                        ({record.danka.dankaCode})
+                        ({record.householder.householderCode})
                       </span>
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-stone-600 text-xs">
-                    {[record.danka.address1, record.danka.address2, record.danka.address3].filter(Boolean).join(" ") || "-"}
+                    {[record.householder.address1, record.householder.address2, record.householder.address3].filter(Boolean).join(" ") || "-"}
                   </td>
                 </tr>
               ))}

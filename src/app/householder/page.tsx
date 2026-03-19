@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 
-interface Danka {
+interface Householder {
   id: number;
-  dankaCode: string;
+  householderCode: string;
   familyName: string;
   givenName: string;
   familyNameKana: string | null;
@@ -19,33 +19,33 @@ interface Danka {
   members: { id: string; familyName: string; givenName: string | null; relation: string | null }[];
 }
 
-export default function DankaPage() {
-  const [dankaList, setDankaList] = useState<Danka[]>([]);
+export default function HouseholderPage() {
+  const [householderList, setHouseholderList] = useState<Householder[]>([]);
   const [query, setQuery] = useState("");
   const [showInactive, setShowInactive] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchDanka = useCallback(async () => {
+  const fetchHouseholders = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
       const params = new URLSearchParams();
       if (query) params.set("q", query);
       if (showInactive) params.set("active", "false");
-      const res = await fetch(`/api/danka?${params}`);
+      const res = await fetch(`/api/householder?${params}`);
       const data = await res.json();
 
       if (!res.ok) {
-        setDankaList([]);
+        setHouseholderList([]);
         setError(data?.error || "データの取得に失敗しました");
         return;
       }
 
-      setDankaList(Array.isArray(data) ? data : []);
+      setHouseholderList(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
-      setDankaList([]);
+      setHouseholderList([]);
       setError("エラーが発生しました");
     } finally {
       setLoading(false);
@@ -53,16 +53,16 @@ export default function DankaPage() {
   }, [query, showInactive]);
 
   useEffect(() => {
-    const timer = setTimeout(fetchDanka, 300);
+    const timer = setTimeout(fetchHouseholders, 300);
     return () => clearTimeout(timer);
-  }, [fetchDanka]);
+  }, [fetchHouseholders]);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-amber-700">戸主台帳</h1>
         <Link
-          href="/danka/new"
+          href="/householder/new"
           className="bg-stone-700 text-white px-4 py-2 rounded-lg hover:bg-stone-800 transition-colors text-sm font-medium"
         >
           + 新規登録
@@ -92,10 +92,10 @@ export default function DankaPage() {
         <div className="text-center py-12 text-stone-400">読み込み中...</div>
       ) : error ? (
         <div className="text-center py-12 text-stone-400">{error}</div>
-      ) : dankaList.length === 0 ? (
+      ) : householderList.length === 0 ? (
         <div className="text-center py-12 text-stone-400">
           <p>戸主が登録されていません</p>
-          <Link href="/danka/new" className="text-stone-600 underline mt-2 inline-block">
+          <Link href="/householder/new" className="text-stone-600 underline mt-2 inline-block">
             最初の戸主を登録する
           </Link>
         </div>
@@ -113,39 +113,39 @@ export default function DankaPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
-              {dankaList.map((danka) => (
-                <tr key={danka.id} className="hover:bg-stone-50">
-                  <td className="px-4 py-3 font-mono text-stone-500">{danka.dankaCode.slice(0, 8)}</td>
+              {householderList.map((householder) => (
+                <tr key={householder.id} className="hover:bg-stone-50">
+                  <td className="px-4 py-3 font-mono text-stone-500">{householder.householderCode.slice(0, 8)}</td>
                   <td className="px-4 py-3">
                     <Link
-                      href={`/danka/${danka.id}`}
+                      href={`/householder/${householder.id}`}
                       className="font-medium text-stone-500 hover:text-stone-400 hover:underline"
                     >
-                      {danka.familyName} {danka.givenName}
+                      {householder.familyName} {householder.givenName}
                     </Link>
-                    {danka.familyNameKana && (
+                    {householder.familyNameKana && (
                       <div className="text-xs text-stone-400">
-                        {danka.familyNameKana} {danka.givenNameKana}
+                        {householder.familyNameKana} {householder.givenNameKana}
                       </div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-stone-600">
-                    {[danka.address1, danka.address2, danka.address3].filter(Boolean).join(" ") || "-"}
+                    {[householder.address1, householder.address2, householder.address3].filter(Boolean).join(" ") || "-"}
                   </td>
                   <td className="px-4 py-3 text-stone-600">
-                    {danka.phone1 || "-"}
-                    {danka.phone2 && <div className="text-xs text-stone-400">{danka.phone2}</div>}
+                    {householder.phone1 || "-"}
+                    {householder.phone2 && <div className="text-xs text-stone-400">{householder.phone2}</div>}
                   </td>
-                  <td className="px-4 py-3 text-stone-600">{danka.members.length}名</td>
+                  <td className="px-4 py-3 text-stone-600">{householder.members.length}名</td>
                   <td className="px-4 py-3">
                     <span
                       className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        danka.isActive
+                        householder.isActive
                           ? "bg-green-100 text-green-700"
                           : "bg-stone-100 text-stone-500"
                       }`}
                     >
-                      {danka.isActive ? "在籍" : "離檀"}
+                      {householder.isActive ? "在籍" : "離檀"}
                     </span>
                   </td>
                 </tr>
@@ -153,7 +153,7 @@ export default function DankaPage() {
             </tbody>
           </table>
           <div className="px-4 py-3 bg-stone-50 border-t border-stone-200 text-xs text-stone-400">
-            {dankaList.length}件
+            {householderList.length}件
           </div>
         </div>
       )}

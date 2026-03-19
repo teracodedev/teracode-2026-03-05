@@ -1,6 +1,6 @@
-export interface DankaWithMembers {
+export interface HouseholderWithMembers {
   id: string;
-  dankaCode: string;
+  householderCode: string;
   familyName: string;
   givenName: string;
   familyNameKana: string | null;
@@ -21,7 +21,7 @@ export interface DankaWithMembers {
   updatedAt: Date;
   members: {
     id: string;
-    dankaId: string;
+    householderId: string;
     familyName: string;
     givenName: string | null;
     familyNameKana: string | null;

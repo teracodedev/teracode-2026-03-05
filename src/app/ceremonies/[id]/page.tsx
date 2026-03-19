@@ -4,20 +4,20 @@ import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-interface Danka {
+interface Householder {
   id: number;
   familyName: string;
   givenName: string;
-  dankaCode: string;
+  householderCode: string;
 }
 
 interface Participant {
   id: number;
-  dankaId: number;
+  householderId: number;
   attendees: number;
   offering: number | null;
   note: string | null;
-  danka: Danka;
+  householder: Householder;
 }
 
 interface CeremonyDetail {
@@ -74,10 +74,10 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
   const [deleting, setDeleting] = useState(false);
 
   // 参加者追加フォーム
-  const [dankaList, setDankaList] = useState<Danka[]>([]);
+  const [householderList, setHouseholderList] = useState<Householder[]>([]);
   const [addingParticipant, setAddingParticipant] = useState(false);
   const [participantForm, setParticipantForm] = useState({
-    dankaId: "",
+    householderId: "",
     attendees: "1",
     offering: "",
     note: "",
@@ -87,13 +87,13 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
   useEffect(() => {
     Promise.all([
       fetch(`/api/ceremonies/${id}`).then((r) => r.json()),
-      fetch("/api/danka?active=true").then(async (r) => {
+      fetch("/api/householder?active=true").then(async (r) => {
         const data = await r.json();
         return r.ok && Array.isArray(data) ? data : [];
       }),
-    ]).then(([ceremonyData, dankaData]) => {
+    ]).then(([ceremonyData, householderData]) => {
       setCeremony(ceremonyData);
-      setDankaList(dankaData);
+      setHouseholderList(householderData);
       setLoading(false);
     });
   }, [id]);
@@ -129,17 +129,17 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
       const updated = await fetch(`/api/ceremonies/${id}`).then((r) => r.json());
       setCeremony(updated);
       setAddingParticipant(false);
-      setParticipantForm({ dankaId: "", attendees: "1", offering: "", note: "" });
+      setParticipantForm({ householderId: "", attendees: "1", offering: "", note: "" });
     } catch (err) {
       console.error(err);
       setParticipantError("エラーが発生しました");
     }
   };
 
-  const handleRemoveParticipant = async (dankaId: number) => {
+  const handleRemoveParticipant = async (householderId: number) => {
     if (!confirm("参加者を削除しますか？")) return;
     try {
-      await fetch(`/api/ceremonies/${id}/participants?dankaId=${dankaId}`, {
+      await fetch(`/api/ceremonies/${id}/participants?householderId=${householderId}`, {
         method: "DELETE",
       });
       const updated = await fetch(`/api/ceremonies/${id}`).then((r) => r.json());
@@ -296,17 +296,17 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
               <div className="col-span-2">
                 <label className="block text-xs text-stone-500 mb-1">戸主 *</label>
                 <select
-                  value={participantForm.dankaId}
-                  onChange={(e) => setParticipantForm({ ...participantForm, dankaId: e.target.value })}
+                  value={participantForm.householderId}
+                  onChange={(e) => setParticipantForm({ ...participantForm, householderId: e.target.value })}
                   required
                   className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white"
                 >
                   <option value="">選択してください</option>
-                  {dankaList
-                    .filter((d) => !ceremony.participants.some((p) => p.dankaId === d.id))
-                    .map((d) => (
-                      <option key={d.id} value={d.id}>
-                        {d.dankaCode} - {d.familyName} {d.givenName}
+                  {householderList
+                    .filter((h) => !ceremony.participants.some((p) => p.householderId === h.id))
+                    .map((h) => (
+                      <option key={h.id} value={h.id}>
+                        {h.householderCode} - {h.familyName} {h.givenName}
                       </option>
                     ))}
                 </select>
@@ -368,12 +368,12 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
                 <tr key={p.id}>
                   <td className="py-2">
                     <Link
-                      href={`/danka/${p.dankaId}`}
+                      href={`/householder/${p.householderId}`}
                       className="text-stone-800 hover:text-stone-600 hover:underline"
                     >
-                      {p.danka.familyName} {p.danka.givenName}
+                      {p.householder.familyName} {p.householder.givenName}
                     </Link>
-                    <span className="ml-2 text-xs text-stone-400">{p.danka.dankaCode}</span>
+                    <span className="ml-2 text-xs text-stone-400">{p.householder.householderCode}</span>
                   </td>
                   <td className="py-2 text-right text-stone-600">{p.attendees}名</td>
                   <td className="py-2 text-right text-stone-600">
@@ -381,7 +381,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
                   </td>
                   <td className="py-2 text-right">
                     <button
-                      onClick={() => handleRemoveParticipant(p.dankaId)}
+                      onClick={() => handleRemoveParticipant(p.householderId)}
                       className="text-red-400 hover:text-red-600 text-xs"
                     >
                       削除

@@ -12,9 +12,9 @@ export async function POST(request: NextRequest, { params }: Params) {
 
   try {
     const body = await request.json();
-    const { dankaId, attendees, offering, note } = body;
+    const { householderId, attendees, offering, note } = body;
 
-    if (typeof ceremonyId !== "string" || !ceremonyId || typeof dankaId !== "string" || !dankaId) {
+    if (typeof ceremonyId !== "string" || !ceremonyId || typeof householderId !== "string" || !householderId) {
       return NextResponse.json({ error: "戸主IDは必須です" }, { status: 400 });
     }
 
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest, { params }: Params) {
 
     const participant = await prisma.ceremonyParticipant.upsert({
       where: {
-        ceremonyId_dankaId: { ceremonyId, dankaId },
+        ceremonyId_householderId: { ceremonyId, householderId },
       },
       update: {
         attendees: attendeesNum ?? 1,
@@ -34,12 +34,12 @@ export async function POST(request: NextRequest, { params }: Params) {
       },
       create: {
         ceremonyId,
-        dankaId,
+        householderId,
         attendees: attendeesNum ?? 1,
         offering: offeringNum ?? null,
         note: note || null,
       },
-      include: { danka: true },
+      include: { householder: true },
     });
 
     return NextResponse.json(participant, { status: 201 });
@@ -54,16 +54,16 @@ export async function DELETE(request: NextRequest, { params }: Params) {
   const { id } = await params;
   const ceremonyId = id;
   const searchParams = request.nextUrl.searchParams;
-  const dankaId = searchParams.get("dankaId");
+  const householderId = searchParams.get("householderId");
 
-  if (!ceremonyId || !dankaId) {
+  if (!ceremonyId || !householderId) {
     return NextResponse.json({ error: "不正なパラメータ" }, { status: 400 });
   }
 
   try {
     await prisma.ceremonyParticipant.delete({
       where: {
-        ceremonyId_dankaId: { ceremonyId, dankaId },
+        ceremonyId_householderId: { ceremonyId, householderId },
       },
     });
 

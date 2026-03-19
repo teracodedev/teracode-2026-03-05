@@ -5,14 +5,13 @@ export const runtime = "nodejs";
 
 type Params = { params: Promise<{ id: string }> };
 
-// 檀家詳細取得
+// 戸主詳細取得
 export async function GET(_request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const dankaId = id;
 
   try {
-    const danka = await prisma.danka.findUnique({
-      where: { id: dankaId },
+    const householder = await prisma.householder.findUnique({
+      where: { id },
       include: {
         members: true,
         ceremonies: {
@@ -22,21 +21,20 @@ export async function GET(_request: NextRequest, { params }: Params) {
       },
     });
 
-    if (!danka) {
+    if (!householder) {
       return NextResponse.json({ error: "戸主が見つかりません" }, { status: 404 });
     }
 
-    return NextResponse.json(danka);
+    return NextResponse.json(householder);
   } catch (error) {
-    console.error(`GET /api/danka/${id} error:`, error);
+    console.error(`GET /api/householder/${id} error:`, error);
     return NextResponse.json({ error: (error as Error).message || "エラーが発生しました" }, { status: 500 });
   }
 }
 
-// 檀家情報更新
+// 戸主情報更新
 export async function PUT(request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const dankaId = id;
 
   try {
     const body = await request.json();
@@ -59,8 +57,8 @@ export async function PUT(request: NextRequest, { params }: Params) {
       isActive,
     } = body;
 
-    const danka = await prisma.danka.update({
-      where: { id: dankaId },
+    const householder = await prisma.householder.update({
+      where: { id },
       data: {
         familyName,
         givenName,
@@ -82,23 +80,22 @@ export async function PUT(request: NextRequest, { params }: Params) {
       include: { members: true },
     });
 
-    return NextResponse.json(danka);
+    return NextResponse.json(householder);
   } catch (error) {
-    console.error(`PUT /api/danka/${id} error:`, error);
+    console.error(`PUT /api/householder/${id} error:`, error);
     return NextResponse.json({ error: (error as Error).message || "エラーが発生しました" }, { status: 500 });
   }
 }
 
-// 檀家削除
+// 戸主削除
 export async function DELETE(_request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const dankaId = id;
 
   try {
-    await prisma.danka.delete({ where: { id: dankaId } });
+    await prisma.householder.delete({ where: { id } });
     return NextResponse.json({ message: "削除しました" });
   } catch (error) {
-    console.error(`DELETE /api/danka/${id} error:`, error);
+    console.error(`DELETE /api/householder/${id} error:`, error);
     return NextResponse.json({ error: (error as Error).message || "エラーが発生しました" }, { status: 500 });
   }
 }

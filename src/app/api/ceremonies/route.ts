@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
       },
       include: {
         participants: {
-          include: { danka: true },
+          include: { householder: true },
         },
       },
       orderBy: { scheduledAt: "asc" },
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         note: note || null,
       },
       include: {
-        participants: { include: { danka: true } },
+        participants: { include: { householder: true } },
       },
     });
 

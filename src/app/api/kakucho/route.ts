@@ -3,13 +3,13 @@ import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
 
-// 過去帳一覧取得（没年月日が設定されている世帯員）
+// 過去帳一覧取得（命日が設定されている世帯員）
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q") || "";
 
   try {
-    const records = await prisma.dankaMember.findMany({
+    const records = await prisma.householderMember.findMany({
       where: {
         deathDate: { not: null },
         OR: query
@@ -20,16 +20,16 @@ export async function GET(request: NextRequest) {
               { givenNameKana: { contains: query, mode: "insensitive" } },
               { dharmaName: { contains: query, mode: "insensitive" } },
               { dharmaNameKana: { contains: query, mode: "insensitive" } },
-              { danka: { familyName: { contains: query, mode: "insensitive" } } },
-              { danka: { dankaCode: { contains: query, mode: "insensitive" } } },
+              { householder: { familyName: { contains: query, mode: "insensitive" } } },
+              { householder: { householderCode: { contains: query, mode: "insensitive" } } },
             ]
           : undefined,
       },
       include: {
-        danka: {
+        householder: {
           select: {
             id: true,
-            dankaCode: true,
+            householderCode: true,
             familyName: true,
             givenName: true,
           },

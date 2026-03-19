@@ -40,7 +40,7 @@ export default async function RootLayout({
               </Link>
               <div className="flex items-center gap-6">
                 <Link
-                  href="/danka"
+                  href="/householder"
                   className="hover:text-stone-300 transition-colors text-sm font-medium"
                 >
                   戸主台帳

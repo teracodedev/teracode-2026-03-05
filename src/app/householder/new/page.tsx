@@ -1,41 +1,27 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-interface DankaForm {
+interface MemberForm {
   familyName: string;
   givenName: string;
   familyNameKana: string;
   givenNameKana: string;
-  postalCode: string;
-  address1: string;
-  address2: string;
-  address3: string;
-  phone1: string;
-  phone2: string;
-  email: string;
-  domicile: string;
+  relation: string;
+  birthDate: string;
+  dharmaName: string;
+  dharmaNameKana: string;
   note: string;
-  joinedAt: string;
-  leftAt: string;
-  isActive: boolean;
 }
 
-function toDateInput(dateStr: string | null) {
-  if (!dateStr) return "";
-  return new Date(dateStr).toISOString().split("T")[0];
-}
-
-export default function EditDankaPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function NewHouseholderPage() {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
 
-  const [form, setForm] = useState<DankaForm>({
+  const [form, setForm] = useState({
     familyName: "",
     givenName: "",
     familyNameKana: "",
@@ -50,42 +36,29 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
     domicile: "",
     note: "",
     joinedAt: "",
-    leftAt: "",
-    isActive: true,
   });
 
-  useEffect(() => {
-    fetch(`/api/danka/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setForm({
-          familyName: data.familyName || "",
-          givenName: data.givenName || "",
-          familyNameKana: data.familyNameKana || "",
-          givenNameKana: data.givenNameKana || "",
-          postalCode: data.postalCode || "",
-          address1: data.address1 || "",
-          address2: data.address2 || "",
-          address3: data.address3 || "",
-          phone1: data.phone1 || "",
-          phone2: data.phone2 || "",
-          email: data.email || "",
-          domicile: data.domicile || "",
-          note: data.note || "",
-          joinedAt: toDateInput(data.joinedAt),
-          leftAt: toDateInput(data.leftAt),
-          isActive: data.isActive,
-        });
-        setLoading(false);
-      });
-  }, [id]);
+  const [members, setMembers] = useState<MemberForm[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const target = e.target as HTMLInputElement;
-    setForm({
-      ...form,
-      [target.name]: target.type === "checkbox" ? target.checked : target.value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const addMember = () => {
+    setMembers([...members, {
+      familyName: "", givenName: "", familyNameKana: "", givenNameKana: "",
+      relation: "", birthDate: "", dharmaName: "", dharmaNameKana: "", note: "",
+    }]);
+  };
+
+  const updateMember = (index: number, field: keyof MemberForm, value: string) => {
+    const updated = [...members];
+    updated[index] = { ...updated[index], [field]: value };
+    setMembers(updated);
+  };
+
+  const removeMember = (index: number) => {
+    setMembers(members.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -94,19 +67,20 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
     setError("");
 
     try {
-      const res = await fetch(`/api/danka/${id}`, {
-        method: "PUT",
+      const res = await fetch("/api/householder", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, members: members.filter((m) => m.familyName) }),
       });
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error || "更新に失敗しました");
+        setError(data.error || "登録に失敗しました");
         return;
       }
 
-      router.push(`/danka/${id}`);
+      const householder = await res.json();
+      router.push(`/householder/${householder.id}`);
     } catch (err) {
       console.error(err);
       setError("ネットワークエラーが発生しました");
@@ -115,15 +89,13 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
     }
   };
 
-  if (loading) return <div className="text-center py-12 text-stone-400">読み込み中...</div>;
-
   return (
     <div className="max-w-2xl space-y-6">
       <div className="flex items-center gap-4">
-        <Link href={`/danka/${id}`} className="text-stone-400 hover:text-stone-600 text-sm">
-          ← 詳細へ
+        <Link href="/householder" className="text-stone-400 hover:text-stone-600 text-sm">
+          ← 一覧へ
         </Link>
-        <h1 className="text-2xl font-bold text-stone-500">戸主情報編集</h1>
+        <h1 className="text-2xl font-bold text-amber-700">戸主新規登録</h1>
       </div>
 
       {error && (
@@ -134,6 +106,8 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6 space-y-4">
+          <h2 className="font-semibold text-stone-700">基本情報</h2>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-stone-600 mb-1">
@@ -145,6 +119,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 value={form.familyName}
                 onChange={handleChange}
                 required
+                placeholder="山田"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
@@ -158,6 +133,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 value={form.givenName}
                 onChange={handleChange}
                 required
+                placeholder="太郎"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
@@ -171,6 +147,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 name="familyNameKana"
                 value={form.familyNameKana}
                 onChange={handleChange}
+                placeholder="ヤマダ"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
@@ -181,6 +158,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 name="givenNameKana"
                 value={form.givenNameKana}
                 onChange={handleChange}
+                placeholder="タロウ"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
@@ -194,6 +172,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 name="postalCode"
                 value={form.postalCode}
                 onChange={handleChange}
+                placeholder="123-4567"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
@@ -204,6 +183,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 name="address1"
                 value={form.address1}
                 onChange={handleChange}
+                placeholder="東京都渋谷区"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
@@ -216,6 +196,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 name="address2"
                 value={form.address2}
                 onChange={handleChange}
+                placeholder="神南1-2-3"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
@@ -226,6 +207,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 name="address3"
                 value={form.address3}
                 onChange={handleChange}
+                placeholder="テラコードビル101"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
@@ -239,6 +221,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 name="phone1"
                 value={form.phone1}
                 onChange={handleChange}
+                placeholder="03-1234-5678"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
@@ -249,6 +232,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 name="phone2"
                 value={form.phone2}
                 onChange={handleChange}
+                placeholder="090-1234-5678"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
@@ -262,6 +246,7 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
                 name="email"
                 value={form.email}
                 onChange={handleChange}
+                placeholder="example@example.com"
                 className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
@@ -279,40 +264,15 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-stone-600 mb-1">入檀日</label>
-              <input
-                type="date"
-                name="joinedAt"
-                value={form.joinedAt}
-                onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-stone-600 mb-1">離檀日</label>
-              <input
-                type="date"
-                name="leftAt"
-                value={form.leftAt}
-                onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
-              />
-            </div>
-          </div>
-
           <div>
-            <label className="flex items-center gap-2 text-sm text-stone-600 cursor-pointer">
-              <input
-                type="checkbox"
-                name="isActive"
-                checked={form.isActive}
-                onChange={handleChange}
-                className="rounded"
-              />
-              在籍中
-            </label>
+            <label className="block text-sm font-medium text-stone-600 mb-1">入檀日</label>
+            <input
+              type="date"
+              name="joinedAt"
+              value={form.joinedAt}
+              onChange={handleChange}
+              className="border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+            />
           </div>
 
           <div>
@@ -327,16 +287,127 @@ export default function EditDankaPage({ params }: { params: Promise<{ id: string
           </div>
         </div>
 
+        <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-stone-700">世帯員</h2>
+            <button
+              type="button"
+              onClick={addMember}
+              className="text-sm text-stone-600 hover:text-stone-800 border border-stone-300 px-3 py-1 rounded-lg"
+            >
+              + 追加
+            </button>
+          </div>
+
+          {members.length === 0 && (
+            <p className="text-stone-400 text-sm">世帯員を追加できます</p>
+          )}
+
+          {members.map((member, index) => (
+            <div key={index} className="border border-stone-200 rounded-lg p-4 space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-stone-600">世帯員 {index + 1}</span>
+                <button
+                  type="button"
+                  onClick={() => removeMember(index)}
+                  className="text-red-400 hover:text-red-600 text-sm"
+                >
+                  削除
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">姓 *</label>
+                  <input
+                    type="text"
+                    value={member.familyName}
+                    onChange={(e) => updateMember(index, "familyName", e.target.value)}
+                    placeholder="山田"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">名</label>
+                  <input
+                    type="text"
+                    value={member.givenName}
+                    onChange={(e) => updateMember(index, "givenName", e.target.value)}
+                    placeholder="花子"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">姓（カナ）</label>
+                  <input
+                    type="text"
+                    value={member.familyNameKana}
+                    onChange={(e) => updateMember(index, "familyNameKana", e.target.value)}
+                    placeholder="ヤマダ"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">名（カナ）</label>
+                  <input
+                    type="text"
+                    value={member.givenNameKana}
+                    onChange={(e) => updateMember(index, "givenNameKana", e.target.value)}
+                    placeholder="ハナコ"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">続柄</label>
+                  <input
+                    type="text"
+                    value={member.relation}
+                    onChange={(e) => updateMember(index, "relation", e.target.value)}
+                    placeholder="妻・子など"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">生年月日</label>
+                  <input
+                    type="date"
+                    value={member.birthDate}
+                    onChange={(e) => updateMember(index, "birthDate", e.target.value)}
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">法名</label>
+                  <input
+                    type="text"
+                    value={member.dharmaName}
+                    onChange={(e) => updateMember(index, "dharmaName", e.target.value)}
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">法名（カナ）</label>
+                  <input
+                    type="text"
+                    value={member.dharmaNameKana}
+                    onChange={(e) => updateMember(index, "dharmaNameKana", e.target.value)}
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
         <div className="flex gap-3">
           <button
             type="submit"
             disabled={submitting}
             className="bg-stone-700 text-white px-6 py-2 rounded-lg hover:bg-stone-800 transition-colors text-sm font-medium disabled:opacity-50"
           >
-            {submitting ? "更新中..." : "更新する"}
+            {submitting ? "登録中..." : "登録する"}
           </button>
           <Link
-            href={`/danka/${id}`}
+            href="/householder"
             className="border border-stone-300 text-stone-600 px-6 py-2 rounded-lg hover:bg-stone-50 transition-colors text-sm font-medium"
           >
             キャンセル

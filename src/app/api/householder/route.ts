@@ -3,14 +3,14 @@ import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
 
-// 檀家一覧取得
+// 戸主一覧取得
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q") || "";
   const activeOnly = searchParams.get("active") !== "false";
 
   try {
-    const dankaList = await prisma.danka.findMany({
+    const householderList = await prisma.householder.findMany({
       where: {
         isActive: activeOnly ? true : undefined,
         OR: query
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
               { givenName: { contains: query, mode: "insensitive" } },
               { familyNameKana: { contains: query, mode: "insensitive" } },
               { givenNameKana: { contains: query, mode: "insensitive" } },
-              { dankaCode: { contains: query, mode: "insensitive" } },
+              { householderCode: { contains: query, mode: "insensitive" } },
               { address1: { contains: query, mode: "insensitive" } },
               { address2: { contains: query, mode: "insensitive" } },
               { address3: { contains: query, mode: "insensitive" } },
@@ -32,14 +32,14 @@ export async function GET(request: NextRequest) {
       orderBy: [{ familyNameKana: "asc" }, { familyName: "asc" }],
     });
 
-    return NextResponse.json(dankaList);
+    return NextResponse.json(householderList);
   } catch (error) {
-    console.error("GET /api/danka error:", error);
+    console.error("GET /api/householder error:", error);
     return NextResponse.json({ error: (error as Error).message || "エラーが発生しました" }, { status: 500 });
   }
 }
 
-// 檀家新規登録
+// 戸主新規登録
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const danka = await prisma.danka.create({
+    const householder = await prisma.householder.create({
       data: {
         familyName,
         givenName,
@@ -113,9 +113,9 @@ export async function POST(request: NextRequest) {
       include: { members: true },
     });
 
-    return NextResponse.json(danka, { status: 201 });
+    return NextResponse.json(householder, { status: 201 });
   } catch (error) {
-    console.error("POST /api/danka error:", error);
+    console.error("POST /api/householder error:", error);
     return NextResponse.json({ error: (error as Error).message || "エラーが発生しました" }, { status: 500 });
   }
 }

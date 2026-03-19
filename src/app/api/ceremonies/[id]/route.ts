@@ -15,7 +15,7 @@ export async function GET(_request: NextRequest, { params }: Params) {
       where: { id: ceremonyId },
       include: {
         participants: {
-          include: { danka: true },
+          include: { householder: true },
         },
       },
     });
@@ -74,7 +74,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
         note: note || null,
       },
       include: {
-        participants: { include: { danka: true } },
+        participants: { include: { householder: true } },
       },
     });
 

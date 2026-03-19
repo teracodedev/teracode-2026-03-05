@@ -8,7 +8,6 @@ type Params = { params: Promise<{ id: string; memberId: string }> };
 // 世帯員更新
 export async function PUT(request: NextRequest, { params }: Params) {
   const { memberId } = await params;
-  const id = memberId;
 
   try {
     const body = await request.json();
@@ -18,8 +17,8 @@ export async function PUT(request: NextRequest, { params }: Params) {
       return NextResponse.json({ error: "姓は必須です" }, { status: 400 });
     }
 
-    const member = await prisma.dankaMember.update({
-      where: { id },
+    const member = await prisma.householderMember.update({
+      where: { id: memberId },
       data: {
         familyName,
         givenName: givenName || null,
@@ -36,7 +35,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
     return NextResponse.json(member);
   } catch (error) {
-    console.error(`PUT /api/danka/members/${memberId} error:`, error);
+    console.error(`PUT /api/householder/members/${memberId} error:`, error);
     return NextResponse.json({ error: (error as Error).message || "更新に失敗しました" }, { status: 500 });
   }
 }
@@ -44,13 +43,12 @@ export async function PUT(request: NextRequest, { params }: Params) {
 // 世帯員削除
 export async function DELETE(_request: NextRequest, { params }: Params) {
   const { memberId } = await params;
-  const id = memberId;
 
   try {
-    await prisma.dankaMember.delete({ where: { id } });
+    await prisma.householderMember.delete({ where: { id: memberId } });
     return NextResponse.json({ message: "削除しました" });
   } catch (error) {
-    console.error(`DELETE /api/danka/members/${memberId} error:`, error);
+    console.error(`DELETE /api/householder/members/${memberId} error:`, error);
     return NextResponse.json({ error: (error as Error).message || "削除に失敗しました" }, { status: 500 });
   }
 }

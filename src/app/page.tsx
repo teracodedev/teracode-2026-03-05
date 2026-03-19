@@ -11,7 +11,7 @@ export default function Home() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
         <Link
-          href="/danka"
+          href="/householder"
           className="block bg-white rounded-xl shadow-sm border border-stone-200 p-8 hover:shadow-md hover:border-stone-300 transition-all group"
         >
           <div className="text-4xl mb-4">👨‍👩‍👧‍👦</div>

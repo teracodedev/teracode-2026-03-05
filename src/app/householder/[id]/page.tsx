@@ -25,9 +25,9 @@ interface Ceremony {
   ceremonyType: string;
 }
 
-interface DankaDetail {
+interface HouseholderDetail {
   id: string;
-  dankaCode: string;
+  householderCode: string;
   familyName: string;
   givenName: string;
   familyNameKana: string | null;
@@ -196,10 +196,10 @@ function MemberCard({
   );
 }
 
-export default function DankaDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function HouseholderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const [danka, setDanka] = useState<DankaDetail | null>(null);
+  const [householder, setHouseholder] = useState<HouseholderDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>("info");
@@ -212,11 +212,11 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
   const [editSubmitting, setEditSubmitting] = useState(false);
   const [editError, setEditError] = useState("");
 
-  const fetchDanka = () => {
-    fetch(`/api/danka/${id}`)
+  const fetchHouseholder = () => {
+    fetch(`/api/householder/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        setDanka({
+        setHouseholder({
           ...data,
           members: Array.isArray(data?.members) ? data.members : [],
           ceremonies: Array.isArray(data?.ceremonies) ? data.ceremonies : [],
@@ -227,14 +227,14 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchDanka(); }, [id]);
+  useEffect(() => { fetchHouseholder(); }, [id]);
 
   const handleDelete = async () => {
     if (!confirm("この戸主を削除してもよろしいですか？")) return;
     setDeleting(true);
     try {
-      await fetch(`/api/danka/${id}`, { method: "DELETE" });
-      router.push("/danka");
+      await fetch(`/api/householder/${id}`, { method: "DELETE" });
+      router.push("/householder");
     } catch { setDeleting(false); }
   };
 
@@ -243,7 +243,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
     setAddSubmitting(true);
     setAddError("");
     try {
-      const res = await fetch(`/api/danka/${id}/members`, {
+      const res = await fetch(`/api/householder/${id}/members`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(addForm),
@@ -252,7 +252,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
       if (!res.ok) { setAddError(data.error || "登録に失敗しました"); return; }
       setAddForm(emptyMemberForm);
       setShowAddForm(false);
-      fetchDanka();
+      fetchHouseholder();
     } catch { setAddError("ネットワークエラーが発生しました"); }
     finally { setAddSubmitting(false); }
   };
@@ -279,7 +279,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
     setEditSubmitting(true);
     setEditError("");
     try {
-      const res = await fetch(`/api/danka/${id}/members/${memberId}`, {
+      const res = await fetch(`/api/householder/${id}/members/${memberId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editForm),
@@ -287,7 +287,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
       const data = await res.json();
       if (!res.ok) { setEditError(data.error || "更新に失敗しました"); return; }
       setEditingMemberId(null);
-      fetchDanka();
+      fetchHouseholder();
     } catch { setEditError("ネットワークエラーが発生しました"); }
     finally { setEditSubmitting(false); }
   };
@@ -295,16 +295,16 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
   const handleDeleteMember = async (memberId: string, memberName: string) => {
     if (!confirm(`「${memberName}」を削除してもよろしいですか？`)) return;
     try {
-      await fetch(`/api/danka/${id}/members/${memberId}`, { method: "DELETE" });
-      fetchDanka();
+      await fetch(`/api/householder/${id}/members/${memberId}`, { method: "DELETE" });
+      fetchHouseholder();
     } catch { alert("削除に失敗しました"); }
   };
 
   if (loading) return <div className="text-center py-12 text-stone-400">読み込み中...</div>;
-  if (!danka) return <div className="text-center py-12 text-stone-400">戸主が見つかりません</div>;
+  if (!householder) return <div className="text-center py-12 text-stone-400">戸主が見つかりません</div>;
 
-  const livingMembers = danka.members.filter((m) => !m.deathDate);
-  const deceasedMembers = danka.members.filter((m) => !!m.deathDate);
+  const livingMembers = householder.members.filter((m) => !m.deathDate);
+  const deceasedMembers = householder.members.filter((m) => !!m.deathDate);
 
   const tabs: { id: TabId; label: string; count?: number }[] = [
     { id: "info", label: "基本情報" },
@@ -317,15 +317,15 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
     <div className="max-w-3xl space-y-4">
       {/* ヘッダー */}
       <div className="flex items-center gap-4">
-        <Link href="/danka" className="text-stone-400 hover:text-stone-600 text-sm">← 一覧へ</Link>
-        <h1 className="text-2xl font-bold text-stone-500">{danka.familyName} {danka.givenName}</h1>
-        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${danka.isActive ? "bg-green-100 text-green-700" : "bg-stone-100 text-stone-500"}`}>
-          {danka.isActive ? "在籍" : "離檀"}
+        <Link href="/householder" className="text-stone-400 hover:text-stone-600 text-sm">← 一覧へ</Link>
+        <h1 className="text-2xl font-bold text-stone-500">{householder.familyName} {householder.givenName}</h1>
+        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${householder.isActive ? "bg-green-100 text-green-700" : "bg-stone-100 text-stone-500"}`}>
+          {householder.isActive ? "在籍" : "離檀"}
         </span>
       </div>
 
       <div className="flex gap-3 justify-end">
-        <Link href={`/danka/${id}/edit`}
+        <Link href={`/householder/${id}/edit`}
           className="border border-stone-300 text-stone-600 px-4 py-1.5 rounded-lg hover:bg-stone-50 transition-colors text-sm font-medium">
           編集
         </Link>
@@ -369,41 +369,41 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
       {activeTab === "info" && (
         <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
           <dl className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
-            <div><dt className="text-stone-400">UUID</dt><dd className="font-mono text-stone-700 text-xs break-all">{danka.dankaCode}</dd></div>
+            <div><dt className="text-stone-400">UUID</dt><dd className="font-mono text-stone-700 text-xs break-all">{householder.householderCode}</dd></div>
             <div>
               <dt className="text-stone-400">氏名（カナ）</dt>
               <dd className="text-stone-700">
-                {[danka.familyNameKana, danka.givenNameKana].filter(Boolean).join(" ") || "-"}
+                {[householder.familyNameKana, householder.givenNameKana].filter(Boolean).join(" ") || "-"}
               </dd>
             </div>
-            <div><dt className="text-stone-400">郵便番号</dt><dd className="text-stone-700">{danka.postalCode || "-"}</dd></div>
+            <div><dt className="text-stone-400">郵便番号</dt><dd className="text-stone-700">{householder.postalCode || "-"}</dd></div>
             <div className="col-span-2">
               <dt className="text-stone-400">住所</dt>
               <dd className="text-stone-700">
-                {[danka.address1, danka.address2, danka.address3].filter(Boolean).join(" ") || "-"}
+                {[householder.address1, householder.address2, householder.address3].filter(Boolean).join(" ") || "-"}
               </dd>
             </div>
-            <div><dt className="text-stone-400">電話番号1</dt><dd className="text-stone-700">{danka.phone1 || "-"}</dd></div>
-          <div><dt className="text-stone-400">電話番号2</dt><dd className="text-stone-700">{danka.phone2 || "-"}</dd></div>
-            <div><dt className="text-stone-400">メールアドレス</dt><dd className="text-stone-700">{danka.email || "-"}</dd></div>
-            <div><dt className="text-stone-400">入檀日</dt><dd className="text-stone-700">{formatDate(danka.joinedAt)}</dd></div>
-            {danka.leftAt && (
-              <div><dt className="text-stone-400">離檀日</dt><dd className="text-stone-700">{formatDate(danka.leftAt)}</dd></div>
+            <div><dt className="text-stone-400">電話番号1</dt><dd className="text-stone-700">{householder.phone1 || "-"}</dd></div>
+            <div><dt className="text-stone-400">電話番号2</dt><dd className="text-stone-700">{householder.phone2 || "-"}</dd></div>
+            <div><dt className="text-stone-400">メールアドレス</dt><dd className="text-stone-700">{householder.email || "-"}</dd></div>
+            <div><dt className="text-stone-400">入檀日</dt><dd className="text-stone-700">{formatDate(householder.joinedAt)}</dd></div>
+            {householder.leftAt && (
+              <div><dt className="text-stone-400">離檀日</dt><dd className="text-stone-700">{formatDate(householder.leftAt)}</dd></div>
             )}
-            {danka.note && (
+            {householder.note && (
               <div className="col-span-2">
                 <dt className="text-stone-400">備考</dt>
-                <dd className="text-stone-700 whitespace-pre-wrap">{danka.note}</dd>
+                <dd className="text-stone-700 whitespace-pre-wrap">{householder.note}</dd>
               </div>
             )}
           </dl>
 
           {/* 参加法要履歴 */}
-          {danka.ceremonies.length > 0 && (
+          {householder.ceremonies.length > 0 && (
             <div className="mt-6 pt-6 border-t border-stone-100">
               <h3 className="font-medium text-stone-600 mb-3 text-sm">参加法要履歴</h3>
               <div className="space-y-2">
-                {danka.ceremonies.map(({ ceremony }) => (
+                {householder.ceremonies.map(({ ceremony }) => (
                   <Link key={ceremony.id} href={`/ceremonies/${ceremony.id}`}
                     className="flex items-center justify-between border border-stone-100 rounded-lg p-3 hover:bg-stone-50">
                     <div>
@@ -427,7 +427,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
           <dl className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
             <div className="col-span-2">
               <dt className="text-stone-400 mb-1">本籍地</dt>
-              <dd className="text-stone-700">{danka.domicile || "-"}</dd>
+              <dd className="text-stone-700">{householder.domicile || "-"}</dd>
             </div>
           </dl>
         </div>

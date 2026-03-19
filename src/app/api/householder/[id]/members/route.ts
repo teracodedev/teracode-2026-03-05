@@ -8,7 +8,7 @@ type Params = { params: Promise<{ id: string }> };
 // 世帯員追加
 export async function POST(request: NextRequest, { params }: Params) {
   const { id } = await params;
-  const dankaId = id;
+  const householderId = id;
 
   try {
     const body = await request.json();
@@ -18,9 +18,9 @@ export async function POST(request: NextRequest, { params }: Params) {
       return NextResponse.json({ error: "姓は必須です" }, { status: 400 });
     }
 
-    const member = await prisma.dankaMember.create({
+    const member = await prisma.householderMember.create({
       data: {
-        dankaId,
+        householderId,
         familyName,
         givenName: givenName || null,
         familyNameKana: familyNameKana || null,
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest, { params }: Params) {
 
     return NextResponse.json(member, { status: 201 });
   } catch (error) {
-    console.error(`POST /api/danka/${id}/members error:`, error);
+    console.error(`POST /api/householder/${id}/members error:`, error);
     return NextResponse.json({ error: (error as Error).message || "登録に失敗しました" }, { status: 500 });
   }
 }
