@@ -40,7 +40,8 @@ model DankaMember {
   id            String    @id @default(uuid())
   dankaId       String
   danka         Danka     @relation(fields: [dankaId], references: [id], onDelete: Cascade)
-  name          String    // 氏名
+  familyName    String    // 姓
+  givenName     String?   // 名
   nameKana      String?   // 氏名（カナ）
   relation      String?   // 続柄（世帯主、妻、子など）
   birthDate     DateTime? // 生年月日

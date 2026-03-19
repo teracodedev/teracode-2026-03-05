@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 
 interface Member {
   id: string;
-  name: string;
+  familyName: string;
+  givenName: string | null;
   nameKana: string | null;
   relation: string | null;
   birthDate: string | null;
@@ -63,7 +64,7 @@ function toInputDate(dateStr: string | null): string {
 }
 
 const emptyMemberForm = {
-  name: "", nameKana: "", relation: "", birthDate: "", deathDate: "", dharmaName: "", dharmaNameKana: "", note: "",
+  familyName: "", givenName: "", nameKana: "", relation: "", birthDate: "", deathDate: "", dharmaName: "", dharmaNameKana: "", note: "",
 };
 
 type MemberForm = typeof emptyMemberForm;
@@ -74,12 +75,16 @@ function MemberFormFields({ form, onChange }: { form: MemberForm; onChange: (f: 
   return (
     <div className="grid grid-cols-2 gap-3 mt-3">
       <div>
-        <label className="block text-xs text-stone-500 mb-1">氏名 <span className="text-red-500">*</span></label>
-        <input type="text" value={form.name} onChange={(e) => set("name", e.target.value)} className={cls} />
+        <label className="block text-xs text-stone-500 mb-1">姓 <span className="text-red-500">*</span></label>
+        <input type="text" value={form.familyName} onChange={(e) => set("familyName", e.target.value)} placeholder="山田" className={cls} />
       </div>
       <div>
+        <label className="block text-xs text-stone-500 mb-1">名</label>
+        <input type="text" value={form.givenName} onChange={(e) => set("givenName", e.target.value)} placeholder="花子" className={cls} />
+      </div>
+      <div className="col-span-2">
         <label className="block text-xs text-stone-500 mb-1">氏名（カナ）</label>
-        <input type="text" value={form.nameKana} onChange={(e) => set("nameKana", e.target.value)} className={cls} />
+        <input type="text" value={form.nameKana} onChange={(e) => set("nameKana", e.target.value)} placeholder="ヤマダ ハナコ" className={cls} />
       </div>
       <div>
         <label className="block text-xs text-stone-500 mb-1">続柄</label>
@@ -165,7 +170,8 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
   const startEdit = (member: Member) => {
     setEditingMemberId(member.id);
     setEditForm({
-      name: member.name,
+      familyName: member.familyName,
+      givenName: member.givenName || "",
       nameKana: member.nameKana || "",
       relation: member.relation || "",
       birthDate: toInputDate(member.birthDate),
@@ -289,59 +295,62 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
           <p className="text-stone-400 text-sm">世帯員が登録されていません</p>
         ) : (
           <div className="space-y-3">
-            {danka.members.map((member) => (
-              <div key={member.id} className="border border-stone-100 rounded-lg p-4 text-sm">
-                {editingMemberId === member.id ? (
-                  <form onSubmit={(e) => handleEditMember(e, member.id)}>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-stone-700">編集中</p>
-                      <button type="button" onClick={() => setEditingMemberId(null)}
-                        className="text-xs text-stone-400 hover:text-stone-600">キャンセル</button>
-                    </div>
-                    {editError && <p className="text-red-600 text-xs mt-1">{editError}</p>}
-                    <MemberFormFields form={editForm} onChange={setEditForm} />
-                    <div className="flex gap-2 mt-3">
-                      <button type="submit" disabled={editSubmitting}
-                        className="bg-stone-700 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-stone-800 disabled:opacity-50">
-                        {editSubmitting ? "保存中..." : "保存する"}
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <span className="font-medium text-stone-800">{member.name}</span>
-                        {member.relation && (
-                          <span className="text-xs bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full">{member.relation}</span>
-                        )}
-                        {member.deathDate && (
-                          <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">故人</span>
-                        )}
+            {danka.members.map((member) => {
+              const displayName = [member.familyName, member.givenName].filter(Boolean).join(" ");
+              return (
+                <div key={member.id} className="border border-stone-100 rounded-lg p-4 text-sm">
+                  {editingMemberId === member.id ? (
+                    <form onSubmit={(e) => handleEditMember(e, member.id)}>
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-stone-700">編集中</p>
+                        <button type="button" onClick={() => setEditingMemberId(null)}
+                          className="text-xs text-stone-400 hover:text-stone-600">キャンセル</button>
                       </div>
-                      <div className="flex gap-2">
-                        <button onClick={() => startEdit(member)}
-                          className="text-xs text-stone-500 hover:text-stone-700 border border-stone-200 px-2 py-0.5 rounded">
-                          編集
-                        </button>
-                        <button onClick={() => handleDeleteMember(member.id, member.name)}
-                          className="text-xs text-red-400 hover:text-red-600 border border-red-100 px-2 py-0.5 rounded">
-                          削除
+                      {editError && <p className="text-red-600 text-xs mt-1">{editError}</p>}
+                      <MemberFormFields form={editForm} onChange={setEditForm} />
+                      <div className="flex gap-2 mt-3">
+                        <button type="submit" disabled={editSubmitting}
+                          className="bg-stone-700 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-stone-800 disabled:opacity-50">
+                          {editSubmitting ? "保存中..." : "保存する"}
                         </button>
                       </div>
-                    </div>
-                    <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-stone-500">
-                      <div className="col-span-2"><dt className="inline">UUID: </dt><dd className="inline font-mono break-all">{member.id}</dd></div>
-                      {member.nameKana && <div><dt className="inline">カナ: </dt><dd className="inline">{member.nameKana}</dd></div>}
-                      {member.birthDate && <div><dt className="inline">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>}
-                      {member.deathDate && <div><dt className="inline">没年月日: </dt><dd className="inline">{formatDate(member.deathDate)}</dd></div>}
-                      {member.dharmaName && <div><dt className="inline">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>}
-                      {member.dharmaNameKana && <div><dt className="inline">法名（カナ）: </dt><dd className="inline">{member.dharmaNameKana}</dd></div>}
-                    </dl>
-                  </>
-                )}
-              </div>
-            ))}
+                    </form>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-3">
+                          <span className="font-medium text-stone-800">{displayName}</span>
+                          {member.relation && (
+                            <span className="text-xs bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full">{member.relation}</span>
+                          )}
+                          {member.deathDate && (
+                            <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">故人</span>
+                          )}
+                        </div>
+                        <div className="flex gap-2">
+                          <button onClick={() => startEdit(member)}
+                            className="text-xs text-stone-500 hover:text-stone-700 border border-stone-200 px-2 py-0.5 rounded">
+                            編集
+                          </button>
+                          <button onClick={() => handleDeleteMember(member.id, displayName)}
+                            className="text-xs text-red-400 hover:text-red-600 border border-red-100 px-2 py-0.5 rounded">
+                            削除
+                          </button>
+                        </div>
+                      </div>
+                      <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-stone-500">
+                        <div className="col-span-2"><dt className="inline">UUID: </dt><dd className="inline font-mono break-all">{member.id}</dd></div>
+                        {member.nameKana && <div><dt className="inline">カナ: </dt><dd className="inline">{member.nameKana}</dd></div>}
+                        {member.birthDate && <div><dt className="inline">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>}
+                        {member.deathDate && <div><dt className="inline">没年月日: </dt><dd className="inline">{formatDate(member.deathDate)}</dd></div>}
+                        {member.dharmaName && <div><dt className="inline">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>}
+                        {member.dharmaNameKana && <div><dt className="inline">法名（カナ）: </dt><dd className="inline">{member.dharmaNameKana}</dd></div>}
+                      </dl>
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

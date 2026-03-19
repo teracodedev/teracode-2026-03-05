@@ -14,7 +14,8 @@ export async function GET(request: NextRequest) {
         deathDate: { not: null },
         OR: query
           ? [
-              { name: { contains: query, mode: "insensitive" } },
+              { familyName: { contains: query, mode: "insensitive" } },
+              { givenName: { contains: query, mode: "insensitive" } },
               { nameKana: { contains: query, mode: "insensitive" } },
               { dharmaName: { contains: query, mode: "insensitive" } },
               { dharmaNameKana: { contains: query, mode: "insensitive" } },

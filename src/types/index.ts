@@ -20,7 +20,8 @@ export interface DankaWithMembers {
   members: {
     id: string;
     dankaId: string;
-    name: string;
+    familyName: string;
+    givenName: string | null;
     nameKana: string | null;
     relation: string | null;
     birthDate: Date | null;

@@ -6,7 +6,8 @@ import Link from "next/link";
 interface KakuchoRecord {
   id: string;
   dankaId: string;
-  name: string;
+  familyName: string;
+  givenName: string | null;
   nameKana: string | null;
   relation: string | null;
   birthDate: string | null;
@@ -106,7 +107,7 @@ export default function KakuchoPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-stone-700">
-                    {record.name}
+                    {[record.familyName, record.givenName].filter(Boolean).join(" ")}
                     {record.nameKana && (
                       <div className="text-xs text-stone-400">{record.nameKana}</div>
                     )}

@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface MemberForm {
-  name: string;
+  familyName: string;
+  givenName: string;
   nameKana: string;
   relation: string;
   birthDate: string;
@@ -41,7 +42,7 @@ export default function NewDankaPage() {
   };
 
   const addMember = () => {
-    setMembers([...members, { name: "", nameKana: "", relation: "", birthDate: "", dharmaName: "", dharmaNameKana: "", note: "" }]);
+    setMembers([...members, { familyName: "", givenName: "", nameKana: "", relation: "", birthDate: "", dharmaName: "", dharmaNameKana: "", note: "" }]);
   };
 
   const updateMember = (index: number, field: keyof MemberForm, value: string) => {
@@ -63,7 +64,7 @@ export default function NewDankaPage() {
       const res = await fetch("/api/danka", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, members: members.filter((m) => m.name) }),
+        body: JSON.stringify({ ...form, members: members.filter((m) => m.familyName) }),
       });
 
       if (!res.ok) {
@@ -284,12 +285,32 @@ export default function NewDankaPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-stone-500 mb-1">氏名 *</label>
+                  <label className="block text-xs text-stone-500 mb-1">姓 *</label>
                   <input
                     type="text"
-                    value={member.name}
-                    onChange={(e) => updateMember(index, "name", e.target.value)}
-                    placeholder="山田 花子"
+                    value={member.familyName}
+                    onChange={(e) => updateMember(index, "familyName", e.target.value)}
+                    placeholder="山田"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-stone-500 mb-1">名</label>
+                  <input
+                    type="text"
+                    value={member.givenName}
+                    onChange={(e) => updateMember(index, "givenName", e.target.value)}
+                    placeholder="花子"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-xs text-stone-500 mb-1">氏名（カナ）</label>
+                  <input
+                    type="text"
+                    value={member.nameKana}
+                    onChange={(e) => updateMember(index, "nameKana", e.target.value)}
+                    placeholder="ヤマダ ハナコ"
                     className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>

@@ -12,16 +12,17 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
   try {
     const body = await request.json();
-    const { name, nameKana, relation, birthDate, deathDate, dharmaName, dharmaNameKana, note } = body;
+    const { familyName, givenName, nameKana, relation, birthDate, deathDate, dharmaName, dharmaNameKana, note } = body;
 
-    if (!name) {
-      return NextResponse.json({ error: "氏名は必須です" }, { status: 400 });
+    if (!familyName) {
+      return NextResponse.json({ error: "姓は必須です" }, { status: 400 });
     }
 
     const member = await prisma.dankaMember.update({
       where: { id },
       data: {
-        name,
+        familyName,
+        givenName: givenName || null,
         nameKana: nameKana || null,
         relation: relation || null,
         birthDate: birthDate ? new Date(birthDate) : null,
