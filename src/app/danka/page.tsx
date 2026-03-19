@@ -103,7 +103,7 @@ export default function DankaPage() {
           <table className="w-full text-sm">
             <thead className="bg-stone-50 border-b border-stone-200">
               <tr>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">檀家番号</th>
+                <th className="text-left px-4 py-3 text-stone-600 font-medium">UUID</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">氏名</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">住所</th>
                 <th className="text-left px-4 py-3 text-stone-600 font-medium">電話番号</th>

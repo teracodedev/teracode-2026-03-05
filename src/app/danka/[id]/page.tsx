@@ -224,7 +224,7 @@ export default function DankaDetailPage({ params }: { params: Promise<{ id: stri
       <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
         <h2 className="font-semibold text-stone-700 mb-4">基本情報</h2>
         <dl className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
-          <div><dt className="text-stone-400">檀家番号</dt><dd className="font-mono text-stone-700">{danka.dankaCode}</dd></div>
+          <div><dt className="text-stone-400">UUID</dt><dd className="font-mono text-stone-700 text-xs break-all">{danka.dankaCode}</dd></div>
           <div>
             <dt className="text-stone-400">氏名（カナ）</dt>
             <dd className="text-stone-700">
