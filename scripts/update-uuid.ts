@@ -17,20 +17,20 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 
 async function main() {
   // 檀家番号がUUIDでないレコードを取得
-  const dankaList = await prisma.danka.findMany({
-    select: { id: true, dankaCode: true, familyName: true, givenName: true },
+  const dankaList = await prisma.householder.findMany({
+    select: { id: true, householderCode: true, familyName: true, givenName: true },
   });
 
-  const targets = dankaList.filter((d) => !UUID_REGEX.test(d.dankaCode));
+  const targets = dankaList.filter((d) => !UUID_REGEX.test(d.householderCode));
   console.log(`檀家 ${dankaList.length}件中、UUID変換対象: ${targets.length}件`);
 
   for (const danka of targets) {
     const newCode = randomUUID();
-    await prisma.danka.update({
+    await prisma.householder.update({
       where: { id: danka.id },
-      data: { dankaCode: newCode },
+      data: { householderCode: newCode },
     });
-    console.log(`  ${danka.familyName}${danka.givenName}: ${danka.dankaCode} → ${newCode}`);
+    console.log(`  ${danka.familyName}${danka.givenName}: ${danka.householderCode} → ${newCode}`);
   }
 
   console.log("完了");
