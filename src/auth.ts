@@ -3,9 +3,9 @@ import Credentials from "next-auth/providers/credentials";
 import { PrismaClient } from "@/generated/prisma";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  // nginx 等のリバプロ配下での Host/Proto 判定エラーを防ぐ
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {
@@ -14,6 +14,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
+
+        // middleware から this module が import されても Prisma の
+        // インスタンス生成は authorize 呼び出し時まで遅延します。
+        const prisma = new PrismaClient();
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },

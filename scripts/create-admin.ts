@@ -2,7 +2,7 @@
  * 初期管理者アカウント作成スクリプト
  * 使用方法: npm run create-admin
  */
-import { PrismaClient } from "../src/generated/prisma";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import * as readline from "readline";
 
