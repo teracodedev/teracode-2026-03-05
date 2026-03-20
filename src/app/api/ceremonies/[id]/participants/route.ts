@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/require-auth";
 
 export const runtime = "nodejs";
 
@@ -7,6 +8,9 @@ type Params = { params: Promise<{ id: string }> };
 
 // 参加者追加
 export async function POST(request: NextRequest, { params }: Params) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const { id } = await params;
   const ceremonyId = id;
 
@@ -51,6 +55,9 @@ export async function POST(request: NextRequest, { params }: Params) {
 
 // 参加者削除
 export async function DELETE(request: NextRequest, { params }: Params) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const { id } = await params;
   const ceremonyId = id;
   const searchParams = request.nextUrl.searchParams;

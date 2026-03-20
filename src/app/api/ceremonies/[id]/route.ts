@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/require-auth";
 
 export const runtime = "nodejs";
 
@@ -7,6 +8,9 @@ type Params = { params: Promise<{ id: string }> };
 
 // 法要詳細取得
 export async function GET(_request: NextRequest, { params }: Params) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const { id } = await params;
   const ceremonyId = id;
 
@@ -33,6 +37,9 @@ export async function GET(_request: NextRequest, { params }: Params) {
 
 // 法要情報更新
 export async function PUT(request: NextRequest, { params }: Params) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const { id } = await params;
   const ceremonyId = id;
 
@@ -87,6 +94,9 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
 // 法要削除
 export async function DELETE(_request: NextRequest, { params }: Params) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const { id } = await params;
   const ceremonyId = id;
 

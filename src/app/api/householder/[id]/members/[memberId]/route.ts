@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMemberDelegate } from "@/lib/prisma-models";
+import { requireAuth } from "@/lib/require-auth";
 
 export const runtime = "nodejs";
 
@@ -7,6 +8,9 @@ type Params = { params: Promise<{ id: string; memberId: string }> };
 
 // 世帯員更新
 export async function PUT(request: NextRequest, { params }: Params) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const { memberId } = await params;
 
   try {
@@ -45,6 +49,9 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
 // 世帯員削除
 export async function DELETE(_request: NextRequest, { params }: Params) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const { memberId } = await params;
 
   try {

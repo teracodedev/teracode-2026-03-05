@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getHouseholderFieldMap, getHouseholderModelKind, getMemberDelegate } from "@/lib/prisma-models";
+import { requireAuth } from "@/lib/require-auth";
 
 export const runtime = "nodejs";
 
 // 過去帳一覧取得（命日が設定されている世帯員）
 export async function GET(request: NextRequest) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q") || "";
 

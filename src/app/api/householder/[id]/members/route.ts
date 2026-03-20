@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getHouseholderFieldMap, getHouseholderModelKind, getMemberDelegate } from "@/lib/prisma-models";
+import { requireAuth } from "@/lib/require-auth";
 
 export const runtime = "nodejs";
 
@@ -7,6 +8,9 @@ type Params = { params: Promise<{ id: string }> };
 
 // 世帯員追加
 export async function POST(request: NextRequest, { params }: Params) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const { id } = await params;
   const householderId = id;
 

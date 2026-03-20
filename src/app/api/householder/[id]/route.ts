@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getHouseholderDelegate, getHouseholderFieldMap, getHouseholderModelKind } from "@/lib/prisma-models";
+import { requireAuth } from "@/lib/require-auth";
 
 export const runtime = "nodejs";
 
@@ -7,6 +8,9 @@ type Params = { params: Promise<{ id: string }> };
 
 // 戸主詳細取得
 export async function GET(_request: NextRequest, { params }: Params) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const { id } = await params;
 
   try {
@@ -40,6 +44,9 @@ export async function GET(_request: NextRequest, { params }: Params) {
 
 // 戸主情報更新
 export async function PUT(request: NextRequest, { params }: Params) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const { id } = await params;
 
   try {
@@ -108,6 +115,9 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
 // 戸主削除
 export async function DELETE(_request: NextRequest, { params }: Params) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const { id } = await params;
 
   try {

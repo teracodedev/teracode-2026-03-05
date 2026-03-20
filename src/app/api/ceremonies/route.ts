@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { CeremonyStatus, CeremonyType } from "@prisma/client";
+import { requireAuth } from "@/lib/require-auth";
 
 export const runtime = "nodejs";
 
 // 法要・行事一覧取得
 export async function GET(request: NextRequest) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q") || "";
   const type = searchParams.get("type") as CeremonyType | null;
@@ -41,6 +45,9 @@ export async function GET(request: NextRequest) {
 
 // 法要・行事新規登録
 export async function POST(request: NextRequest) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   try {
     const body = await request.json();
     const {

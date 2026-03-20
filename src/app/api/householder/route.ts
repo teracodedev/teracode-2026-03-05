@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getHouseholderDelegate, getHouseholderFieldMap, getHouseholderModelKind } from "@/lib/prisma-models";
+import { requireAuth } from "@/lib/require-auth";
 
 export const runtime = "nodejs";
 
 // 戸主一覧取得
 export async function GET(request: NextRequest) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q") || "";
   const activeOnly = searchParams.get("active") !== "false";
@@ -48,6 +51,9 @@ export async function GET(request: NextRequest) {
 
 // 戸主新規登録
 export async function POST(request: NextRequest) {
+  const unauth = await requireAuth();
+  if (unauth) return unauth;
+
   try {
     const kind = getHouseholderModelKind();
     const delegate = getHouseholderDelegate() as {
