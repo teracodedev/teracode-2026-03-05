@@ -1,4 +1,5 @@
 "use client";
+import { fetchWithAuth } from "@/lib/fetch-with-auth";
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
@@ -33,7 +34,7 @@ export default function HouseholderPage() {
       const params = new URLSearchParams();
       if (query) params.set("q", query);
       if (showInactive) params.set("active", "false");
-      const res = await fetch(`/api/householder?${params}`);
+      const res = await fetchWithAuth(`/api/householder?${params}`);
       const data = await res.json();
 
       if (!res.ok) {

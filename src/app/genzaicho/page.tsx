@@ -1,4 +1,5 @@
 "use client";
+import { fetchWithAuth } from "@/lib/fetch-with-auth";
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
@@ -50,7 +51,7 @@ export default function GenzaichoPage() {
     try {
       const params = new URLSearchParams();
       if (query) params.set("q", query);
-      const res = await fetch(`/api/genzaicho?${params}`);
+      const res = await fetchWithAuth(`/api/genzaicho?${params}`);
       const data = await res.json();
       setRecords(Array.isArray(data) ? data : []);
     } catch (err) {

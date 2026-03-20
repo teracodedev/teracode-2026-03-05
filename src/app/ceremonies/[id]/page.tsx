@@ -1,4 +1,5 @@
 "use client";
+import { fetchWithAuth } from "@/lib/fetch-with-auth";
 
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
@@ -113,7 +114,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
     e.preventDefault();
     setParticipantError("");
     try {
-      const res = await fetch(`/api/ceremonies/${id}/participants`, {
+      const res = await fetchWithAuth(`/api/ceremonies/${id}/participants`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(participantForm),
@@ -126,7 +127,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
       }
 
       // 再取得
-      const updated = await fetch(`/api/ceremonies/${id}`).then((r) => r.json());
+      const updated = await fetchWithAuth(`/api/ceremonies/${id}`).then((r) => r.json());
       setCeremony(updated);
       setAddingParticipant(false);
       setParticipantForm({ householderId: "", attendees: "1", offering: "", note: "" });
@@ -142,7 +143,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
       await fetch(`/api/ceremonies/${id}/participants?householderId=${householderId}`, {
         method: "DELETE",
       });
-      const updated = await fetch(`/api/ceremonies/${id}`).then((r) => r.json());
+      const updated = await fetchWithAuth(`/api/ceremonies/${id}`).then((r) => r.json());
       setCeremony(updated);
     } catch (err) {
       console.error(err);
@@ -151,7 +152,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
 
   const updateStatus = async (status: string) => {
     try {
-      const res = await fetch(`/api/ceremonies/${id}`, {
+      const res = await fetchWithAuth(`/api/ceremonies/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...ceremony, status }),

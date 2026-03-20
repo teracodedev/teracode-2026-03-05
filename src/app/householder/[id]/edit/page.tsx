@@ -1,4 +1,5 @@
 "use client";
+import { fetchWithAuth } from "@/lib/fetch-with-auth";
 
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
@@ -94,7 +95,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
     setError("");
 
     try {
-      const res = await fetch(`/api/householder/${id}`, {
+      const res = await fetchWithAuth(`/api/householder/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

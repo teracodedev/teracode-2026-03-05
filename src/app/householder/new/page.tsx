@@ -1,4 +1,5 @@
 "use client";
+import { fetchWithAuth } from "@/lib/fetch-with-auth";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -67,7 +68,7 @@ export default function NewHouseholderPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/householder", {
+      const res = await fetchWithAuth("/api/householder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, members: members.filter((m) => m.familyName) }),

@@ -1,4 +1,5 @@
 "use client";
+import { fetchWithAuth } from "@/lib/fetch-with-auth";
 
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
@@ -243,7 +244,7 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
     setAddSubmitting(true);
     setAddError("");
     try {
-      const res = await fetch(`/api/householder/${id}/members`, {
+      const res = await fetchWithAuth(`/api/householder/${id}/members`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(addForm),
@@ -279,7 +280,7 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
     setEditSubmitting(true);
     setEditError("");
     try {
-      const res = await fetch(`/api/householder/${id}/members/${memberId}`, {
+      const res = await fetchWithAuth(`/api/householder/${id}/members/${memberId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editForm),

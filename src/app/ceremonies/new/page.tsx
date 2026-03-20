@@ -1,4 +1,5 @@
 "use client";
+import { fetchWithAuth } from "@/lib/fetch-with-auth";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -39,7 +40,7 @@ export default function NewCeremonyPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/ceremonies", {
+      const res = await fetchWithAuth("/api/ceremonies", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

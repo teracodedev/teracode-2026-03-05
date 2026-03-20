@@ -1,4 +1,5 @@
 "use client";
+import { fetchWithAuth } from "@/lib/fetch-with-auth";
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
@@ -56,7 +57,7 @@ export default function CeremoniesPage() {
       if (query) params.set("q", query);
       if (filterType) params.set("type", filterType);
       if (filterStatus) params.set("status", filterStatus);
-      const res = await fetch(`/api/ceremonies?${params}`);
+      const res = await fetchWithAuth(`/api/ceremonies?${params}`);
       const data = await res.json();
       setCeremonies(data);
     } catch (err) {
