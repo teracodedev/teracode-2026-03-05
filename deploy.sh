@@ -38,6 +38,7 @@ pm2 restart teracode 2>/dev/null || pm2 start ecosystem.config.cjs
 
 echo "=== デプロイ完了 ==="
 pm2 list
+echo "※ nginx が 502 のとき（Cursor 等で PM2 がホストと別 netns）: sudo ./scripts/pm2-restart-host-netns.sh"
 
 if command -v docker >/dev/null 2>&1 && [ -f docker-compose.yml ]; then
   echo "[任意] nginx コンテナを再起動しています..."
