@@ -337,8 +337,8 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
       </div>
 
       {/* タブ */}
-      <div className="border-b border-stone-200">
-        <nav className="flex gap-0" aria-label="タブ">
+      <div className="border-b border-stone-200 overflow-x-auto">
+        <nav className="flex gap-0 min-w-max" aria-label="タブ">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -347,7 +347,7 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
                 setShowAddForm(false);
                 setEditingMemberId(null);
               }}
-              className={`px-5 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              className={`whitespace-nowrap px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
                   ? "border-amber-600 text-amber-700"
                   : "border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300"
