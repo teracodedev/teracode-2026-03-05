@@ -15,6 +15,9 @@ npm ci
 echo "[3/4] Prisma クライアント生成..."
 npx prisma generate
 
+echo "[3b/4] PM2 停止（ビルド中に server.js が消えてクラッシュループしないよう）..."
+pm2 stop teracode 2>/dev/null || true
+
 echo "[4/4] ビルド..."
 # 古い .next が残るとマニフェストと実ファイルがずれ、/_next/static が 500 になり
 # 「Application error: a client-side exception」になることがある
@@ -28,13 +31,14 @@ if [ -d public ]; then
 fi
 cp -r .next/static .next/standalone/.next/
 
-echo "=== ビルド完了 ==="
-echo "pm2 を再起動する前に 3000 を空ける（任意・EADDRINUSE 対策）:"
-echo "  fuser -k 3000/tcp 2>/dev/null || true; sleep 1"
-echo "pm2 を再起動: pm2 restart teracode"
-echo "Docker の nginx を使っている場合（.next/static をマウントしている場合）:"
-echo "  docker compose restart nginx"
-echo "  ※ compose を実行するディレクトリと pm2 の cwd は同一のプロジェクトルートにすること"
+echo "[4c/4] PM2 再起動..."
+fuser -k 3000/tcp 2>/dev/null || true
+sleep 1
+pm2 restart teracode 2>/dev/null || pm2 start ecosystem.config.cjs
+
+echo "=== デプロイ完了 ==="
+pm2 list
+
 if command -v docker >/dev/null 2>&1 && [ -f docker-compose.yml ]; then
   echo "[任意] nginx コンテナを再起動しています..."
   docker compose restart nginx 2>/dev/null || true
