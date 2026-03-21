@@ -8,11 +8,6 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const { pathname } = req.nextUrl;
 
-  // ログイン不要なパス
-  if (pathname.startsWith("/login") || pathname.startsWith("/api/auth")) {
-    return NextResponse.next();
-  }
-
   // 未ログインはログインページへ
   if (!isLoggedIn) {
     const loginUrl = new URL("/login", req.url);
@@ -29,5 +24,20 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    /*
+     * 否定パターンは path-to-regexp の解釈で漏れることがあるため、
+     * 「認証を掛けたいページ」だけを明示列挙する。それ以外（/_next, /api, /login,
+     * 静的ファイル等）ではミドルウェアは一切動かない。
+     */
+    "/",
+    "/admin",
+    "/admin/:path*",
+    "/ceremonies",
+    "/ceremonies/:path*",
+    "/genzaicho",
+    "/householder",
+    "/householder/:path*",
+    "/kakucho",
+  ],
 };

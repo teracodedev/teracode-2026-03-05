@@ -14,7 +14,9 @@ export default function Home() {
           href="/householder"
           className="block bg-white rounded-xl shadow-sm border border-stone-200 p-8 hover:shadow-md hover:border-stone-300 transition-all group"
         >
-          <div className="text-4xl mb-4">👨‍👩‍👧‍👦</div>
+          <div className="text-4xl mb-4" suppressHydrationWarning>
+            👨‍👩‍👧‍👦
+          </div>
           <h2 className="text-xl font-bold text-stone-800 mb-2 group-hover:text-stone-600">
             戸主台帳
           </h2>
@@ -27,7 +29,9 @@ export default function Home() {
           href="/ceremonies"
           className="block bg-white rounded-xl shadow-sm border border-stone-200 p-8 hover:shadow-md hover:border-stone-300 transition-all group"
         >
-          <div className="text-4xl mb-4">🪷</div>
+          <div className="text-4xl mb-4" suppressHydrationWarning>
+            🪷
+          </div>
           <h2 className="text-xl font-bold text-stone-800 mb-2 group-hover:text-stone-600">
             法要・行事
           </h2>
@@ -40,7 +44,9 @@ export default function Home() {
           href="/genzaicho"
           className="block bg-white rounded-xl shadow-sm border border-stone-200 p-8 hover:shadow-md hover:border-stone-300 transition-all group"
         >
-          <div className="text-4xl mb-4">📋</div>
+          <div className="text-4xl mb-4" suppressHydrationWarning>
+            📋
+          </div>
           <h2 className="text-xl font-bold text-stone-800 mb-2 group-hover:text-stone-600">
             現在帳
           </h2>
@@ -53,7 +59,9 @@ export default function Home() {
           href="/kakucho"
           className="block bg-white rounded-xl shadow-sm border border-stone-200 p-8 hover:shadow-md hover:border-stone-300 transition-all group"
         >
-          <div className="text-4xl mb-4">📖</div>
+          <div className="text-4xl mb-4" suppressHydrationWarning>
+            📖
+          </div>
           <h2 className="text-xl font-bold text-stone-800 mb-2 group-hover:text-stone-600">
             過去帳
           </h2>
