@@ -90,7 +90,7 @@ export default function NewCeremonyPage() {
               onChange={handleChange}
               required
               placeholder="例: 山田家 三回忌"
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
             />
           </div>
 
@@ -103,7 +103,7 @@ export default function NewCeremonyPage() {
               value={form.ceremonyType}
               onChange={handleChange}
               required
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white"
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white"
             >
               {CEREMONY_TYPES.map(({ value, label }) => (
                 <option key={value} value={value}>{label}</option>
@@ -122,7 +122,7 @@ export default function NewCeremonyPage() {
                 value={form.scheduledAt}
                 onChange={handleChange}
                 required
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div>
@@ -132,7 +132,7 @@ export default function NewCeremonyPage() {
                 name="endAt"
                 value={form.endAt}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -145,7 +145,7 @@ export default function NewCeremonyPage() {
               value={form.location}
               onChange={handleChange}
               placeholder="本堂・○○寺など"
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
             />
           </div>
 
@@ -159,7 +159,7 @@ export default function NewCeremonyPage() {
                 onChange={handleChange}
                 min="0"
                 placeholder="人数"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div>
@@ -171,7 +171,7 @@ export default function NewCeremonyPage() {
                 onChange={handleChange}
                 min="0"
                 placeholder="金額"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -183,7 +183,7 @@ export default function NewCeremonyPage() {
               value={form.description}
               onChange={handleChange}
               rows={3}
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
             />
           </div>
 
@@ -194,7 +194,7 @@ export default function NewCeremonyPage() {
               value={form.note}
               onChange={handleChange}
               rows={2}
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
             />
           </div>
         </div>
@@ -203,13 +203,13 @@ export default function NewCeremonyPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="bg-stone-700 text-white px-6 py-2 rounded-lg hover:bg-stone-800 transition-colors text-sm font-medium disabled:opacity-50"
+            className="bg-stone-700 text-white px-6 py-2 rounded-lg hover:bg-stone-800 transition-colors text-base font-medium disabled:opacity-50"
           >
             {submitting ? "登録中..." : "登録する"}
           </button>
           <Link
             href="/ceremonies"
-            className="border border-stone-300 text-stone-600 px-6 py-2 rounded-lg hover:bg-stone-50 transition-colors text-sm font-medium"
+            className="border border-stone-300 text-stone-600 px-6 py-2 rounded-lg hover:bg-stone-50 transition-colors text-base font-medium"
           >
             キャンセル
           </Link>

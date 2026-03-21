@@ -78,7 +78,7 @@ export default function CeremoniesPage() {
         <h1 className="text-2xl font-bold text-amber-700">法要・行事</h1>
         <Link
           href="/ceremonies/new"
-          className="bg-stone-700 text-white px-4 py-2 rounded-lg hover:bg-stone-800 transition-colors text-sm font-medium"
+          className="bg-stone-700 text-white px-4 py-2 rounded-lg hover:bg-stone-800 transition-colors text-base font-medium"
         >
           + 新規登録
         </Link>
@@ -90,12 +90,12 @@ export default function CeremoniesPage() {
           placeholder="名称で検索..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 min-w-48 border border-stone-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+          className="flex-1 min-w-48 border border-stone-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
         />
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white"
+          className="border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white"
         >
           <option value="">全ての種別</option>
           {Object.entries(CEREMONY_TYPE_LABELS).map(([value, label]) => (
@@ -105,7 +105,7 @@ export default function CeremoniesPage() {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white"
+          className="border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white"
         >
           <option value="">全てのステータス</option>
           {Object.entries(STATUS_LABELS).map(([value, label]) => (

@@ -146,7 +146,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 value={form.familyName}
                 onChange={handleChange}
                 required
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div>
@@ -159,7 +159,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 value={form.givenName}
                 onChange={handleChange}
                 required
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -172,7 +172,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 name="familyNameKana"
                 value={form.familyNameKana}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div>
@@ -182,7 +182,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 name="givenNameKana"
                 value={form.givenNameKana}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -195,7 +195,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 name="postalCode"
                 value={form.postalCode}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div className="col-span-2">
@@ -205,7 +205,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 name="address1"
                 value={form.address1}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -217,7 +217,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 name="address2"
                 value={form.address2}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div>
@@ -227,7 +227,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 name="address3"
                 value={form.address3}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -240,7 +240,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 name="phone1"
                 value={form.phone1}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div>
@@ -250,7 +250,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 name="phone2"
                 value={form.phone2}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -263,7 +263,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 name="email"
                 value={form.email}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -276,7 +276,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
               value={form.domicile}
               onChange={handleChange}
               placeholder="東京都千代田区〇〇番地"
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
             />
           </div>
 
@@ -288,7 +288,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 name="joinedAt"
                 value={form.joinedAt}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div>
@@ -298,7 +298,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
                 name="leftAt"
                 value={form.leftAt}
                 onChange={handleChange}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -323,7 +323,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
               value={form.note}
               onChange={handleChange}
               rows={3}
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
             />
           </div>
         </div>
@@ -332,13 +332,13 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
           <button
             type="submit"
             disabled={submitting}
-            className="bg-stone-700 text-white px-6 py-2 rounded-lg hover:bg-stone-800 transition-colors text-sm font-medium disabled:opacity-50"
+            className="bg-stone-700 text-white px-6 py-2 rounded-lg hover:bg-stone-800 transition-colors text-base font-medium disabled:opacity-50"
           >
             {submitting ? "更新中..." : "更新する"}
           </button>
           <Link
             href={`/householder/${id}`}
-            className="border border-stone-300 text-stone-600 px-6 py-2 rounded-lg hover:bg-stone-50 transition-colors text-sm font-medium"
+            className="border border-stone-300 text-stone-600 px-6 py-2 rounded-lg hover:bg-stone-50 transition-colors text-base font-medium"
           >
             キャンセル
           </Link>

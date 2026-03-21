@@ -90,7 +90,7 @@ export default function AccountsPage() {
         ) : users.length === 0 ? (
           <div className="p-6 text-stone-400 text-sm">アカウントがありません</div>
         ) : (
-          <table className="w-full text-sm">
+          <table className="w-full text-base">
             <thead className="bg-stone-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-stone-500">名前</th>

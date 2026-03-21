@@ -81,7 +81,7 @@ export default function GenzaichoPage() {
           placeholder="氏名・戸主名・住所で検索..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 border border-stone-300 rounded-lg px-4 py-2 text-sm text-stone-800 bg-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400"
+          className="flex-1 border border-stone-300 rounded-lg px-4 py-2 text-base text-stone-800 bg-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400"
         />
       </div>
 
@@ -129,7 +129,7 @@ export default function GenzaichoPage() {
 
           {/* デスクトップ: テーブル表示 */}
           <div className="hidden md:block bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-base">
               <thead className="bg-stone-50 border-b border-stone-200">
                 <tr>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">姓</th>

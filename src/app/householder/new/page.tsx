@@ -121,7 +121,7 @@ export default function NewHouseholderPage() {
                 onChange={handleChange}
                 required
                 placeholder="山田"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div>
@@ -135,7 +135,7 @@ export default function NewHouseholderPage() {
                 onChange={handleChange}
                 required
                 placeholder="太郎"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -149,7 +149,7 @@ export default function NewHouseholderPage() {
                 value={form.familyNameKana}
                 onChange={handleChange}
                 placeholder="ヤマダ"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div>
@@ -160,7 +160,7 @@ export default function NewHouseholderPage() {
                 value={form.givenNameKana}
                 onChange={handleChange}
                 placeholder="タロウ"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -174,7 +174,7 @@ export default function NewHouseholderPage() {
                 value={form.postalCode}
                 onChange={handleChange}
                 placeholder="123-4567"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div className="col-span-2">
@@ -185,7 +185,7 @@ export default function NewHouseholderPage() {
                 value={form.address1}
                 onChange={handleChange}
                 placeholder="東京都渋谷区"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function NewHouseholderPage() {
                 value={form.address2}
                 onChange={handleChange}
                 placeholder="神南1-2-3"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div>
@@ -209,7 +209,7 @@ export default function NewHouseholderPage() {
                 value={form.address3}
                 onChange={handleChange}
                 placeholder="テラコードビル101"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -223,7 +223,7 @@ export default function NewHouseholderPage() {
                 value={form.phone1}
                 onChange={handleChange}
                 placeholder="03-1234-5678"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
             <div>
@@ -234,7 +234,7 @@ export default function NewHouseholderPage() {
                 value={form.phone2}
                 onChange={handleChange}
                 placeholder="090-1234-5678"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -248,7 +248,7 @@ export default function NewHouseholderPage() {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="example@example.com"
-                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
               />
             </div>
           </div>
@@ -261,7 +261,7 @@ export default function NewHouseholderPage() {
               value={form.domicile}
               onChange={handleChange}
               placeholder="東京都千代田区〇〇番地"
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
             />
           </div>
 
@@ -272,7 +272,7 @@ export default function NewHouseholderPage() {
               name="joinedAt"
               value={form.joinedAt}
               onChange={handleChange}
-              className="border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              className="border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
             />
           </div>
 
@@ -283,7 +283,7 @@ export default function NewHouseholderPage() {
               value={form.note}
               onChange={handleChange}
               rows={3}
-              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+              className="w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
             />
           </div>
         </div>
@@ -318,80 +318,80 @@ export default function NewHouseholderPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-stone-500 mb-1">姓 *</label>
+                  <label className="block text-sm text-stone-500 mb-1">姓 *</label>
                   <input
                     type="text"
                     value={member.familyName}
                     onChange={(e) => updateMember(index, "familyName", e.target.value)}
                     placeholder="山田"
-                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-stone-500 mb-1">名</label>
+                  <label className="block text-sm text-stone-500 mb-1">名</label>
                   <input
                     type="text"
                     value={member.givenName}
                     onChange={(e) => updateMember(index, "givenName", e.target.value)}
                     placeholder="花子"
-                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-stone-500 mb-1">姓（カナ）</label>
+                  <label className="block text-sm text-stone-500 mb-1">姓（カナ）</label>
                   <input
                     type="text"
                     value={member.familyNameKana}
                     onChange={(e) => updateMember(index, "familyNameKana", e.target.value)}
                     placeholder="ヤマダ"
-                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-stone-500 mb-1">名（カナ）</label>
+                  <label className="block text-sm text-stone-500 mb-1">名（カナ）</label>
                   <input
                     type="text"
                     value={member.givenNameKana}
                     onChange={(e) => updateMember(index, "givenNameKana", e.target.value)}
                     placeholder="ハナコ"
-                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-stone-500 mb-1">続柄</label>
+                  <label className="block text-sm text-stone-500 mb-1">続柄</label>
                   <input
                     type="text"
                     value={member.relation}
                     onChange={(e) => updateMember(index, "relation", e.target.value)}
                     placeholder="妻・子など"
-                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-stone-500 mb-1">生年月日</label>
+                  <label className="block text-sm text-stone-500 mb-1">生年月日</label>
                   <input
                     type="date"
                     value={member.birthDate}
                     onChange={(e) => updateMember(index, "birthDate", e.target.value)}
-                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-stone-500 mb-1">法名</label>
+                  <label className="block text-sm text-stone-500 mb-1">法名</label>
                   <input
                     type="text"
                     value={member.dharmaName}
                     onChange={(e) => updateMember(index, "dharmaName", e.target.value)}
-                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-stone-500 mb-1">法名（カナ）</label>
+                  <label className="block text-sm text-stone-500 mb-1">法名（カナ）</label>
                   <input
                     type="text"
                     value={member.dharmaNameKana}
                     onChange={(e) => updateMember(index, "dharmaNameKana", e.target.value)}
-                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                    className="w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
                   />
                 </div>
               </div>
@@ -403,13 +403,13 @@ export default function NewHouseholderPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="bg-stone-700 text-white px-6 py-2 rounded-lg hover:bg-stone-800 transition-colors text-sm font-medium disabled:opacity-50"
+            className="bg-stone-700 text-white px-6 py-2 rounded-lg hover:bg-stone-800 transition-colors text-base font-medium disabled:opacity-50"
           >
             {submitting ? "登録中..." : "登録する"}
           </button>
           <Link
             href="/householder"
-            className="border border-stone-300 text-stone-600 px-6 py-2 rounded-lg hover:bg-stone-50 transition-colors text-sm font-medium"
+            className="border border-stone-300 text-stone-600 px-6 py-2 rounded-lg hover:bg-stone-50 transition-colors text-base font-medium"
           >
             キャンセル
           </Link>

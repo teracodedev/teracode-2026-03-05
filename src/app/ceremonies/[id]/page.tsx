@@ -295,12 +295,12 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
             )}
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2">
-                <label className="block text-xs text-stone-500 mb-1">戸主 *</label>
+                <label className="block text-sm text-stone-500 mb-1">戸主 *</label>
                 <select
                   value={participantForm.householderId}
                   onChange={(e) => setParticipantForm({ ...participantForm, householderId: e.target.value })}
                   required
-                  className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white"
+                  className="w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white"
                 >
                   <option value="">選択してください</option>
                   {householderList
@@ -313,24 +313,24 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-stone-500 mb-1">参加人数</label>
+                <label className="block text-sm text-stone-500 mb-1">参加人数</label>
                 <input
                   type="number"
                   value={participantForm.attendees}
                   onChange={(e) => setParticipantForm({ ...participantForm, attendees: e.target.value })}
                   min="1"
-                  className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  className="w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
                 />
               </div>
               <div>
-                <label className="block text-xs text-stone-500 mb-1">御布施（円）</label>
+                <label className="block text-sm text-stone-500 mb-1">御布施（円）</label>
                 <input
                   type="number"
                   value={participantForm.offering}
                   onChange={(e) => setParticipantForm({ ...participantForm, offering: e.target.value })}
                   min="0"
                   placeholder="金額"
-                  className="w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+                  className="w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400"
                 />
               </div>
             </div>
@@ -355,7 +355,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
         {ceremony.participants.length === 0 ? (
           <p className="text-stone-400 text-sm">参加者が登録されていません</p>
         ) : (
-          <table className="w-full text-sm">
+          <table className="w-full text-base">
             <thead className="border-b border-stone-200">
               <tr>
                 <th className="text-left pb-2 text-stone-500 font-medium">戸主</th>

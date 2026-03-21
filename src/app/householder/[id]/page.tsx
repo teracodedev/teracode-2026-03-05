@@ -77,47 +77,47 @@ type TabId = "info" | "detail" | "genzaicho" | "kakucho";
 
 function MemberFormFields({ form, onChange }: { form: MemberForm; onChange: (f: MemberForm) => void }) {
   const set = (k: keyof MemberForm, v: string) => onChange({ ...form, [k]: v });
-  const cls = "w-full border border-stone-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400";
+  const cls = "w-full border border-stone-300 rounded px-3 py-1.5 text-base focus:outline-none focus:ring-2 focus:ring-stone-400";
   return (
     <div className="grid grid-cols-2 gap-3 mt-3">
       <div>
-        <label className="block text-xs text-stone-500 mb-1">姓 <span className="text-red-500">*</span></label>
+        <label className="block text-sm text-stone-500 mb-1">姓 <span className="text-red-500">*</span></label>
         <input type="text" value={form.familyName} onChange={(e) => set("familyName", e.target.value)} placeholder="山田" className={cls} />
       </div>
       <div>
-        <label className="block text-xs text-stone-500 mb-1">名</label>
+        <label className="block text-sm text-stone-500 mb-1">名</label>
         <input type="text" value={form.givenName} onChange={(e) => set("givenName", e.target.value)} placeholder="花子" className={cls} />
       </div>
       <div>
-        <label className="block text-xs text-stone-500 mb-1">姓（カナ）</label>
+        <label className="block text-sm text-stone-500 mb-1">姓（カナ）</label>
         <input type="text" value={form.familyNameKana} onChange={(e) => set("familyNameKana", e.target.value)} placeholder="ヤマダ" className={cls} />
       </div>
       <div>
-        <label className="block text-xs text-stone-500 mb-1">名（カナ）</label>
+        <label className="block text-sm text-stone-500 mb-1">名（カナ）</label>
         <input type="text" value={form.givenNameKana} onChange={(e) => set("givenNameKana", e.target.value)} placeholder="ハナコ" className={cls} />
       </div>
       <div>
-        <label className="block text-xs text-stone-500 mb-1">続柄</label>
+        <label className="block text-sm text-stone-500 mb-1">続柄</label>
         <input type="text" value={form.relation} onChange={(e) => set("relation", e.target.value)} placeholder="妻・子など" className={cls} />
       </div>
       <div>
-        <label className="block text-xs text-stone-500 mb-1">法名</label>
+        <label className="block text-sm text-stone-500 mb-1">法名</label>
         <input type="text" value={form.dharmaName} onChange={(e) => set("dharmaName", e.target.value)} className={cls} />
       </div>
       <div>
-        <label className="block text-xs text-stone-500 mb-1">法名（カナ）</label>
+        <label className="block text-sm text-stone-500 mb-1">法名（カナ）</label>
         <input type="text" value={form.dharmaNameKana} onChange={(e) => set("dharmaNameKana", e.target.value)} className={cls} />
       </div>
       <div>
-        <label className="block text-xs text-stone-500 mb-1">生年月日</label>
+        <label className="block text-sm text-stone-500 mb-1">生年月日</label>
         <input type="date" value={form.birthDate} onChange={(e) => set("birthDate", e.target.value)} className={cls} />
       </div>
       <div>
-        <label className="block text-xs text-stone-500 mb-1">命日</label>
+        <label className="block text-sm text-stone-500 mb-1">命日</label>
         <input type="date" value={form.deathDate} onChange={(e) => set("deathDate", e.target.value)} className={cls} />
       </div>
       <div className="col-span-2">
-        <label className="block text-xs text-stone-500 mb-1">備考</label>
+        <label className="block text-sm text-stone-500 mb-1">備考</label>
         <input type="text" value={form.note} onChange={(e) => set("note", e.target.value)} className={cls} />
       </div>
     </div>

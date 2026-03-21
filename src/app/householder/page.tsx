@@ -64,7 +64,7 @@ export default function HouseholderPage() {
         <h1 className="text-2xl font-bold text-amber-700">戸主台帳</h1>
         <Link
           href="/householder/new"
-          className="bg-stone-700 text-white px-4 py-2 rounded-lg hover:bg-stone-800 transition-colors text-sm font-medium"
+          className="bg-stone-700 text-white px-4 py-2 rounded-lg hover:bg-stone-800 transition-colors text-base font-medium"
         >
           + 新規登録
         </Link>
@@ -76,7 +76,7 @@ export default function HouseholderPage() {
           placeholder="氏名・住所で検索..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 border border-stone-300 rounded-lg px-4 py-2 text-sm text-stone-800 bg-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400"
+          className="flex-1 border border-stone-300 rounded-lg px-4 py-2 text-base text-stone-800 bg-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400"
         />
         <label className="flex items-center gap-2 text-sm text-stone-600 cursor-pointer">
           <input
@@ -143,7 +143,7 @@ export default function HouseholderPage() {
 
           {/* デスクトップ: テーブル表示 */}
           <div className="hidden md:block bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-base">
               <thead className="bg-stone-50 border-b border-stone-200">
                 <tr>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">UUID</th>
