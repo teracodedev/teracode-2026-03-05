@@ -95,59 +95,93 @@ export default function GenzaichoPage() {
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-stone-50 border-b border-stone-200">
-              <tr>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">姓</th>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">名</th>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">続柄</th>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">生年月日</th>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">年齢</th>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">戸主</th>
-                <th className="text-left px-4 py-3 text-stone-600 font-medium">住所</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-stone-100">
-              {records.map((record) => (
-                <tr key={record.id} className="hover:bg-stone-50">
-                  <td className="px-4 py-3 font-medium text-stone-700">
-                    {record.familyName}
+        <>
+          {/* モバイル: カード表示 */}
+          <div className="md:hidden space-y-2">
+            {records.map((record) => (
+              <div key={record.id} className="bg-white rounded-xl border border-stone-200 px-4 py-3 shadow-sm">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <div className="font-medium text-stone-800 text-base">
+                      {record.familyName} {record.givenName || ""}
+                    </div>
                     {record.familyNameKana && (
-                      <div className="text-xs text-stone-400 font-normal">{record.familyNameKana}</div>
+                      <div className="text-xs text-stone-400">{record.familyNameKana} {record.givenNameKana || ""}</div>
                     )}
-                  </td>
-                  <td className="px-4 py-3 text-stone-700">
-                    {record.givenName || <span className="text-stone-300">-</span>}
-                    {record.givenNameKana && (
-                      <div className="text-xs text-stone-400">{record.givenNameKana}</div>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-stone-600">{record.relation || "-"}</td>
-                  <td className="px-4 py-3 text-stone-600">{formatDate(record.birthDate)}</td>
-                  <td className="px-4 py-3 text-stone-600">{calcAge(record.birthDate)}</td>
-                  <td className="px-4 py-3">
-                    <Link
-                      href={`/householder/${record.householder.id}`}
-                      className="text-stone-500 hover:text-stone-400 hover:underline"
-                    >
+                    <div className="text-xs text-stone-500 mt-1 flex flex-wrap gap-x-2">
+                      {record.relation && <span>{record.relation}</span>}
+                      {record.birthDate && <span>生: {formatDate(record.birthDate)}（{calcAge(record.birthDate)}）</span>}
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <Link href={`/householder/${record.householder.id}`} className="text-xs text-stone-500 hover:underline">
                       {record.householder.familyName} {record.householder.givenName}
-                      <span className="text-xs text-stone-400 ml-1">
-                        ({record.householder.householderCode})
-                      </span>
                     </Link>
-                  </td>
-                  <td className="px-4 py-3 text-stone-600 text-xs">
-                    {[record.householder.address1, record.householder.address2, record.householder.address3].filter(Boolean).join(" ") || "-"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="px-4 py-3 bg-stone-50 border-t border-stone-200 text-xs text-stone-400">
-            {records.length}名
+                    <div className="text-xs text-stone-400 mt-0.5">
+                      {[record.householder.address1, record.householder.address2].filter(Boolean).join(" ")}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="text-xs text-stone-400 px-1 pt-1">{records.length}名</div>
           </div>
-        </div>
+
+          {/* デスクトップ: テーブル表示 */}
+          <div className="hidden md:block bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-stone-50 border-b border-stone-200">
+                <tr>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">姓</th>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">名</th>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">続柄</th>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">生年月日</th>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">年齢</th>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">戸主</th>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">住所</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-stone-100">
+                {records.map((record) => (
+                  <tr key={record.id} className="hover:bg-stone-50">
+                    <td className="px-4 py-3 font-medium text-stone-700">
+                      {record.familyName}
+                      {record.familyNameKana && (
+                        <div className="text-xs text-stone-400 font-normal">{record.familyNameKana}</div>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-stone-700">
+                      {record.givenName || <span className="text-stone-300">-</span>}
+                      {record.givenNameKana && (
+                        <div className="text-xs text-stone-400">{record.givenNameKana}</div>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-stone-600">{record.relation || "-"}</td>
+                    <td className="px-4 py-3 text-stone-600">{formatDate(record.birthDate)}</td>
+                    <td className="px-4 py-3 text-stone-600">{calcAge(record.birthDate)}</td>
+                    <td className="px-4 py-3">
+                      <Link
+                        href={`/householder/${record.householder.id}`}
+                        className="text-stone-500 hover:text-stone-400 hover:underline"
+                      >
+                        {record.householder.familyName} {record.householder.givenName}
+                        <span className="text-xs text-stone-400 ml-1">
+                          ({record.householder.householderCode})
+                        </span>
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3 text-stone-600 text-xs">
+                      {[record.householder.address1, record.householder.address2, record.householder.address3].filter(Boolean).join(" ") || "-"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="px-4 py-3 bg-stone-50 border-t border-stone-200 text-xs text-stone-400">
+              {records.length}名
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
