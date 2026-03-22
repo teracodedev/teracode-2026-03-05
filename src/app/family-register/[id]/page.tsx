@@ -26,12 +26,25 @@ interface Householder {
   familyName: string;
   givenName: string;
   familyNameKana: string | null;
+  givenNameKana: string | null;
   isActive: boolean;
   postalCode: string | null;
   address1: string | null;
   address2: string | null;
   address3: string | null;
   phone1: string | null;
+  phone2: string | null;
+  fax: string | null;
+  email: string | null;
+  domicile: string | null;
+  gender: string | null;
+  birthDate: string | null;
+  deathDate: string | null;
+  dharmaName: string | null;
+  dharmaNameKana: string | null;
+  note: string | null;
+  joinedAt: string | null;
+  leftAt: string | null;
   members: Member[];
 }
 
@@ -144,8 +157,8 @@ export default function FamilyRegisterDetailPage({ params }: { params: Promise<{
 
   const tabs: { id: TabId; label: string; count?: number }[] = [
     { id: "householders", label: "戸主" },
-    { id: "genzaicho",    label: "現在帳",   count: livingMembers.length },
-    { id: "kakucho",      label: "過去帳",   count: deceasedMembers.length },
+    { id: "genzaicho",    label: "現在帳", count: livingMembers.length },
+    { id: "kakucho",      label: "過去帳",  count: deceasedMembers.length },
   ];
 
   const inputCls = "w-full border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400";
@@ -213,35 +226,131 @@ export default function FamilyRegisterDetailPage({ params }: { params: Promise<{
       {/* 戸主タブ（1:1） */}
       {activeTab === "householders" && (
         <div className="space-y-4">
-
-          {/* 戸主カード */}
           {data.householders.length === 0 ? (
             <p className="text-stone-400 text-sm">戸主が登録されていません</p>
-          ) : (
-            <div className="space-y-2">
-              {data.householders.map((h) => (
-                <div key={h.id} className="bg-white rounded-xl border border-stone-200 overflow-hidden">
-                  <div className="flex items-center gap-3 px-4 py-3">
-                    <div className="flex-1">
-                      <Link href={`/householder/${h.id}`} className="font-medium text-stone-800 hover:text-amber-700">
-                        {h.familyName} {h.givenName}
-                      </Link>
-                      {h.familyNameKana && <div className="text-xs text-stone-400">{h.familyNameKana}</div>}
-                      <div className="text-sm text-stone-500">
-                        {[h.address1, h.address2, h.address3].filter(Boolean).join(" ") || "-"}
+          ) : (() => {
+            const h = data.householders[0];
+            const address = [h.address1, h.address2, h.address3].filter(Boolean).join(" ");
+            return (
+              <div className="bg-white rounded-xl border border-stone-200 overflow-hidden">
+                {/* ヘッダー */}
+                <div className="flex items-center justify-between px-4 py-3 border-b border-stone-100">
+                  <div>
+                    <Link href={`/householder/${h.id}`} className="text-xl font-bold text-stone-800 hover:text-amber-700">
+                      {h.familyName}　{h.givenName}
+                    </Link>
+                    {(h.familyNameKana || h.givenNameKana) && (
+                      <div className="text-sm text-stone-400 mt-0.5">
+                        {h.familyNameKana}　{h.givenNameKana}
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${h.isActive ? "bg-green-100 text-green-700" : "bg-stone-100 text-stone-500"}`}>
-                        {h.isActive ? "在籍" : "離檀"}
-                      </span>
-                      <span className="text-xs text-stone-400">{h.members.length}名</span>
-                    </div>
+                    )}
                   </div>
+                  <span className={`text-sm px-3 py-1 rounded-full font-medium ${h.isActive ? "bg-green-100 text-green-700" : "bg-stone-100 text-stone-500"}`}>
+                    {h.isActive ? "在籍" : "離檀"}
+                  </span>
                 </div>
-              ))}
-            </div>
-          )}
+
+                {/* 基本情報 */}
+                <dl className="divide-y divide-stone-50">
+                  {h.gender && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">性別</dt>
+                      <dd className="text-sm text-stone-800">{h.gender}</dd>
+                    </div>
+                  )}
+                  {h.birthDate && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">生年月日</dt>
+                      <dd className="text-sm text-stone-800">{formatDate(h.birthDate)}</dd>
+                    </div>
+                  )}
+                  {h.deathDate && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">命日</dt>
+                      <dd className="text-sm text-stone-800">{formatDate(h.deathDate)}</dd>
+                    </div>
+                  )}
+                  {h.dharmaName && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">法名</dt>
+                      <dd className="text-sm text-stone-800">
+                        {h.dharmaName}
+                        {h.dharmaNameKana && <span className="ml-2 text-stone-400 text-xs">({h.dharmaNameKana})</span>}
+                      </dd>
+                    </div>
+                  )}
+                  {h.postalCode && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">郵便番号</dt>
+                      <dd className="text-sm text-stone-800">〒{h.postalCode}</dd>
+                    </div>
+                  )}
+                  {address && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">住所</dt>
+                      <dd className="text-sm text-stone-800">{address}</dd>
+                    </div>
+                  )}
+                  {h.phone1 && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">電話番号１</dt>
+                      <dd className="text-sm text-stone-800">{h.phone1}</dd>
+                    </div>
+                  )}
+                  {h.phone2 && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">電話番号２</dt>
+                      <dd className="text-sm text-stone-800">{h.phone2}</dd>
+                    </div>
+                  )}
+                  {h.fax && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">FAX</dt>
+                      <dd className="text-sm text-stone-800">{h.fax}</dd>
+                    </div>
+                  )}
+                  {h.email && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">メール</dt>
+                      <dd className="text-sm text-stone-800">{h.email}</dd>
+                    </div>
+                  )}
+                  {h.domicile && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">本籍</dt>
+                      <dd className="text-sm text-stone-800">{h.domicile}</dd>
+                    </div>
+                  )}
+                  {h.joinedAt && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">入檀日</dt>
+                      <dd className="text-sm text-stone-800">{formatDate(h.joinedAt)}</dd>
+                    </div>
+                  )}
+                  {h.leftAt && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">離檀日</dt>
+                      <dd className="text-sm text-stone-800">{formatDate(h.leftAt)}</dd>
+                    </div>
+                  )}
+                  {h.note && (
+                    <div className="flex px-4 py-2.5">
+                      <dt className="w-28 shrink-0 text-sm text-stone-400">備考</dt>
+                      <dd className="text-sm text-stone-800 whitespace-pre-wrap">{h.note}</dd>
+                    </div>
+                  )}
+                </dl>
+
+                {/* 戸主台帳へのリンク */}
+                <div className="px-4 py-3 border-t border-stone-100 bg-stone-50">
+                  <Link href={`/householder/${h.id}`}
+                    className="text-sm text-amber-700 hover:text-amber-800 font-medium">
+                    → 戸主台帳を開く
+                  </Link>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       )}
 

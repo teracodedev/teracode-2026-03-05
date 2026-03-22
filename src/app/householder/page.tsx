@@ -156,7 +156,9 @@ export default function HouseholderPage() {
                 className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden"
               >
                 <Link
-                  href={`/householder/${householder.id}`}
+                  href={householder.familyRegister
+                    ? `/family-register/${householder.familyRegister.id}`
+                    : `/householder/${householder.id}`}
                   className="block px-4 py-3 active:bg-stone-50"
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -233,8 +235,10 @@ export default function HouseholderPage() {
                     </td>
                     <td className="px-4 py-3">
                       <Link
-                        href={`/householder/${householder.id}`}
-                        className="font-medium text-stone-500 hover:text-stone-400 hover:underline"
+                        href={householder.familyRegister
+                          ? `/family-register/${householder.familyRegister.id}`
+                          : `/householder/${householder.id}`}
+                        className="font-medium text-stone-800 hover:text-amber-700 hover:underline"
                       >
                         {householder.familyName} {householder.givenName}
                       </Link>
