@@ -143,7 +143,7 @@ export default function FamilyRegisterDetailPage({ params }: { params: Promise<{
   const deceasedMembers = allMembers.filter((m) => !!m.deathDate);
 
   const tabs: { id: TabId; label: string; count?: number }[] = [
-    { id: "householders", label: "戸主一覧", count: data.householders.length },
+    { id: "householders", label: "戸主" },
     { id: "genzaicho",    label: "現在帳",   count: livingMembers.length },
     { id: "kakucho",      label: "過去帳",   count: deceasedMembers.length },
   ];
