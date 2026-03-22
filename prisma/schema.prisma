@@ -24,6 +24,7 @@ model Householder {
   address3         String?   // 住所3（建物名・部屋番号）
   phone1           String?   // 電話番号1
   phone2           String?   // 電話番号2
+  fax              String?   // FAX番号
   email            String?   // メールアドレス
   domicile         String?   // 本籍地
   note             String?   // 備考
