@@ -38,15 +38,15 @@ export default async function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-gray-50 text-stone-900`}
       >
         <script
           dangerouslySetInnerHTML={{ __html: CHUNK_RECOVERY_INLINE }}
         />
         <nav className="bg-stone-800 text-white shadow-md relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <Link href="/" className="flex items-center gap-2">
+            <div className="flex min-w-0 items-center justify-between gap-4 h-16">
+              <Link href="/" className="flex shrink-0 items-center gap-2">
                 <span className="text-2xl font-bold">寺</span>
                 <span className="font-bold text-xl tracking-wide">テラコード</span>
               </Link>
