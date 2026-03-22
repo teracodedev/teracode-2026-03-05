@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getHouseholderDelegate, getHouseholderFieldMap, getHouseholderModelKind } from "@/lib/prisma-models";
 import { requireAuth } from "@/lib/require-auth";
+import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
 
@@ -133,6 +134,12 @@ export async function POST(request: NextRequest) {
     if (fields.domicile) {
       data[fields.domicile] = domicile || null;
     }
+
+    // 家族・親族台帳を自動作成して紐付け
+    const familyRegister = await prisma.familyRegister.create({
+      data: { name: `${familyName}${givenName}の家族親族台帳` },
+    });
+    data.familyRegisterId = familyRegister.id;
 
     const householder = await delegate.create({
       data,

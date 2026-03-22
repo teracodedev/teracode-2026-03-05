@@ -210,32 +210,9 @@ export default function FamilyRegisterDetailPage({ params }: { params: Promise<{
         </nav>
       </div>
 
-      {/* 戸主一覧タブ */}
+      {/* 戸主タブ（1:1） */}
       {activeTab === "householders" && (
         <div className="space-y-4">
-          {/* 戸主追加 */}
-          <div className="bg-white rounded-xl border border-stone-200 p-4">
-            <p className="text-sm font-medium text-stone-600 mb-2">戸主を検索して追加</p>
-            <div className="flex gap-2">
-              <input type="text" value={linkQuery}
-                onChange={(e) => { setLinkQuery(e.target.value); searchHouseholders(e.target.value); }}
-                placeholder="氏名で検索..."
-                className="flex-1 border border-stone-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-stone-400" />
-            </div>
-            {linkResults.length > 0 && (
-              <ul className="mt-2 border border-stone-200 rounded-lg overflow-hidden divide-y divide-stone-100">
-                {linkResults.filter(r => r.familyRegisterId !== id).map((r) => (
-                  <li key={r.id} className="flex items-center justify-between px-3 py-2 hover:bg-stone-50">
-                    <span className="text-sm">{r.familyName}{r.givenName}</span>
-                    <button onClick={() => handleLink(r.id)} disabled={linking}
-                      className="text-xs border border-stone-300 px-2 py-1 rounded hover:bg-stone-100 disabled:opacity-50">
-                      追加
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
 
           {/* 戸主カード */}
           {data.householders.length === 0 ? (
@@ -259,10 +236,6 @@ export default function FamilyRegisterDetailPage({ params }: { params: Promise<{
                         {h.isActive ? "在籍" : "離檀"}
                       </span>
                       <span className="text-xs text-stone-400">{h.members.length}名</span>
-                      <button onClick={() => handleUnlink(h.id)}
-                        className="text-xs text-red-400 hover:text-red-600 border border-red-100 px-2 py-1 rounded">
-                        解除
-                      </button>
                     </div>
                   </div>
                 </div>

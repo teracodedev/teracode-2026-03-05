@@ -48,7 +48,7 @@ model Householder {
   joinedAt         DateTime? // 入檀日
   leftAt           DateTime? // 離檀日
   isActive         Boolean   @default(true) // 在籍フラグ
-  familyRegisterId String?   // 家族・親族台帳ID
+  familyRegisterId String?   @unique // 家族・親族台帳ID（1:1）
   familyRegister   FamilyRegister? @relation(fields: [familyRegisterId], references: [id], onDelete: SetNull)
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt

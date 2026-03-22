@@ -269,6 +269,7 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
   const [editSubmitting, setEditSubmitting] = useState(false);
   const [editError, setEditError] = useState("");
   const [expandedDetailId, setExpandedDetailId] = useState<string | null>(null);
+  const [transferring, setTransferring] = useState(false);
   const [editingContact, setEditingContact] = useState<string | null>(null); // member.id を流用してどの行で戸主編集中かを管理
   const [contactForm, setContactForm] = useState<ContactForm>({
     postalCode: "", address1: "", address2: "", address3: "",
@@ -385,6 +386,22 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
       await fetch(`/api/householder/${id}/members/${memberId}`, { method: "DELETE" });
       fetchHouseholder();
     } catch { alert("削除に失敗しました"); }
+  };
+
+  const handleTransfer = async (memberId: string, memberName: string) => {
+    if (!confirm(`「${memberName}」を新しい戸主にしますか？\n現在の戸主は世帯員（元戸主）に移ります。`)) return;
+    setTransferring(true);
+    try {
+      const res = await fetchWithAuth(`/api/householder/${id}/transfer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ memberId }),
+      });
+      const data = await res.json();
+      if (!res.ok) { alert(data.error || "当主交代に失敗しました"); return; }
+      router.push(`/householder/${data.id}`);
+    } catch { alert("ネットワークエラーが発生しました"); }
+    finally { setTransferring(false); }
   };
 
   const startEditContact = () => {
@@ -627,6 +644,11 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
                         )}
                       </div>
                       <div className="flex gap-2 shrink-0">
+                        <button onClick={() => handleTransfer(member.id, displayName)}
+                          disabled={transferring}
+                          className="text-xs text-amber-600 hover:text-amber-800 border border-amber-200 px-2 py-1 rounded disabled:opacity-50">
+                          当主交代
+                        </button>
                         <button onClick={() => { startEdit(member); setExpandedDetailId(null); }}
                           className="text-xs text-stone-500 hover:text-stone-700 border border-stone-200 px-2 py-1 rounded">
                           編集
