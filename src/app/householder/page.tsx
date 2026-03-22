@@ -26,6 +26,28 @@ export default function HouseholderPage() {
   const [showInactive, setShowInactive] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<{ ok: number; errors: number; results: { file: string; status: string; name?: string; error?: string }[] } | null>(null);
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setImporting(true);
+    setImportResult(null);
+    const formData = new FormData();
+    for (const f of Array.from(files)) formData.append("files", f);
+    try {
+      const res = await fetchWithAuth("/api/import", { method: "POST", body: formData });
+      const data = await res.json();
+      setImportResult(data);
+      if (data.ok > 0) fetchHouseholders();
+    } catch {
+      setImportResult({ ok: 0, errors: 1, results: [{ file: "—", status: "error", error: "通信エラー" }] });
+    } finally {
+      setImporting(false);
+      e.target.value = "";
+    }
+  };
 
   const fetchHouseholders = useCallback(async () => {
     setLoading(true);
@@ -60,15 +82,34 @@ export default function HouseholderPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <h1 className="text-2xl font-bold text-amber-700">戸主台帳</h1>
-        <Link
-          href="/householder/new"
-          className="bg-stone-700 text-white px-4 py-2 rounded-lg hover:bg-stone-800 transition-colors text-base font-medium"
-        >
-          + 新規登録
-        </Link>
+        <div className="flex gap-2 flex-wrap">
+          <label className={`border border-stone-300 text-stone-600 px-4 py-2 rounded-lg hover:bg-stone-50 transition-colors text-sm font-medium cursor-pointer ${importing ? "opacity-50 pointer-events-none" : ""}`}>
+            {importing ? "インポート中..." : "⬆ インポート"}
+            <input type="file" accept=".yaml,.yml" multiple className="hidden" onChange={handleImport} disabled={importing} />
+          </label>
+          <Link
+            href="/householder/new"
+            className="bg-stone-700 text-white px-4 py-2 rounded-lg hover:bg-stone-800 transition-colors text-sm font-medium"
+          >
+            + 新規登録
+          </Link>
+        </div>
       </div>
+
+      {importResult && (
+        <div className={`rounded-lg px-4 py-3 text-sm ${importResult.errors > 0 ? "bg-yellow-50 border border-yellow-200" : "bg-green-50 border border-green-200"}`}>
+          <p className="font-medium mb-1">{importResult.ok}件 成功 / {importResult.errors}件 エラー</p>
+          <ul className="space-y-0.5 text-xs">
+            {importResult.results.map((r, i) => (
+              <li key={i} className={r.status === "ok" ? "text-green-700" : "text-red-600"}>
+                {r.status === "ok" ? "✓" : "✗"} {r.name || r.file}{r.error ? `：${r.error}` : ""}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="flex gap-4 items-center">
         <input

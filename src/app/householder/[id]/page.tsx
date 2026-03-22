@@ -442,7 +442,11 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
         </span>
       </div>
 
-      <div className="flex gap-3 justify-end">
+      <div className="flex gap-3 justify-end flex-wrap">
+        <a href={`/api/householder/${id}/export`}
+          className="border border-stone-300 text-stone-600 px-4 py-1.5 rounded-lg hover:bg-stone-50 transition-colors text-sm font-medium">
+          ⬇ エクスポート
+        </a>
         <Link href={`/householder/${id}/edit`}
           className="border border-stone-300 text-stone-600 px-4 py-1.5 rounded-lg hover:bg-stone-50 transition-colors text-sm font-medium">
           編集
