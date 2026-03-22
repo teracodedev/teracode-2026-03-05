@@ -10,6 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// 家族・親族台帳
+model FamilyRegister {
+  id           String    @id @default(uuid())
+  registerCode String    @unique @default(uuid())
+  name         String    // 台帳名（例: 山田家）
+  note         String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  householders Householder[]
+}
+
 // 檀家（法人・個人）
 model Householder {
   id               String    @id @default(uuid())
@@ -36,6 +48,8 @@ model Householder {
   joinedAt         DateTime? // 入檀日
   leftAt           DateTime? // 離檀日
   isActive         Boolean   @default(true) // 在籍フラグ
+  familyRegisterId String?   // 家族・親族台帳ID
+  familyRegister   FamilyRegister? @relation(fields: [familyRegisterId], references: [id], onDelete: SetNull)
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 

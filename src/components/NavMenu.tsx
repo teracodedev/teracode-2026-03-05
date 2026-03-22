@@ -10,10 +10,11 @@ interface NavMenuProps {
 }
 
 const navLinks = [
-  { href: "/householder", label: "戸主台帳" },
-  { href: "/kakucho",     label: "過去帳" },
-  { href: "/genzaicho",   label: "現在帳" },
-  { href: "/ceremonies",  label: "法要・行事" },
+  { href: "/family-register", label: "家族・親族台帳" },
+  { href: "/householder",     label: "戸主台帳" },
+  { href: "/kakucho",         label: "過去帳" },
+  { href: "/genzaicho",       label: "現在帳" },
+  { href: "/ceremonies",      label: "法要・行事" },
 ] as const;
 
 export default function NavMenu({ userName, isAdmin }: NavMenuProps) {
