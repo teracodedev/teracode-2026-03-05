@@ -155,11 +155,12 @@ export function memberToYaml(
 
 /** YamlPerson オブジェクト → YAML 文字列 */
 export function serializeYaml(person: YamlPerson): string {
-  return yaml.dump({ 個人: person }, {
+  const dumpOptions: yaml.DumpOptions & { allowUnicode?: boolean } = {
     allowUnicode: true,
     lineWidth: -1,
     noRefs: true,
-  });
+  };
+  return yaml.dump({ 個人: person }, dumpOptions);
 }
 
 /** YAML 文字列 → YamlPerson オブジェクト */
