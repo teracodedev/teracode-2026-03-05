@@ -17,8 +17,6 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/certs:/etc/nginx/certs:ro
-      # Next の JS/CSS（ビルド後の .next/static）。マウントしないとチャンクが Node 経由で 500 になり得る
-      - ./.next/static:/var/www/next-next-static:ro
       - certbot-webroot:/var/www/certbot:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:

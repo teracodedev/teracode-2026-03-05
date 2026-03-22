@@ -5,42 +5,36 @@ echo "=== テラコード デプロイ ==="
 
 cd "$(dirname "$0")"
 
-echo "[1/4] git pull..."
+echo "[1/5] git pull..."
 git pull
 
-echo "[2/4] npm install..."
-# ビルドに TypeScript 等が必要なため dev も含めて入れる（本番実行は next start のみ）
+echo "[2/5] npm install..."
 npm ci
 
-echo "[3/4] Prisma クライアント生成..."
+echo "[3/5] Prisma クライアント生成..."
 npx prisma generate
 
-echo "[3b/4] PM2 停止（ビルド中に server.js が消えてクラッシュループしないよう）..."
+echo "[4/5] PM2 停止..."
 pm2 stop teracode 2>/dev/null || true
 
-echo "[4/4] ビルド..."
-# 古い .next が残るとマニフェストと実ファイルがずれ、/_next/static が 500 になり
-# 「Application error: a client-side exception」になることがある
+echo "[5/5] ビルド..."
 rm -rf .next
 npm run build
 
-echo "[4b/4] standalone: public と .next/static をコピー..."
+echo "[5b/5] standalone: public と .next/static をコピー..."
 mkdir -p .next/standalone/.next
 if [ -d public ]; then
   cp -r public .next/standalone/
 fi
 cp -r .next/static .next/standalone/.next/
 
-echo "[4c/4] PM2 再起動..."
+echo "[5c/5] PM2 再起動..."
 fuser -k 3000/tcp 2>/dev/null || true
 sleep 1
 pm2 restart teracode 2>/dev/null || pm2 start ecosystem.config.cjs
 
+echo "[5d/5] nginx コンテナを再起動..."
+docker compose restart nginx 2>/dev/null || docker-compose restart nginx 2>/dev/null || true
+
 echo "=== デプロイ完了 ==="
 pm2 list
-echo "※ nginx が 502 のとき（Cursor 等で PM2 がホストと別 netns）: sudo ./scripts/pm2-restart-host-netns.sh"
-
-if command -v docker >/dev/null 2>&1 && [ -f docker-compose.yml ]; then
-  echo "[任意] nginx コンテナを再起動しています..."
-  docker compose restart nginx 2>/dev/null || true
-fi
