@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 
 interface Householder {
-  id: number;
+  id: string;
   householderCode: string;
   familyName: string;
   givenName: string;
@@ -17,6 +17,7 @@ interface Householder {
   phone1: string | null;
   phone2: string | null;
   isActive: boolean;
+  familyRegister: { id: string; name: string } | null;
   members: { id: string; familyName: string; givenName: string | null; relation: string | null }[];
 }
 
@@ -171,6 +172,9 @@ export default function HouseholderPage() {
                     {householder.phone1 && (
                       <div className="text-xs text-stone-500">{householder.phone1}</div>
                     )}
+                    {householder.familyRegister && (
+                      <div className="text-xs text-amber-700 mt-1">{householder.familyRegister.name}</div>
+                    )}
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
@@ -191,7 +195,7 @@ export default function HouseholderPage() {
             <table className="w-full text-base">
               <thead className="bg-stone-50 border-b border-stone-200">
                 <tr>
-                  <th className="text-left px-4 py-3 text-stone-600 font-medium">UUID</th>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">家族・親族台帳</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">氏名</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">住所</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">電話番号</th>
@@ -202,7 +206,18 @@ export default function HouseholderPage() {
               <tbody className="divide-y divide-stone-100">
                 {householderList.map((householder) => (
                   <tr key={householder.id} className="hover:bg-stone-50">
-                    <td className="px-4 py-3 font-mono text-stone-500">{householder.householderCode.slice(0, 8)}</td>
+                    <td className="px-4 py-3">
+                      {householder.familyRegister ? (
+                        <Link
+                          href={`/family-register/${householder.familyRegister.id}`}
+                          className="text-amber-700 hover:text-amber-800 hover:underline text-sm"
+                        >
+                          {householder.familyRegister.name}
+                        </Link>
+                      ) : (
+                        <span className="text-stone-300 text-sm">未設定</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3">
                       <Link
                         href={`/householder/${householder.id}`}
