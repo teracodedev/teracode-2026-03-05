@@ -212,6 +212,7 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
   const [editForm, setEditForm] = useState<MemberForm>(emptyMemberForm);
   const [editSubmitting, setEditSubmitting] = useState(false);
   const [editError, setEditError] = useState("");
+  const [expandedDetailId, setExpandedDetailId] = useState<string | null>(null);
 
   const fetchHouseholder = () => {
     fetch(`/api/householder/${id}`)
@@ -464,22 +465,94 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
           {livingMembers.length === 0 && !showAddForm ? (
             <p className="text-stone-400 text-sm">存命の世帯員が登録されていません</p>
           ) : (
-            <div className="space-y-3">
-              {livingMembers.map((member) => (
-                <MemberCard
-                  key={member.id}
-                  member={member}
-                  isEditing={editingMemberId === member.id}
-                  editForm={editForm}
-                  editError={editError}
-                  editSubmitting={editSubmitting}
-                  onStartEdit={() => startEdit(member)}
-                  onCancelEdit={() => setEditingMemberId(null)}
-                  onEditChange={setEditForm}
-                  onEditSubmit={(e) => handleEditMember(e, member.id)}
-                  onDelete={() => handleDeleteMember(member.id, [member.familyName, member.givenName].filter(Boolean).join(" "))}
-                />
-              ))}
+            <div className="space-y-2">
+              {livingMembers.map((member) => {
+                const isEditing = editingMemberId === member.id;
+                const isExpanded = expandedDetailId === member.id;
+                const displayName = [member.familyName, member.givenName].filter(Boolean).join(" ");
+                return (
+                  <div key={member.id} className="border border-stone-200 rounded-lg overflow-hidden">
+                    {/* 行ヘッダー */}
+                    <div className="flex items-center gap-2 px-3 py-2.5 bg-white">
+                      <button
+                        onClick={() => setExpandedDetailId(isExpanded ? null : member.id)}
+                        className="shrink-0 border border-stone-300 rounded px-2 py-1 text-sm text-stone-600 hover:bg-stone-100 transition-colors font-medium"
+                      >
+                        {isExpanded ? "▲" : "詳細"}
+                      </button>
+                      <div className="flex-1 min-w-0">
+                        <span className="font-medium text-stone-800">{displayName}</span>
+                        {member.relation && (
+                          <span className="ml-2 text-sm text-stone-400">{member.relation}</span>
+                        )}
+                        {member.birthDate && (
+                          <span className="ml-2 text-sm text-stone-400">{formatDate(member.birthDate)}</span>
+                        )}
+                      </div>
+                      <div className="flex gap-2 shrink-0">
+                        <button onClick={() => { startEdit(member); setExpandedDetailId(null); }}
+                          className="text-xs text-stone-500 hover:text-stone-700 border border-stone-200 px-2 py-1 rounded">
+                          編集
+                        </button>
+                        <button onClick={() => handleDeleteMember(member.id, displayName)}
+                          className="text-xs text-red-400 hover:text-red-600 border border-red-100 px-2 py-1 rounded">
+                          削除
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* 詳細パネル */}
+                    {isExpanded && !isEditing && (
+                      <div className="bg-stone-50 border-t border-stone-200 px-4 py-3">
+                        <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-stone-600">
+                          {member.familyNameKana && (
+                            <div className="col-span-2">
+                              <dt className="inline text-stone-400">カナ: </dt>
+                              <dd className="inline">{member.familyNameKana} {member.givenNameKana || ""}</dd>
+                            </div>
+                          )}
+                          {member.relation && (
+                            <div><dt className="inline text-stone-400">続柄: </dt><dd className="inline">{member.relation}</dd></div>
+                          )}
+                          {member.birthDate && (
+                            <div><dt className="inline text-stone-400">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>
+                          )}
+                          {member.dharmaName && (
+                            <div><dt className="inline text-stone-400">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>
+                          )}
+                          {member.dharmaNameKana && (
+                            <div><dt className="inline text-stone-400">法名（カナ）: </dt><dd className="inline">{member.dharmaNameKana}</dd></div>
+                          )}
+                          {member.note && (
+                            <div className="col-span-2"><dt className="inline text-stone-400">備考: </dt><dd className="inline">{member.note}</dd></div>
+                          )}
+                        </dl>
+                      </div>
+                    )}
+
+                    {/* 編集フォーム */}
+                    {isEditing && (
+                      <div className="border-t border-stone-200 p-4 bg-stone-50">
+                        <form onSubmit={(e) => handleEditMember(e, member.id)}>
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-sm font-medium text-stone-700">編集中</p>
+                            <button type="button" onClick={() => setEditingMemberId(null)}
+                              className="text-xs text-stone-400 hover:text-stone-600">キャンセル</button>
+                          </div>
+                          {editError && <p className="text-red-600 text-xs mb-2">{editError}</p>}
+                          <MemberFormFields form={editForm} onChange={setEditForm} />
+                          <div className="flex gap-2 mt-3">
+                            <button type="submit" disabled={editSubmitting}
+                              className="bg-stone-700 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-stone-800 disabled:opacity-50">
+                              {editSubmitting ? "保存中..." : "保存する"}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
