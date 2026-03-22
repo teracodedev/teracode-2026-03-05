@@ -39,6 +39,7 @@ interface HouseholderDetail {
   address3: string | null;
   phone1: string | null;
   phone2: string | null;
+  fax: string | null;
   email: string | null;
   domicile: string | null;
   note: string | null;
@@ -48,6 +49,18 @@ interface HouseholderDetail {
   members: Member[];
   ceremonies: { ceremony: Ceremony }[];
 }
+
+type ContactForm = {
+  postalCode: string;
+  address1: string;
+  address2: string;
+  address3: string;
+  phone1: string;
+  phone2: string;
+  fax: string;
+  domicile: string;
+  note: string;
+};
 
 const CEREMONY_TYPE_LABELS: Record<string, string> = {
   MEMORIAL: "法要",
@@ -213,6 +226,13 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
   const [editSubmitting, setEditSubmitting] = useState(false);
   const [editError, setEditError] = useState("");
   const [expandedDetailId, setExpandedDetailId] = useState<string | null>(null);
+  const [editingContact, setEditingContact] = useState<string | null>(null); // member.id を流用してどの行で戸主編集中かを管理
+  const [contactForm, setContactForm] = useState<ContactForm>({
+    postalCode: "", address1: "", address2: "", address3: "",
+    phone1: "", phone2: "", fax: "", domicile: "", note: "",
+  });
+  const [contactSubmitting, setContactSubmitting] = useState(false);
+  const [contactError, setContactError] = useState("");
 
   const fetchHouseholder = () => {
     fetch(`/api/householder/${id}`)
@@ -300,6 +320,51 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
       await fetch(`/api/householder/${id}/members/${memberId}`, { method: "DELETE" });
       fetchHouseholder();
     } catch { alert("削除に失敗しました"); }
+  };
+
+  const startEditContact = () => {
+    if (!householder) return;
+    setContactForm({
+      postalCode: householder.postalCode || "",
+      address1: householder.address1 || "",
+      address2: householder.address2 || "",
+      address3: householder.address3 || "",
+      phone1: householder.phone1 || "",
+      phone2: householder.phone2 || "",
+      fax: householder.fax || "",
+      domicile: householder.domicile || "",
+      note: householder.note || "",
+    });
+    setEditingContact("open");
+    setContactError("");
+  };
+
+  const handleSaveContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setContactSubmitting(true);
+    setContactError("");
+    try {
+      const res = await fetchWithAuth(`/api/householder/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          familyName: householder!.familyName,
+          givenName: householder!.givenName,
+          familyNameKana: householder!.familyNameKana,
+          givenNameKana: householder!.givenNameKana,
+          email: householder!.email,
+          joinedAt: householder!.joinedAt,
+          leftAt: householder!.leftAt,
+          isActive: householder!.isActive,
+          ...contactForm,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setContactError(data.error || "更新に失敗しました"); return; }
+      setEditingContact(null);
+      fetchHouseholder();
+    } catch { setContactError("ネットワークエラーが発生しました"); }
+    finally { setContactSubmitting(false); }
   };
 
   if (loading) return <div className="text-center py-12 text-stone-400">読み込み中...</div>;
@@ -503,30 +568,91 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
 
                     {/* 詳細パネル */}
                     {isExpanded && !isEditing && (
-                      <div className="bg-stone-50 border-t border-stone-200 px-4 py-3">
-                        <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-stone-600">
-                          {member.familyNameKana && (
-                            <div className="col-span-2">
-                              <dt className="inline text-stone-400">カナ: </dt>
-                              <dd className="inline">{member.familyNameKana} {member.givenNameKana || ""}</dd>
-                            </div>
+                      <div className="bg-stone-50 border-t border-stone-200 px-4 py-4 space-y-4">
+
+                        {/* 世帯員情報 */}
+                        <div>
+                          <p className="text-xs font-semibold text-stone-400 uppercase mb-2">世帯員情報</p>
+                          <dl className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm text-stone-700">
+                            {member.familyNameKana && (
+                              <div className="col-span-2">
+                                <dt className="inline text-stone-400">カナ: </dt>
+                                <dd className="inline">{member.familyNameKana} {member.givenNameKana || ""}</dd>
+                              </div>
+                            )}
+                            {member.relation && (
+                              <div><dt className="inline text-stone-400">続柄: </dt><dd className="inline">{member.relation}</dd></div>
+                            )}
+                            {member.birthDate && (
+                              <div><dt className="inline text-stone-400">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>
+                            )}
+                            {member.dharmaName && (
+                              <div><dt className="inline text-stone-400">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>
+                            )}
+                            {member.dharmaNameKana && (
+                              <div><dt className="inline text-stone-400">法名（カナ）: </dt><dd className="inline">{member.dharmaNameKana}</dd></div>
+                            )}
+                            {member.note && (
+                              <div className="col-span-2"><dt className="inline text-stone-400">備考: </dt><dd className="inline">{member.note}</dd></div>
+                            )}
+                          </dl>
+                        </div>
+
+                        {/* 戸主連絡先 */}
+                        <div className="border-t border-stone-200 pt-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-xs font-semibold text-stone-400 uppercase">戸主連絡先</p>
+                            {editingContact !== "open" && (
+                              <button onClick={startEditContact}
+                                className="text-xs border border-stone-300 rounded px-2 py-0.5 text-stone-600 hover:bg-stone-100">
+                                編集
+                              </button>
+                            )}
+                          </div>
+
+                          {editingContact === "open" ? (
+                            <form onSubmit={handleSaveContact} className="space-y-2">
+                              {contactError && <p className="text-red-600 text-xs">{contactError}</p>}
+                              {(["郵便番号", "住所1", "住所2", "住所3", "電話番号1", "電話番号2", "FAX", "本籍地", "備考"] as const).map((label, i) => {
+                                const keys: (keyof ContactForm)[] = ["postalCode","address1","address2","address3","phone1","phone2","fax","domicile","note"];
+                                const k = keys[i];
+                                return (
+                                  <div key={k}>
+                                    <label className="block text-xs text-stone-400 mb-0.5">{label}</label>
+                                    <input
+                                      type="text"
+                                      value={contactForm[k]}
+                                      onChange={(e) => setContactForm({ ...contactForm, [k]: e.target.value })}
+                                      className="w-full border border-stone-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-stone-400"
+                                    />
+                                  </div>
+                                );
+                              })}
+                              <div className="flex gap-2 pt-1">
+                                <button type="submit" disabled={contactSubmitting}
+                                  className="bg-stone-700 text-white px-3 py-1 rounded text-sm hover:bg-stone-800 disabled:opacity-50">
+                                  {contactSubmitting ? "保存中..." : "保存"}
+                                </button>
+                                <button type="button" onClick={() => setEditingContact(null)}
+                                  className="text-stone-400 text-sm hover:text-stone-600">
+                                  キャンセル
+                                </button>
+                              </div>
+                            </form>
+                          ) : (
+                            <dl className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm text-stone-700">
+                              <div><dt className="inline text-stone-400">郵便番号: </dt><dd className="inline">{householder.postalCode || "-"}</dd></div>
+                              <div className="col-span-2"><dt className="inline text-stone-400">住所1: </dt><dd className="inline">{householder.address1 || "-"}</dd></div>
+                              {householder.address2 && <div className="col-span-2"><dt className="inline text-stone-400">住所2: </dt><dd className="inline">{householder.address2}</dd></div>}
+                              {householder.address3 && <div className="col-span-2"><dt className="inline text-stone-400">住所3: </dt><dd className="inline">{householder.address3}</dd></div>}
+                              <div><dt className="inline text-stone-400">電話番号1: </dt><dd className="inline">{householder.phone1 || "-"}</dd></div>
+                              <div><dt className="inline text-stone-400">電話番号2: </dt><dd className="inline">{householder.phone2 || "-"}</dd></div>
+                              <div><dt className="inline text-stone-400">FAX: </dt><dd className="inline">{householder.fax || "-"}</dd></div>
+                              {householder.domicile && <div className="col-span-2"><dt className="inline text-stone-400">本籍地: </dt><dd className="inline">{householder.domicile}</dd></div>}
+                              {householder.note && <div className="col-span-2"><dt className="inline text-stone-400">備考: </dt><dd className="inline">{householder.note}</dd></div>}
+                            </dl>
                           )}
-                          {member.relation && (
-                            <div><dt className="inline text-stone-400">続柄: </dt><dd className="inline">{member.relation}</dd></div>
-                          )}
-                          {member.birthDate && (
-                            <div><dt className="inline text-stone-400">生年月日: </dt><dd className="inline">{formatDate(member.birthDate)}</dd></div>
-                          )}
-                          {member.dharmaName && (
-                            <div><dt className="inline text-stone-400">法名: </dt><dd className="inline">{member.dharmaName}</dd></div>
-                          )}
-                          {member.dharmaNameKana && (
-                            <div><dt className="inline text-stone-400">法名（カナ）: </dt><dd className="inline">{member.dharmaNameKana}</dd></div>
-                          )}
-                          {member.note && (
-                            <div className="col-span-2"><dt className="inline text-stone-400">備考: </dt><dd className="inline">{member.note}</dd></div>
-                          )}
-                        </dl>
+                        </div>
                       </div>
                     )}
 
