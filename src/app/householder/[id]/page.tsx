@@ -12,6 +12,14 @@ interface Member {
   familyNameKana: string | null;
   givenNameKana: string | null;
   relation: string | null;
+  postalCode: string | null;
+  address1: string | null;
+  address2: string | null;
+  address3: string | null;
+  phone1: string | null;
+  phone2: string | null;
+  fax: string | null;
+  domicile: string | null;
   birthDate: string | null;
   deathDate: string | null;
   dharmaName: string | null;
@@ -82,7 +90,10 @@ function toInputDate(dateStr: string | null): string {
 
 const emptyMemberForm = {
   familyName: "", givenName: "", familyNameKana: "", givenNameKana: "",
-  relation: "", birthDate: "", deathDate: "", dharmaName: "", dharmaNameKana: "", note: "",
+  relation: "",
+  postalCode: "", address1: "", address2: "", address3: "",
+  phone1: "", phone2: "", fax: "", domicile: "",
+  birthDate: "", deathDate: "", dharmaName: "", dharmaNameKana: "", note: "",
 };
 
 type MemberForm = typeof emptyMemberForm;
@@ -112,6 +123,38 @@ function MemberFormFields({ form, onChange }: { form: MemberForm; onChange: (f: 
       <div>
         <label className="block text-sm text-stone-500 mb-1">続柄</label>
         <input type="text" value={form.relation} onChange={(e) => set("relation", e.target.value)} placeholder="妻・子など" className={cls} />
+      </div>
+      <div>
+        <label className="block text-sm text-stone-500 mb-1">郵便番号</label>
+        <input type="text" value={form.postalCode} onChange={(e) => set("postalCode", e.target.value)} placeholder="123-4567" className={cls} />
+      </div>
+      <div className="col-span-2">
+        <label className="block text-sm text-stone-500 mb-1">住所1（都道府県・市区町村）</label>
+        <input type="text" value={form.address1} onChange={(e) => set("address1", e.target.value)} placeholder="東京都渋谷区" className={cls} />
+      </div>
+      <div>
+        <label className="block text-sm text-stone-500 mb-1">住所2（丁目・番地）</label>
+        <input type="text" value={form.address2} onChange={(e) => set("address2", e.target.value)} className={cls} />
+      </div>
+      <div>
+        <label className="block text-sm text-stone-500 mb-1">住所3（建物名等）</label>
+        <input type="text" value={form.address3} onChange={(e) => set("address3", e.target.value)} className={cls} />
+      </div>
+      <div>
+        <label className="block text-sm text-stone-500 mb-1">電話番号1</label>
+        <input type="tel" value={form.phone1} onChange={(e) => set("phone1", e.target.value)} className={cls} />
+      </div>
+      <div>
+        <label className="block text-sm text-stone-500 mb-1">電話番号2</label>
+        <input type="tel" value={form.phone2} onChange={(e) => set("phone2", e.target.value)} className={cls} />
+      </div>
+      <div>
+        <label className="block text-sm text-stone-500 mb-1">FAX</label>
+        <input type="tel" value={form.fax} onChange={(e) => set("fax", e.target.value)} className={cls} />
+      </div>
+      <div>
+        <label className="block text-sm text-stone-500 mb-1">本籍地</label>
+        <input type="text" value={form.domicile} onChange={(e) => set("domicile", e.target.value)} className={cls} />
       </div>
       <div>
         <label className="block text-sm text-stone-500 mb-1">法名</label>
@@ -287,6 +330,14 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
       familyNameKana: member.familyNameKana || "",
       givenNameKana: member.givenNameKana || "",
       relation: member.relation || "",
+      postalCode: member.postalCode || "",
+      address1: member.address1 || "",
+      address2: member.address2 || "",
+      address3: member.address3 || "",
+      phone1: member.phone1 || "",
+      phone2: member.phone2 || "",
+      fax: member.fax || "",
+      domicile: member.domicile || "",
       birthDate: toInputDate(member.birthDate),
       deathDate: toInputDate(member.deathDate),
       dharmaName: member.dharmaName || "",
@@ -598,60 +649,19 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
                           </dl>
                         </div>
 
-                        {/* 戸主連絡先 */}
+                        {/* 個人連絡先 */}
                         <div className="border-t border-stone-200 pt-3">
-                          <div className="flex items-center justify-between mb-2">
-                            <p className="text-xs font-semibold text-stone-400 uppercase">戸主連絡先</p>
-                            {editingContact !== "open" && (
-                              <button onClick={startEditContact}
-                                className="text-xs border border-stone-300 rounded px-2 py-0.5 text-stone-600 hover:bg-stone-100">
-                                編集
-                              </button>
-                            )}
-                          </div>
-
-                          {editingContact === "open" ? (
-                            <form onSubmit={handleSaveContact} className="space-y-2">
-                              {contactError && <p className="text-red-600 text-xs">{contactError}</p>}
-                              {(["郵便番号", "住所1", "住所2", "住所3", "電話番号1", "電話番号2", "FAX", "本籍地", "備考"] as const).map((label, i) => {
-                                const keys: (keyof ContactForm)[] = ["postalCode","address1","address2","address3","phone1","phone2","fax","domicile","note"];
-                                const k = keys[i];
-                                return (
-                                  <div key={k}>
-                                    <label className="block text-xs text-stone-400 mb-0.5">{label}</label>
-                                    <input
-                                      type="text"
-                                      value={contactForm[k]}
-                                      onChange={(e) => setContactForm({ ...contactForm, [k]: e.target.value })}
-                                      className="w-full border border-stone-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-stone-400"
-                                    />
-                                  </div>
-                                );
-                              })}
-                              <div className="flex gap-2 pt-1">
-                                <button type="submit" disabled={contactSubmitting}
-                                  className="bg-stone-700 text-white px-3 py-1 rounded text-sm hover:bg-stone-800 disabled:opacity-50">
-                                  {contactSubmitting ? "保存中..." : "保存"}
-                                </button>
-                                <button type="button" onClick={() => setEditingContact(null)}
-                                  className="text-stone-400 text-sm hover:text-stone-600">
-                                  キャンセル
-                                </button>
-                              </div>
-                            </form>
-                          ) : (
-                            <dl className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm text-stone-700">
-                              <div><dt className="inline text-stone-400">郵便番号: </dt><dd className="inline">{householder.postalCode || "-"}</dd></div>
-                              <div className="col-span-2"><dt className="inline text-stone-400">住所1: </dt><dd className="inline">{householder.address1 || "-"}</dd></div>
-                              {householder.address2 && <div className="col-span-2"><dt className="inline text-stone-400">住所2: </dt><dd className="inline">{householder.address2}</dd></div>}
-                              {householder.address3 && <div className="col-span-2"><dt className="inline text-stone-400">住所3: </dt><dd className="inline">{householder.address3}</dd></div>}
-                              <div><dt className="inline text-stone-400">電話番号1: </dt><dd className="inline">{householder.phone1 || "-"}</dd></div>
-                              <div><dt className="inline text-stone-400">電話番号2: </dt><dd className="inline">{householder.phone2 || "-"}</dd></div>
-                              <div><dt className="inline text-stone-400">FAX: </dt><dd className="inline">{householder.fax || "-"}</dd></div>
-                              {householder.domicile && <div className="col-span-2"><dt className="inline text-stone-400">本籍地: </dt><dd className="inline">{householder.domicile}</dd></div>}
-                              {householder.note && <div className="col-span-2"><dt className="inline text-stone-400">備考: </dt><dd className="inline">{householder.note}</dd></div>}
-                            </dl>
-                          )}
+                          <p className="text-xs font-semibold text-stone-400 uppercase mb-2">連絡先</p>
+                          <dl className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm text-stone-700">
+                            <div><dt className="inline text-stone-400">郵便番号: </dt><dd className="inline">{member.postalCode || "-"}</dd></div>
+                            <div className="col-span-2"><dt className="inline text-stone-400">住所1: </dt><dd className="inline">{member.address1 || "-"}</dd></div>
+                            {member.address2 && <div className="col-span-2"><dt className="inline text-stone-400">住所2: </dt><dd className="inline">{member.address2}</dd></div>}
+                            {member.address3 && <div className="col-span-2"><dt className="inline text-stone-400">住所3: </dt><dd className="inline">{member.address3}</dd></div>}
+                            <div><dt className="inline text-stone-400">電話番号1: </dt><dd className="inline">{member.phone1 || "-"}</dd></div>
+                            <div><dt className="inline text-stone-400">電話番号2: </dt><dd className="inline">{member.phone2 || "-"}</dd></div>
+                            <div><dt className="inline text-stone-400">FAX: </dt><dd className="inline">{member.fax || "-"}</dd></div>
+                            {member.domicile && <div className="col-span-2"><dt className="inline text-stone-400">本籍地: </dt><dd className="inline">{member.domicile}</dd></div>}
+                          </dl>
                         </div>
                       </div>
                     )}
