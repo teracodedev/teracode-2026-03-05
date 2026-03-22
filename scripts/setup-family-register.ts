@@ -2,7 +2,7 @@
  * 家族・親族台帳のセットアップスクリプト
  * 使い方: npx tsx scripts/setup-family-register.ts
  *
- * - 「山下和彰の家族親族台帳」を作成し、戸主「山下 和彰」を紐付けます。
+ * - 「山下和彰の家族・親族台帳」を作成し、戸主「山下 和彰」を紐付けます。
  * - 台帳またはリンクがすでに存在する場合はスキップします。
  */
 
@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
 async function main() {
   // 戸主を名前で検索（UUIDが一致する場合はそちら優先）
   const HOUSEHOLDER_UUID = "ceda572c-4ac0-44f2-89ba-e2562ca07b20";
-  const REGISTER_NAME = "山下和彰の家族親族台帳";
+  const REGISTER_NAME = "山下和彰の家族・親族台帳";
 
   // 戸主を確認
   let householder = await prisma.householder.findUnique({

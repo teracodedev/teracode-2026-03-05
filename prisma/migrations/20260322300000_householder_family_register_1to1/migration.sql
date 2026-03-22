@@ -14,7 +14,7 @@ BEGIN
     VALUES (
       reg_id,
       gen_random_uuid(),
-      h."familyName" || h."givenName" || 'の家族親族台帳',
+      h."familyName" || h."givenName" || 'の家族・親族台帳',
       NOW(),
       NOW()
     );
