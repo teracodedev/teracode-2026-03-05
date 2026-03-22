@@ -21,6 +21,14 @@ export async function GET(request: NextRequest) {
     const fields = getHouseholderFieldMap(kind);
     const codeFilter = { [fields.code]: { contains: query, mode: "insensitive" } };
 
+    const include =
+      kind === "householder"
+        ? {
+            members: true,
+            familyRegister: { select: { id: true, name: true } },
+          }
+        : { members: true };
+
     const householderList = await delegate.findMany({
       where: {
         isActive: activeOnly ? true : undefined,
@@ -37,9 +45,7 @@ export async function GET(request: NextRequest) {
             ]
           : undefined,
       },
-      include: {
-        members: true,
-      },
+      include,
       orderBy: [{ familyNameKana: "asc" }, { familyName: "asc" }],
     });
 

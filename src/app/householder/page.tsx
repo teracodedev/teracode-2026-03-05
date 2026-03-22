@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 
 interface Householder {
-  id: number;
+  id: string;
   householderCode: string;
   familyName: string;
   givenName: string;
@@ -18,6 +18,7 @@ interface Householder {
   phone2: string | null;
   isActive: boolean;
   members: { id: string; familyName: string; givenName: string | null; relation: string | null }[];
+  familyRegister?: { id: string; name: string } | null;
 }
 
 export default function HouseholderPage() {
@@ -150,38 +151,54 @@ export default function HouseholderPage() {
           {/* モバイル: カード表示 */}
           <div className="md:hidden space-y-2">
             {householderList.map((householder) => (
-              <Link
+              <div
                 key={householder.id}
-                href={`/householder/${householder.id}`}
-                className="block bg-white rounded-xl border border-stone-200 px-4 py-3 shadow-sm active:bg-stone-50"
+                className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden"
               >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <div className="font-medium text-stone-800 text-base">
-                      {householder.familyName} {householder.givenName}
-                    </div>
-                    {householder.familyNameKana && (
-                      <div className="text-xs text-stone-400">
-                        {householder.familyNameKana} {householder.givenNameKana}
+                <Link
+                  href={`/householder/${householder.id}`}
+                  className="block px-4 py-3 active:bg-stone-50"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="font-medium text-stone-800 text-base">
+                        {householder.familyName} {householder.givenName}
                       </div>
-                    )}
-                    <div className="text-xs text-stone-500 mt-1">
-                      {[householder.address1, householder.address2, householder.address3].filter(Boolean).join(" ") || "-"}
+                      {householder.familyNameKana && (
+                        <div className="text-xs text-stone-400">
+                          {householder.familyNameKana} {householder.givenNameKana}
+                        </div>
+                      )}
+                      <div className="text-xs text-stone-500 mt-1">
+                        {[householder.address1, householder.address2, householder.address3].filter(Boolean).join(" ") || "-"}
+                      </div>
+                      {householder.phone1 && (
+                        <div className="text-xs text-stone-500">{householder.phone1}</div>
+                      )}
                     </div>
-                    {householder.phone1 && (
-                      <div className="text-xs text-stone-500">{householder.phone1}</div>
-                    )}
+                    <div className="flex flex-col items-end gap-1 shrink-0">
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                        householder.isActive ? "bg-green-100 text-green-700" : "bg-stone-100 text-stone-500"
+                      }`}>
+                        {householder.isActive ? "在籍" : "離檀"}
+                      </span>
+                      <span className="text-xs text-stone-400">{householder.members.length}名</span>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-end gap-1 shrink-0">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                      householder.isActive ? "bg-green-100 text-green-700" : "bg-stone-100 text-stone-500"
-                    }`}>
-                      {householder.isActive ? "在籍" : "離檀"}
-                    </span>
-                    <span className="text-xs text-stone-400">{householder.members.length}名</span>
+                </Link>
+                {householder.familyRegister ? (
+                  <Link
+                    href={`/family-register/${householder.familyRegister.id}`}
+                    className="block px-4 py-2 border-t border-stone-100 text-xs text-amber-800 bg-amber-50/50 hover:bg-amber-50"
+                  >
+                    {householder.familyRegister.name}
+                  </Link>
+                ) : (
+                  <div className="px-4 py-2 border-t border-stone-100 text-xs text-stone-400 bg-stone-50/40">
+                    家族・親族台帳未紐付け
                   </div>
-                </div>
-              </Link>
+                )}
+              </div>
             ))}
             <div className="text-xs text-stone-400 px-1 pt-1">{householderList.length}件</div>
           </div>
@@ -191,7 +208,7 @@ export default function HouseholderPage() {
             <table className="w-full text-base">
               <thead className="bg-stone-50 border-b border-stone-200">
                 <tr>
-                  <th className="text-left px-4 py-3 text-stone-600 font-medium">UUID</th>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">家族・親族台帳</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">氏名</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">住所</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">電話番号</th>
@@ -202,7 +219,18 @@ export default function HouseholderPage() {
               <tbody className="divide-y divide-stone-100">
                 {householderList.map((householder) => (
                   <tr key={householder.id} className="hover:bg-stone-50">
-                    <td className="px-4 py-3 font-mono text-stone-500">{householder.householderCode.slice(0, 8)}</td>
+                    <td className="px-4 py-3 text-stone-600">
+                      {householder.familyRegister ? (
+                        <Link
+                          href={`/family-register/${householder.familyRegister.id}`}
+                          className="text-amber-800 hover:text-amber-900 hover:underline"
+                        >
+                          {householder.familyRegister.name}
+                        </Link>
+                      ) : (
+                        <span className="text-stone-400">—</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3">
                       <Link
                         href={`/householder/${householder.id}`}
