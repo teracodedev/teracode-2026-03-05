@@ -70,7 +70,12 @@ export default function HouseholderPage() {
         return;
       }
 
-      setHouseholderList(Array.isArray(data) ? data : []);
+      const sorted = (Array.isArray(data) ? data : []).sort((a, b) => {
+        const ka = (a.familyNameKana ?? a.familyName) + (a.givenNameKana ?? a.givenName);
+        const kb = (b.familyNameKana ?? b.familyName) + (b.givenNameKana ?? b.givenName);
+        return ka.localeCompare(kb, "ja");
+      });
+      setHouseholderList(sorted);
     } catch (err) {
       console.error(err);
       setHouseholderList([]);

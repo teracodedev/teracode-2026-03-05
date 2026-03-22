@@ -33,7 +33,18 @@ export default function FamilyRegisterPage() {
       if (query) params.set("q", query);
       const res = await fetchWithAuth(`/api/family-register?${params}`);
       const data = await res.json();
-      setList(Array.isArray(data) ? data : []);
+      const sorted = (Array.isArray(data) ? data : []).sort((a, b) => {
+        const hhA = a.householders[0];
+        const hhB = b.householders[0];
+        const ka = hhA
+          ? (hhA.familyNameKana ?? hhA.familyName) + (hhA.givenNameKana ?? hhA.givenName ?? "")
+          : a.name;
+        const kb = hhB
+          ? (hhB.familyNameKana ?? hhB.familyName) + (hhB.givenNameKana ?? hhB.givenName ?? "")
+          : b.name;
+        return ka.localeCompare(kb, "ja");
+      });
+      setList(sorted);
     } finally {
       setLoading(false);
     }
