@@ -279,16 +279,30 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
 
   const fetchHouseholder = () => {
     fetch(`/api/householder/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setHouseholder({
-          ...data,
-          members: Array.isArray(data?.members) ? data.members : [],
-          ceremonies: Array.isArray(data?.ceremonies) ? data.ceremonies : [],
-        });
+      .then(async (res) => {
+        const data = await res.json();
+        const ok =
+          res.ok &&
+          data &&
+          typeof data === "object" &&
+          typeof (data as HouseholderDetail).id === "string" &&
+          typeof (data as HouseholderDetail).familyName === "string" &&
+          typeof (data as HouseholderDetail).givenName === "string";
+        if (ok) {
+          setHouseholder({
+            ...(data as HouseholderDetail),
+            members: Array.isArray(data.members) ? data.members : [],
+            ceremonies: Array.isArray(data.ceremonies) ? data.ceremonies : [],
+          });
+        } else {
+          setHouseholder(null);
+        }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setHouseholder(null);
+        setLoading(false);
+      });
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -421,8 +435,9 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
   if (loading) return <div className="text-center py-12 text-stone-400">読み込み中...</div>;
   if (!householder) return <div className="text-center py-12 text-stone-400">戸主が見つかりません</div>;
 
-  const livingMembers = householder.members.filter((m) => !m.deathDate);
-  const deceasedMembers = householder.members.filter((m) => !!m.deathDate);
+  const members = householder.members ?? [];
+  const livingMembers = members.filter((m) => !m.deathDate);
+  const deceasedMembers = members.filter((m) => !!m.deathDate);
 
   const tabs: { id: TabId; label: string; count?: number }[] = [
     { id: "info", label: "基本情報" },
@@ -521,11 +536,13 @@ export default function HouseholderDetailPage({ params }: { params: Promise<{ id
           </dl>
 
           {/* 参加法要履歴 */}
-          {householder.ceremonies.length > 0 && (
+          {(householder.ceremonies ?? []).filter((row) => row?.ceremony?.id).length > 0 && (
             <div className="mt-6 pt-6 border-t border-stone-100">
               <h3 className="font-medium text-stone-600 mb-3 text-sm">参加法要履歴</h3>
               <div className="space-y-2">
-                {householder.ceremonies.map(({ ceremony }) => (
+                {(householder.ceremonies ?? [])
+                  .filter((row): row is { ceremony: Ceremony } => !!row?.ceremony?.id)
+                  .map(({ ceremony }) => (
                   <Link key={ceremony.id} href={`/ceremonies/${ceremony.id}`}
                     className="flex items-center justify-between border border-stone-100 rounded-lg p-3 hover:bg-stone-50">
                     <div>

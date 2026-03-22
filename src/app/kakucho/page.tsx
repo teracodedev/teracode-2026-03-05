@@ -43,7 +43,15 @@ export default function KakuchoPage() {
       if (query) params.set("q", query);
       const res = await fetchWithAuth(`/api/kakucho?${params}`);
       const data = await res.json();
-      setRecords(Array.isArray(data) ? data : []);
+      const rows = Array.isArray(data) ? data : [];
+      setRecords(
+        rows.filter(
+          (r): r is KakuchoRecord =>
+            !!r &&
+            typeof r === "object" &&
+            typeof (r as KakuchoRecord).householder?.id === "string"
+        )
+      );
     } catch (err) {
       console.error(err);
     } finally {

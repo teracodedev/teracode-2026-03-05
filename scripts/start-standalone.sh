@@ -11,4 +11,26 @@ if command -v fuser >/dev/null 2>&1; then
   fuser -k "${PORT}/tcp" 2>/dev/null || true
   sleep 1
 fi
+
+# next build の standalone 出力には public と .next/static が含まれない。
+# 作業ディレクトリが .next/standalone のみのサーバーでも動くよう、起動直前に同期する。
+STANDALONE="${ROOT}/.next/standalone"
+if [[ -d "${STANDALONE}" ]]; then
+  if [[ -d "${ROOT}/public" ]]; then
+    mkdir -p "${STANDALONE}/public"
+    cp -a "${ROOT}/public/." "${STANDALONE}/public/"
+  fi
+  if [[ -d "${ROOT}/.next/static" ]]; then
+    mkdir -p "${STANDALONE}/.next/static"
+    # 古いチャンクだけ残るとデバッグが紛らわしいので、ビルド結果と完全一致させる
+    if command -v rsync >/dev/null 2>&1; then
+      rsync -a --delete "${ROOT}/.next/static/" "${STANDALONE}/.next/static/"
+    else
+      rm -rf "${STANDALONE}/.next/static"
+      mkdir -p "${STANDALONE}/.next/static"
+      cp -a "${ROOT}/.next/static/." "${STANDALONE}/.next/static/"
+    fi
+  fi
+fi
+
 exec node .next/standalone/server.js

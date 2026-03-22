@@ -19,7 +19,8 @@ export default function FamilyRegisterPage() {
     setLoading(true);
     try {
       const res = await fetchWithAuth("/api/family-register");
-      setList(await res.json());
+      const data = await res.json();
+      setList(Array.isArray(data) ? data : []);
     } finally {
       setLoading(false);
     }
@@ -47,7 +48,8 @@ export default function FamilyRegisterPage() {
       ) : (
         <div className="space-y-3">
           {list.map((r) => {
-            const memberCount = r.householders.reduce((sum, h) => sum + h._count.members, 0);
+            const hh = r.householders ?? [];
+            const memberCount = hh.reduce((sum, h) => sum + (h._count?.members ?? 0), 0);
             return (
               <Link key={r.id} href={`/family-register/${r.id}`}
                 className="block bg-white rounded-xl border border-stone-200 px-5 py-4 shadow-sm hover:shadow-md hover:border-stone-300 transition-all">
@@ -56,7 +58,7 @@ export default function FamilyRegisterPage() {
                     <div className="text-lg font-bold text-stone-800">{r.name}</div>
                     {r.note && <div className="text-sm text-stone-400 mt-0.5">{r.note}</div>}
                     <div className="mt-2 flex flex-wrap gap-2">
-                      {r.householders.map((h) => (
+                      {hh.map((h) => (
                         <span key={h.id} className={`text-xs px-2 py-0.5 rounded-full ${h.isActive ? "bg-green-100 text-green-700" : "bg-stone-100 text-stone-400"}`}>
                           {h.familyName}{h.givenName}
                         </span>
@@ -64,7 +66,7 @@ export default function FamilyRegisterPage() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-sm text-stone-500">{r.householders.length}戸主</div>
+                    <div className="text-sm text-stone-500">{hh.length}戸主</div>
                     <div className="text-sm text-stone-500">{memberCount}世帯員</div>
                   </div>
                 </div>

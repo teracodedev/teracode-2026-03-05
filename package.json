@@ -7,6 +7,7 @@
     "build": "next build --webpack",
     "start": "bash scripts/start-standalone.sh",
     "lint": "eslint",
+    "verify-static": "bash scripts/verify-next-static.sh",
     "update-uuid": "npx prisma db execute --file scripts/update-uuid.sql",
     "create-admin": "npx tsx scripts/create-admin.ts"
   },

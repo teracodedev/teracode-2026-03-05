@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   description: "戸主・法要を管理するシステム",
 };
 
+/** デプロイ直後の ChunkLoadError 用（public/ の配信に依存しない） */
+const CHUNK_RECOVERY_INLINE = `(function(){var k="teracode_chunk_reload";function sr(r){var t=r&&typeof r==="object"&&r.message?String(r.message):String(r||"");if(!/ChunkLoadError|Loading chunk|chunk load failed/i.test(t))return false;try{if(sessionStorage.getItem(k)==="1")return false;sessionStorage.setItem(k,"1")}catch(e){}return true}window.addEventListener("error",function(ev){if(sr(ev.error||ev.message))location.reload()});window.addEventListener("unhandledrejection",function(ev){if(sr(ev.reason))location.reload()})})();`;
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -37,6 +40,9 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
       >
+        <script
+          dangerouslySetInnerHTML={{ __html: CHUNK_RECOVERY_INLINE }}
+        />
         <nav className="bg-stone-800 text-white shadow-md relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">

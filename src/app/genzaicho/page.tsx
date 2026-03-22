@@ -1,7 +1,7 @@
 "use client";
 import { fetchWithAuth } from "@/lib/fetch-with-auth";
 
-import { useState, useEffect, useCallback } from "react";
+import { Fragment, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 
 interface GenzaichoRecord {
@@ -257,7 +257,15 @@ export default function GenzaichoPage() {
       if (query) params.set("q", query);
       const res = await fetchWithAuth(`/api/genzaicho?${params}`);
       const data = await res.json();
-      setRecords(Array.isArray(data) ? data : []);
+      const rows = Array.isArray(data) ? data : [];
+      setRecords(
+        rows.filter(
+          (r): r is GenzaichoRecord =>
+            !!r &&
+            typeof r === "object" &&
+            typeof (r as GenzaichoRecord).householder?.id === "string"
+        )
+      );
     } catch (err) {
       console.error(err);
     } finally {
@@ -382,8 +390,8 @@ export default function GenzaichoPage() {
               </thead>
               <tbody className="divide-y divide-stone-100">
                 {records.map((record) => (
-                  <>
-                    <tr key={record.id} className="hover:bg-stone-50">
+                  <Fragment key={record.id}>
+                    <tr className="hover:bg-stone-50">
                       <td className="px-4 py-3 font-medium text-stone-700">
                         {record.familyName}
                         {record.familyNameKana && (
@@ -433,7 +441,7 @@ export default function GenzaichoPage() {
                         </td>
                       </tr>
                     )}
-                  </>
+                  </Fragment>
                 ))}
               </tbody>
             </table>

@@ -59,7 +59,7 @@ export default function CeremoniesPage() {
       if (filterStatus) params.set("status", filterStatus);
       const res = await fetchWithAuth(`/api/ceremonies?${params}`);
       const data = await res.json();
-      setCeremonies(data);
+      setCeremonies(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -148,7 +148,7 @@ export default function CeremoniesPage() {
                   </div>
                 </div>
                 <div className="text-sm text-stone-400 whitespace-nowrap">
-                  参加: {ceremony.participants.length}件
+                  参加: {(ceremony.participants ?? []).length}件
                 </div>
               </div>
             </Link>

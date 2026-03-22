@@ -39,8 +39,12 @@ export default function HouseholderPage() {
     try {
       const res = await fetchWithAuth("/api/import", { method: "POST", body: formData });
       const data = await res.json();
-      setImportResult(data);
-      if (data.ok > 0) fetchHouseholders();
+      setImportResult({
+        ok: typeof data?.ok === "number" ? data.ok : 0,
+        errors: typeof data?.errors === "number" ? data.errors : 0,
+        results: Array.isArray(data?.results) ? data.results : [],
+      });
+      if (typeof data?.ok === "number" && data.ok > 0) fetchHouseholders();
     } catch {
       setImportResult({ ok: 0, errors: 1, results: [{ file: "—", status: "error", error: "通信エラー" }] });
     } finally {

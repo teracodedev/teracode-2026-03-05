@@ -34,6 +34,7 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
   const [loading, setLoading] = useState(true);
 
   const [form, setForm] = useState<HouseholderForm>({
@@ -57,26 +58,41 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
 
   useEffect(() => {
     fetch(`/api/householder/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setForm({
-          familyName: data.familyName || "",
-          givenName: data.givenName || "",
-          familyNameKana: data.familyNameKana || "",
-          givenNameKana: data.givenNameKana || "",
-          postalCode: data.postalCode || "",
-          address1: data.address1 || "",
-          address2: data.address2 || "",
-          address3: data.address3 || "",
-          phone1: data.phone1 || "",
-          phone2: data.phone2 || "",
-          email: data.email || "",
-          domicile: data.domicile || "",
-          note: data.note || "",
-          joinedAt: toDateInput(data.joinedAt),
-          leftAt: toDateInput(data.leftAt),
-          isActive: data.isActive,
-        });
+      .then(async (res) => {
+        const data = await res.json();
+        const ok =
+          res.ok &&
+          data &&
+          typeof data === "object" &&
+          typeof data.familyName === "string" &&
+          typeof data.givenName === "string";
+        if (ok) {
+          setLoadError("");
+          setForm({
+            familyName: data.familyName || "",
+            givenName: data.givenName || "",
+            familyNameKana: data.familyNameKana || "",
+            givenNameKana: data.givenNameKana || "",
+            postalCode: data.postalCode || "",
+            address1: data.address1 || "",
+            address2: data.address2 || "",
+            address3: data.address3 || "",
+            phone1: data.phone1 || "",
+            phone2: data.phone2 || "",
+            email: data.email || "",
+            domicile: data.domicile || "",
+            note: data.note || "",
+            joinedAt: toDateInput(data.joinedAt),
+            leftAt: toDateInput(data.leftAt),
+            isActive: Boolean(data.isActive),
+          });
+        } else {
+          setLoadError(data?.error || "戸主情報を読み込めませんでした");
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoadError("戸主情報を読み込めませんでした");
         setLoading(false);
       });
   }, [id]);
@@ -117,6 +133,15 @@ export default function EditHouseholderPage({ params }: { params: Promise<{ id: 
   };
 
   if (loading) return <div className="text-center py-12 text-stone-400">読み込み中...</div>;
+
+  if (loadError) {
+    return (
+      <div className="max-w-2xl space-y-4">
+        <Link href="/householder" className="text-stone-400 hover:text-stone-600 text-sm">← 戸主一覧へ</Link>
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">{loadError}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl space-y-6">

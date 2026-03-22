@@ -69,9 +69,19 @@ export default function FamilyRegisterDetailPage({ params }: { params: Promise<{
     try {
       const res = await fetchWithAuth(`/api/family-register/${id}`);
       const json = await res.json();
-      setData(json);
-      setEditName(json.name);
-      setEditNote(json.note || "");
+      const ok =
+        res.ok &&
+        json &&
+        typeof json === "object" &&
+        Array.isArray((json as FamilyRegister).householders);
+      if (ok) {
+        const row = json as FamilyRegister;
+        setData(row);
+        setEditName(row.name);
+        setEditNote(row.note || "");
+      } else {
+        setData(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -127,7 +137,7 @@ export default function FamilyRegisterDetailPage({ params }: { params: Promise<{
   if (!data) return <div className="text-center py-12 text-stone-400">台帳が見つかりません</div>;
 
   const allMembers = data.householders.flatMap((h) =>
-    h.members.map((m) => ({ ...m, householderName: `${h.familyName}${h.givenName}`, householderId: h.id }))
+    (h.members ?? []).map((m) => ({ ...m, householderName: `${h.familyName}${h.givenName}`, householderId: h.id }))
   );
   const livingMembers = allMembers.filter((m) => !m.deathDate);
   const deceasedMembers = allMembers.filter((m) => !!m.deathDate);

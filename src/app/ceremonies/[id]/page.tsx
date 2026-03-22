@@ -36,6 +36,16 @@ interface CeremonyDetail {
   participants: Participant[];
 }
 
+function isCeremonyDetail(v: unknown): v is CeremonyDetail {
+  if (!v || typeof v !== "object") return false;
+  const o = v as Record<string, unknown>;
+  return (
+    ("id" in o && (typeof o.id === "string" || typeof o.id === "number")) &&
+    typeof o.title === "string" &&
+    Array.isArray(o.participants)
+  );
+}
+
 const CEREMONY_TYPE_LABELS: Record<string, string> = {
   MEMORIAL: "法要",
   REGULAR: "定例行事",
@@ -86,17 +96,36 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
   const [participantError, setParticipantError] = useState("");
 
   useEffect(() => {
-    Promise.all([
-      fetch(`/api/ceremonies/${id}`).then((r) => r.json()),
-      fetch("/api/householder?active=true").then(async (r) => {
-        const data = await r.json();
-        return r.ok && Array.isArray(data) ? data : [];
-      }),
-    ]).then(([ceremonyData, householderData]) => {
-      setCeremony(ceremonyData);
-      setHouseholderList(householderData);
-      setLoading(false);
-    });
+    let cancelled = false;
+    (async () => {
+      try {
+        const [cRes, hRes] = await Promise.all([
+          fetchWithAuth(`/api/ceremonies/${id}`),
+          fetchWithAuth("/api/householder?active=true"),
+        ]);
+        const ceremonyJson = await cRes.json();
+        const householderJson = await hRes.json();
+        const householders =
+          hRes.ok && Array.isArray(householderJson) ? householderJson : [];
+        if (cancelled) return;
+        if (cRes.ok && isCeremonyDetail(ceremonyJson)) {
+          setCeremony(ceremonyJson);
+        } else {
+          setCeremony(null);
+        }
+        setHouseholderList(householders);
+      } catch {
+        if (!cancelled) {
+          setCeremony(null);
+          setHouseholderList([]);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   const handleDelete = async () => {
@@ -127,8 +156,9 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
       }
 
       // 再取得
-      const updated = await fetchWithAuth(`/api/ceremonies/${id}`).then((r) => r.json());
-      setCeremony(updated);
+      const uRes = await fetchWithAuth(`/api/ceremonies/${id}`);
+      const updated = await uRes.json();
+      if (uRes.ok && isCeremonyDetail(updated)) setCeremony(updated);
       setAddingParticipant(false);
       setParticipantForm({ householderId: "", attendees: "1", offering: "", note: "" });
     } catch (err) {
@@ -143,8 +173,9 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
       await fetch(`/api/ceremonies/${id}/participants?householderId=${householderId}`, {
         method: "DELETE",
       });
-      const updated = await fetchWithAuth(`/api/ceremonies/${id}`).then((r) => r.json());
-      setCeremony(updated);
+      const uRes = await fetchWithAuth(`/api/ceremonies/${id}`);
+      const updated = await uRes.json();
+      if (uRes.ok && isCeremonyDetail(updated)) setCeremony(updated);
     } catch (err) {
       console.error(err);
     }
@@ -158,7 +189,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
         body: JSON.stringify({ ...ceremony, status }),
       });
       const updated = await res.json();
-      setCeremony(updated);
+      if (res.ok && isCeremonyDetail(updated)) setCeremony(updated);
     } catch (err) {
       console.error(err);
     }
@@ -167,8 +198,9 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
   if (loading) return <div className="text-center py-12 text-stone-400">読み込み中...</div>;
   if (!ceremony) return <div className="text-center py-12 text-stone-400">法要が見つかりません</div>;
 
-  const totalOffering = ceremony.participants.reduce((sum, p) => sum + (p.offering || 0), 0);
-  const totalAttendees = ceremony.participants.reduce((sum, p) => sum + p.attendees, 0);
+  const participants = ceremony.participants ?? [];
+  const totalOffering = participants.reduce((sum, p) => sum + (p.offering || 0), 0);
+  const totalAttendees = participants.reduce((sum, p) => sum + p.attendees, 0);
 
   return (
     <div className="max-w-3xl space-y-6">
@@ -271,7 +303,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
       <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-semibold text-stone-700">
-            参加戸主 ({ceremony.participants.length}件 / {totalAttendees}名)
+            参加戸主 ({participants.length}件 / {totalAttendees}名)
           </h2>
           <div className="flex items-center gap-4">
             {totalOffering > 0 && (
@@ -304,7 +336,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
                 >
                   <option value="">選択してください</option>
                   {householderList
-                    .filter((h) => !ceremony.participants.some((p) => p.householderId === h.id))
+                    .filter((h) => !participants.some((p) => String(p.householderId) === String(h.id)))
                     .map((h) => (
                       <option key={h.id} value={h.id}>
                         {h.householderCode} - {h.familyName} {h.givenName}
@@ -352,7 +384,7 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
           </form>
         )}
 
-        {ceremony.participants.length === 0 ? (
+        {participants.length === 0 ? (
           <p className="text-stone-400 text-sm">参加者が登録されていません</p>
         ) : (
           <table className="w-full text-base">
@@ -365,16 +397,19 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
-              {ceremony.participants.map((p) => (
+              {participants.map((p) => {
+                const h = p.householder;
+                if (!h) return null;
+                return (
                 <tr key={p.id}>
                   <td className="py-2">
                     <Link
                       href={`/householder/${p.householderId}`}
                       className="text-stone-800 hover:text-stone-600 hover:underline"
                     >
-                      {p.householder.familyName} {p.householder.givenName}
+                      {h.familyName} {h.givenName}
                     </Link>
-                    <span className="ml-2 text-xs text-stone-400">{p.householder.householderCode}</span>
+                    <span className="ml-2 text-xs text-stone-400">{h.householderCode}</span>
                   </td>
                   <td className="py-2 text-right text-stone-600">{p.attendees}名</td>
                   <td className="py-2 text-right text-stone-600">
@@ -389,7 +424,8 @@ export default function CeremonyDetailPage({ params }: { params: Promise<{ id: s
                     </button>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         )}
