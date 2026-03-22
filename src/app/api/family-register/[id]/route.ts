@@ -11,17 +11,22 @@ export async function GET(_req: NextRequest, { params }: Params) {
   if (unauth) return unauth;
 
   const { id } = await params;
-  const register = await prisma.familyRegister.findUnique({
-    where: { id },
-    include: {
-      householders: {
-        include: { members: true },
-        orderBy: { createdAt: "asc" },
+  try {
+    const register = await prisma.familyRegister.findUnique({
+      where: { id },
+      include: {
+        householders: {
+          include: { members: true },
+          orderBy: { createdAt: "asc" },
+        },
       },
-    },
-  });
-  if (!register) return NextResponse.json({ error: "見つかりません" }, { status: 404 });
-  return NextResponse.json(register);
+    });
+    if (!register) return NextResponse.json({ error: "見つかりません" }, { status: 404 });
+    return NextResponse.json(register);
+  } catch (e) {
+    console.error("GET /api/family-register/[id] error:", e);
+    return NextResponse.json({ error: "データ取得エラー" }, { status: 500 });
+  }
 }
 
 export async function PUT(req: NextRequest, { params }: Params) {

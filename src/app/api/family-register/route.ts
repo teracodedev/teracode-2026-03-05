@@ -10,28 +10,33 @@ export async function GET(req: NextRequest) {
 
   const q = req.nextUrl.searchParams.get("q")?.trim() || "";
 
-  const registers = await prisma.familyRegister.findMany({
-    where: q
-      ? {
-          OR: [
-            { name: { contains: q } },
-            { householders: { some: { OR: [
-              { familyName: { contains: q } },
-              { givenName:  { contains: q } },
-              { familyNameKana: { contains: q } },
-              { givenNameKana:  { contains: q } },
-            ] } } },
-          ],
-        }
-      : undefined,
-    include: {
-      householders: {
-        select: { id: true, familyName: true, givenName: true, familyNameKana: true, givenNameKana: true, isActive: true, address1: true, phone1: true, _count: { select: { members: true } } },
+  try {
+    const registers = await prisma.familyRegister.findMany({
+      where: q
+        ? {
+            OR: [
+              { name: { contains: q } },
+              { householders: { some: { OR: [
+                { familyName: { contains: q } },
+                { givenName:  { contains: q } },
+                { familyNameKana: { contains: q } },
+                { givenNameKana:  { contains: q } },
+              ] } } },
+            ],
+          }
+        : undefined,
+      include: {
+        householders: {
+          select: { id: true, familyName: true, givenName: true, familyNameKana: true, givenNameKana: true, isActive: true, address1: true, phone1: true, _count: { select: { members: true } } },
+        },
       },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-  return NextResponse.json(registers);
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json(registers);
+  } catch (e) {
+    console.error("GET /api/family-register error:", e);
+    return NextResponse.json({ error: "データ取得エラー" }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {

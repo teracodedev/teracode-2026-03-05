@@ -81,7 +81,13 @@ export default function FamilyRegisterDetailPage({ params }: { params: Promise<{
   const fetchData = useCallback(async () => {
     try {
       const res = await fetchWithAuth(`/api/family-register/${id}`);
-      const json = await res.json();
+      let json: unknown;
+      try {
+        json = await res.json();
+      } catch {
+        setData(null);
+        return;
+      }
       const ok =
         res.ok &&
         json &&
@@ -95,6 +101,8 @@ export default function FamilyRegisterDetailPage({ params }: { params: Promise<{
       } else {
         setData(null);
       }
+    } catch {
+      setData(null);
     } finally {
       setLoading(false);
     }
