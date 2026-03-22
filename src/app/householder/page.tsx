@@ -17,8 +17,8 @@ interface Householder {
   phone1: string | null;
   phone2: string | null;
   isActive: boolean;
+  familyRegister: { id: string; name: string } | null;
   members: { id: string; familyName: string; givenName: string | null; relation: string | null }[];
-  familyRegister?: { id: string; name: string } | null;
 }
 
 export default function HouseholderPage() {
@@ -223,12 +223,12 @@ export default function HouseholderPage() {
                       {householder.familyRegister ? (
                         <Link
                           href={`/family-register/${householder.familyRegister.id}`}
-                          className="text-amber-800 hover:text-amber-900 hover:underline"
+                          className="text-amber-700 hover:text-amber-800 hover:underline text-sm"
                         >
                           {householder.familyRegister.name}
                         </Link>
                       ) : (
-                        <span className="text-stone-400">—</span>
+                        <span className="text-stone-300 text-sm">未設定</span>
                       )}
                     </td>
                     <td className="px-4 py-3">

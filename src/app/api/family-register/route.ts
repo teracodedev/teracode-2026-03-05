@@ -4,14 +4,29 @@ import { requireAuth } from "@/lib/require-auth";
 
 export const runtime = "nodejs";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const unauth = await requireAuth();
   if (unauth) return unauth;
 
+  const q = req.nextUrl.searchParams.get("q")?.trim() || "";
+
   const registers = await prisma.familyRegister.findMany({
+    where: q
+      ? {
+          OR: [
+            { name: { contains: q } },
+            { householders: { some: { OR: [
+              { familyName: { contains: q } },
+              { givenName:  { contains: q } },
+              { familyNameKana: { contains: q } },
+              { givenNameKana:  { contains: q } },
+            ] } } },
+          ],
+        }
+      : undefined,
     include: {
       householders: {
-        select: { id: true, familyName: true, givenName: true, isActive: true, _count: { select: { members: true } } },
+        select: { id: true, familyName: true, givenName: true, familyNameKana: true, givenNameKana: true, isActive: true, address1: true, phone1: true, _count: { select: { members: true } } },
       },
     },
     orderBy: { createdAt: "desc" },

@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
 
     // 家族・親族台帳を自動作成して紐付け
     const familyRegister = await prisma.familyRegister.create({
-      data: { name: `${familyName}${givenName}の家族親族台帳` },
+      data: { name: `${familyName}${givenName}の家族・親族台帳` },
     });
     data.familyRegisterId = familyRegister.id;
 
