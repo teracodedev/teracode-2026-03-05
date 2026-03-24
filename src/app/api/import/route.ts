@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
       if (isHouseholder) {
         // 戸主として upsert
-        await prisma.householder.upsert({
+        const upsertedHouseholder = await prisma.householder.upsert({
           where: { id: p.個人UUID },
           update: {
             familyName: p.姓,
@@ -71,6 +71,17 @@ export async function POST(req: NextRequest) {
             fax: p.FAX || null,
           },
         });
+        // 家族・親族台帳が存在しない場合は自動作成して紐付け
+        if (!upsertedHouseholder.familyRegisterId) {
+          const familyRegister = await prisma.familyRegister.create({
+            data: { name: `${p.姓}${p.名 || ''}の家族・親族台帳` },
+          });
+          await prisma.householder.update({
+            where: { id: upsertedHouseholder.id },
+            data: { familyRegisterId: familyRegister.id },
+          });
+        }
+
         results.push({ file: fileName, status: "ok", name: `${p.姓}${p.名 || ""}（戸主）` });
       } else {
         // 世帯員として upsert（戸主が存在しないと追加できない）
