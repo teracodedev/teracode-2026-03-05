@@ -3,6 +3,7 @@ import { fetchWithAuth } from "@/lib/fetch-with-auth";
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface KakuchoRecord {
   id: string;
@@ -28,10 +29,11 @@ interface KakuchoRecord {
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return "-";
   const d = new Date(dateStr);
-  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+  return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
 }
 
 export default function KakuchoPage() {
+  const router = useRouter();
   const [records, setRecords] = useState<KakuchoRecord[]>([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -41,13 +43,13 @@ export default function KakuchoPage() {
     try {
       const params = new URLSearchParams();
       if (query) params.set("q", query);
-      const res = await fetchWithAuth(`/api/kakucho?${params}`);
+      const res = await fetchWithAuth("/api/kakucho?" + params);
       const data = await res.json();
       const rows = Array.isArray(data) ? data : [];
       setRecords(
         rows.filter(
           (r): r is KakuchoRecord =>
-            !!r &&
+            r != null &&
             typeof r === "object" &&
             typeof (r as KakuchoRecord).householder?.id === "string"
         )
@@ -94,24 +96,26 @@ export default function KakuchoPage() {
         </div>
       ) : (
         <>
-          {/* モバイル: カード表示 */}
           <div className="md:hidden space-y-2">
             {records.map((record) => (
-              <Link
+              <div
                 key={record.id}
-                href={`/householder/${record.householder.id}`}
-                className="block bg-white rounded-xl border border-stone-200 px-4 py-3 shadow-sm active:bg-stone-50"
+                className="bg-white rounded-xl border border-stone-200 px-4 py-3 shadow-sm active:bg-stone-50 cursor-pointer"
+                onClick={() => router.push("/members/" + record.id)}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="font-medium text-stone-800 text-base">
-                      {record.dharmaName || <span className="text-stone-400 font-normal">法名未登録</span>}
+                      {record.familyName} {record.givenName || ""}
                     </div>
-                    {record.dharmaNameKana && (
-                      <div className="text-xs text-stone-400">{record.dharmaNameKana}</div>
+                    {(record.familyNameKana || record.givenNameKana) && (
+                      <div className="text-xs text-stone-400">{record.familyNameKana || ""} {record.givenNameKana || ""}</div>
                     )}
                     <div className="text-sm text-stone-600 mt-0.5">
-                      {record.familyName} {record.givenName || ""}
+                      {record.dharmaName || <span className="text-stone-400">法名未登録</span>}
+                      {record.dharmaNameKana && (
+                        <span className="text-xs text-stone-400 ml-1">({record.dharmaNameKana})</span>
+                      )}
                     </div>
                     <div className="text-xs text-stone-500 mt-1 flex flex-wrap gap-x-2">
                       {record.relation && <span>{record.relation}</span>}
@@ -122,19 +126,17 @@ export default function KakuchoPage() {
                     {record.householder.familyName} {record.householder.givenName}
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
             <div className="text-xs text-stone-400 px-1 pt-1">{records.length}件</div>
           </div>
 
-          {/* デスクトップ: テーブル表示 */}
           <div className="hidden md:block bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
             <table className="w-full text-base">
               <thead className="bg-stone-50 border-b border-stone-200">
                 <tr>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">姓名（俗名）</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">法名</th>
-                  <th className="text-left px-4 py-3 text-stone-600 font-medium">俗名（姓）</th>
-                  <th className="text-left px-4 py-3 text-stone-600 font-medium">俗名（名）</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">命日</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">生年月日</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">続柄</th>
@@ -143,31 +145,31 @@ export default function KakuchoPage() {
               </thead>
               <tbody className="divide-y divide-stone-100">
                 {records.map((record) => (
-                  <tr key={record.id} className="hover:bg-stone-50">
-                    <td className="px-4 py-3 font-medium text-stone-700">
+                  <tr
+                    key={record.id}
+                    className="hover:bg-stone-50 cursor-pointer"
+                    onClick={() => router.push("/members/" + record.id)}
+                  >
+                    <td className="px-4 py-3 font-medium text-stone-800">
+                      {record.familyName} {record.givenName || ""}
+                      {(record.familyNameKana || record.givenNameKana) && (
+                        <div className="text-xs text-stone-400 font-normal">
+                          {record.familyNameKana || ""} {record.givenNameKana || ""}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-stone-700">
                       {record.dharmaName || <span className="text-stone-300">未登録</span>}
                       {record.dharmaNameKana && (
-                        <div className="text-xs text-stone-400 font-normal">{record.dharmaNameKana}</div>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-stone-700">
-                      {record.familyName}
-                      {record.familyNameKana && (
-                        <div className="text-xs text-stone-400">{record.familyNameKana}</div>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-stone-700">
-                      {record.givenName || <span className="text-stone-300">-</span>}
-                      {record.givenNameKana && (
-                        <div className="text-xs text-stone-400">{record.givenNameKana}</div>
+                        <div className="text-xs text-stone-400">{record.dharmaNameKana}</div>
                       )}
                     </td>
                     <td className="px-4 py-3 text-stone-600">{formatDate(record.deathDate)}</td>
                     <td className="px-4 py-3 text-stone-600">{formatDate(record.birthDate)}</td>
                     <td className="px-4 py-3 text-stone-600">{record.relation || "-"}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                       <Link
-                        href={`/householder/${record.householder.id}`}
+                        href={"/householder/" + record.householder.id}
                         className="text-stone-500 hover:text-stone-400 hover:underline"
                       >
                         {record.householder.familyName} {record.householder.givenName}
