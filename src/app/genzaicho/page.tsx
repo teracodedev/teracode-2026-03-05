@@ -31,6 +31,7 @@ interface GenzaichoRecord {
     fax: string | null;
     note: string | null;
     domicile: string | null;
+    familyRegister: { id: string; name: string } | null;
   };
 }
 
@@ -143,6 +144,28 @@ export default function GenzaichoPage() {
                     </div>
                   </div>
                 </div>
+<<<<<<< HEAD
+=======
+                {record.householder.familyRegister ? (
+                  <Link
+                    href={`/family-register/${record.householder.familyRegister.id}`}
+                    className="block px-4 py-2 border-t border-stone-100 text-xs text-amber-800 bg-amber-50/50 hover:bg-amber-50"
+                  >
+                    {record.householder.familyRegister.name}
+                  </Link>
+                ) : (
+                  <div className="px-4 py-2 border-t border-stone-100 text-xs text-stone-400 bg-stone-50/40">
+                    家族・親族台帳未紐付け
+                  </div>
+                )}
+                {expandedId === record.id && (
+                  <DetailPanel
+                    record={record}
+                    onClose={() => setExpandedId(null)}
+                    onSaved={(updated) => handleSaved(record.id, updated)}
+                  />
+                )}
+>>>>>>> 8bda93a (過去帳・現在帳一覧に家族・親族台帳リンクを追加)
               </div>
             ))}
             <div className="text-sm text-stone-400 px-1 pt-1">{records.length}名</div>
@@ -152,7 +175,13 @@ export default function GenzaichoPage() {
             <table className="w-full text-base">
               <thead className="bg-stone-50 border-b border-stone-200">
                 <tr>
+<<<<<<< HEAD
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">姓名</th>
+=======
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">家族・親族台帳</th>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">姓</th>
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">名</th>
+>>>>>>> 8bda93a (過去帳・現在帳一覧に家族・親族台帳リンクを追加)
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">続柄</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">生年月日</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">年齢</th>
@@ -163,10 +192,26 @@ export default function GenzaichoPage() {
               <tbody className="divide-y divide-stone-100">
                 {records.map((record) => (
                   <Fragment key={record.id}>
+<<<<<<< HEAD
                     <tr
                       className="hover:bg-stone-50 cursor-pointer"
                       onClick={() => router.push("/members/" + record.id)}
                     >
+=======
+                    <tr className="hover:bg-stone-50">
+                      <td className="px-4 py-3 text-stone-600">
+                        {record.householder.familyRegister ? (
+                          <Link
+                            href={`/family-register/${record.householder.familyRegister.id}`}
+                            className="text-amber-700 hover:text-amber-800 hover:underline text-sm"
+                          >
+                            {record.householder.familyRegister.name}
+                          </Link>
+                        ) : (
+                          <span className="text-stone-300 text-sm">未設定</span>
+                        )}
+                      </td>
+>>>>>>> 8bda93a (過去帳・現在帳一覧に家族・親族台帳リンクを追加)
                       <td className="px-4 py-3 font-medium text-stone-700">
                         {record.familyName} {record.givenName || ""}
                         {(record.familyNameKana || record.givenNameKana) && (
@@ -193,6 +238,20 @@ export default function GenzaichoPage() {
                         {[record.householder.address1, record.householder.address2, record.householder.address3].filter(Boolean).join(" ") || "-"}
                       </td>
                     </tr>
+<<<<<<< HEAD
+=======
+                    {expandedId === record.id && (
+                      <tr key={`${record.id}-detail`}>
+                        <td colSpan={9} className="p-0">
+                          <DetailPanel
+                            record={record}
+                            onClose={() => setExpandedId(null)}
+                            onSaved={(updated) => handleSaved(record.id, updated)}
+                          />
+                        </td>
+                      </tr>
+                    )}
+>>>>>>> 8bda93a (過去帳・現在帳一覧に家族・親族台帳リンクを追加)
                   </Fragment>
                 ))}
               </tbody>

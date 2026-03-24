@@ -23,6 +23,7 @@ interface KakuchoRecord {
     householderCode: string;
     familyName: string;
     givenName: string;
+    familyRegister: { id: string; name: string } | null;
   };
 }
 
@@ -98,10 +99,19 @@ export default function KakuchoPage() {
         <>
           <div className="md:hidden space-y-2">
             {records.map((record) => (
+<<<<<<< HEAD
               <div
                 key={record.id}
                 className="bg-white rounded-xl border border-stone-200 px-4 py-3 shadow-sm active:bg-stone-50 cursor-pointer"
                 onClick={() => router.push("/members/" + record.id)}
+=======
+              <div key={record.id} className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+              <Link
+                href={record.householder.familyRegister
+                  ? `/family-register/${record.householder.familyRegister.id}`
+                  : `/householder/${record.householder.id}`}
+                className="block px-4 py-3 active:bg-stone-50"
+>>>>>>> 8bda93a (過去帳・現在帳一覧に家族・親族台帳リンクを追加)
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
@@ -126,6 +136,22 @@ export default function KakuchoPage() {
                     {record.householder.familyName} {record.householder.givenName}
                   </div>
                 </div>
+<<<<<<< HEAD
+=======
+              </Link>
+              {record.householder.familyRegister ? (
+                <Link
+                  href={`/family-register/${record.householder.familyRegister.id}`}
+                  className="block px-4 py-2 border-t border-stone-100 text-xs text-amber-800 bg-amber-50/50 hover:bg-amber-50"
+                >
+                  {record.householder.familyRegister.name}
+                </Link>
+              ) : (
+                <div className="px-4 py-2 border-t border-stone-100 text-xs text-stone-400 bg-stone-50/40">
+                  家族・親族台帳未紐付け
+                </div>
+              )}
+>>>>>>> 8bda93a (過去帳・現在帳一覧に家族・親族台帳リンクを追加)
               </div>
             ))}
             <div className="text-xs text-stone-400 px-1 pt-1">{records.length}件</div>
@@ -135,7 +161,11 @@ export default function KakuchoPage() {
             <table className="w-full text-base">
               <thead className="bg-stone-50 border-b border-stone-200">
                 <tr>
+<<<<<<< HEAD
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">姓名（俗名）</th>
+=======
+                  <th className="text-left px-4 py-3 text-stone-600 font-medium">家族・親族台帳</th>
+>>>>>>> 8bda93a (過去帳・現在帳一覧に家族・親族台帳リンクを追加)
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">法名</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">命日</th>
                   <th className="text-left px-4 py-3 text-stone-600 font-medium">生年月日</th>
@@ -145,6 +175,7 @@ export default function KakuchoPage() {
               </thead>
               <tbody className="divide-y divide-stone-100">
                 {records.map((record) => (
+<<<<<<< HEAD
                   <tr
                     key={record.id}
                     className="hover:bg-stone-50 cursor-pointer"
@@ -159,6 +190,22 @@ export default function KakuchoPage() {
                       )}
                     </td>
                     <td className="px-4 py-3 text-stone-700">
+=======
+                  <tr key={record.id} className="hover:bg-stone-50">
+                    <td className="px-4 py-3 text-stone-600">
+                      {record.householder.familyRegister ? (
+                        <Link
+                          href={`/family-register/${record.householder.familyRegister.id}`}
+                          className="text-amber-700 hover:text-amber-800 hover:underline text-sm"
+                        >
+                          {record.householder.familyRegister.name}
+                        </Link>
+                      ) : (
+                        <span className="text-stone-300 text-sm">未設定</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 font-medium text-stone-700">
+>>>>>>> 8bda93a (過去帳・現在帳一覧に家族・親族台帳リンクを追加)
                       {record.dharmaName || <span className="text-stone-300">未登録</span>}
                       {record.dharmaNameKana && (
                         <div className="text-xs text-stone-400">{record.dharmaNameKana}</div>

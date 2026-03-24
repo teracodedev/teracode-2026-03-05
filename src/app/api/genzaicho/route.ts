@@ -59,6 +59,7 @@ export async function GET(request: NextRequest) {
             fax: true,
             note: true,
             domicile: true,
+            familyRegister: { select: { id: true, name: true } },
           },
         },
       },

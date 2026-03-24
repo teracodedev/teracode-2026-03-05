@@ -49,6 +49,7 @@ export async function GET(request: NextRequest) {
             [fields.code]: true,
             familyName: true,
             givenName: true,
+            familyRegister: { select: { id: true, name: true } },
           },
         },
       },
