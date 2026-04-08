@@ -20,6 +20,21 @@ model FamilyRegister {
   updatedAt    DateTime  @updatedAt
 
   householders Householder[]
+  graveSites   GraveSite[]
+}
+
+// 墓地
+model GraveSite {
+  id               String          @id @default(uuid())
+  familyRegisterId String
+  familyRegister   FamilyRegister  @relation(fields: [familyRegisterId], references: [id], onDelete: Cascade)
+  section          String?         // 区画
+  number           String?         // 番号
+  graveType        String?         // 種類（一般墓、永代供養墓など）
+  contractedAt     DateTime?       // 契約日
+  note             String?         // 備考
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
 }
 
 // 檀家（法人・個人）
