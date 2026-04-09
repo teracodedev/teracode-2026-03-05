@@ -1,5 +1,6 @@
 "use client";
 import { fetchWithAuth } from "@/lib/fetch-with-auth";
+import { generateCsv, downloadCsv } from "@/lib/csv-utils";
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
@@ -74,6 +75,31 @@ export default function KakuchoPage() {
           <h1 className="text-2xl font-bold text-amber-700">過去帳</h1>
           <p className="text-sm text-stone-500 mt-1">命日が登録されている故人の一覧</p>
         </div>
+        <button
+          onClick={() => {
+            const headers = ["姓", "名", "姓フリガナ", "名フリガナ", "法名", "法名フリガナ", "命日", "生年月日", "続柄", "戸主姓", "戸主名", "戸主番号", "家族・親族台帳"];
+            const rows = records.map((r) => [
+              r.familyName,
+              r.givenName || "",
+              r.familyNameKana || "",
+              r.givenNameKana || "",
+              r.dharmaName || "",
+              r.dharmaNameKana || "",
+              r.deathDate ? new Date(r.deathDate).toISOString().slice(0, 10) : "",
+              r.birthDate ? new Date(r.birthDate).toISOString().slice(0, 10) : "",
+              r.relation || "",
+              r.householder.familyName,
+              r.householder.givenName,
+              r.householder.householderCode,
+              r.householder.familyRegister?.name || "",
+            ]);
+            downloadCsv(generateCsv(headers, rows), "過去帳.csv");
+          }}
+          disabled={records.length === 0}
+          className="border border-stone-300 text-stone-600 px-4 py-2 rounded-lg hover:bg-stone-50 transition-colors text-sm font-medium disabled:opacity-50 disabled:pointer-events-none"
+        >
+          CSV
+        </button>
       </div>
 
       <div className="flex gap-4 items-center">
