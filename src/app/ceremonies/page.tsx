@@ -94,7 +94,7 @@ export default function CeremoniesPage() {
           disabled={ceremonies.length === 0}
           className="border border-stone-300 text-stone-600 px-4 py-2 rounded-lg hover:bg-stone-50 transition-colors text-sm font-medium disabled:opacity-50 disabled:pointer-events-none"
         >
-          CSV
+          CSVダウンロード
         </button>
         <Link
           href="/ceremonies/new"
